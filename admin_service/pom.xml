@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.stedu.mall</groupId>
     <artifactId>admin_service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>admin_service</name>
     <description>admin_service</description>
     <parent>
