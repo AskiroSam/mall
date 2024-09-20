@@ -12,8 +12,8 @@
         <collection column="id" property="childList" ofType="category" select="selectByParentId" />
     </resultMap>
     <insert id="insert" parameterType="category" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-        INSERT INTO `category`(`id`, `name`, `dscp`, `pic`, `parent_id`, `recomm`, `status`)
-        VALUES (#{name}, #{dscp}, #{pic}, #{parentId}, #{recomm}, #{status})
+        INSERT INTO `category`(`id`, `name`, `dscp`, `pic`, `parent_id`, `recom`, `status`)
+        VALUES (#{name}, #{dscp}, #{pic}, #{parentId}, #{recom}, #{status})
     </insert>
     <update id="update" parameterType="category">
         UPDATE `category`
@@ -31,7 +31,7 @@
                 `parent_id`=#{parentId},
             </if>
             <if test="recomm!=null">
-                `recomm`=#{recomm},
+                `recom`=#{recom},
             </if>
             <if test="status!=null">
                 `status`=#{status},
@@ -42,7 +42,7 @@
     <delete id="delete">
         DELETE FROM `category` WHERE `id`=#{id}
     </delete>
-    <select id="selectByCondition" resultType="category">
+    <select id="selectByCondition" resultMap="categoryMap">
         SELECT * FROM `category`
         <where>
             <if test="name!=null and name.length>0">
@@ -52,7 +52,7 @@
                 AND `parent_id`=#{parentId}
             </if>
             <if test="recomm!=null">
-                AND `recomm`=#{recomm}
+                AND `recom`=#{recom}
             </if>
             <if test="status!=null">
                 AND `status`=#{status}
@@ -62,7 +62,7 @@
     <select id="selectById" resultMap="categoryMap">
         SELECT * FROM `category` WHERE `id`=#{id}
     </select>
-    <select id="selectByParentId" resultMap="categoryMap">
+    <select id="selectByParentId" resultType="category">
         SELECT * FROM `category` WHERE `parent_id`=#{parentId}
     </select>
 </mapper>

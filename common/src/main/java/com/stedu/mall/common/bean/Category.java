@@ -18,7 +18,7 @@ public class Category {
     private String dscp; //描述
     private String pic; //图片
     private Integer parentId; //夫分类的ID
-    private Integer recomm; //是否推荐 0:不推荐 1:推荐
+    private Integer recom; //是否推荐 0:不推荐 1:推荐
     private Integer status; //是否上架 0:下架 1:上架
 
     private Category parent; //夫分类
