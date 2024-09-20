@@ -42,4 +42,33 @@ class GoodsServiceApplicationTests {
                 .forEach(System.out::println);
     }
 
+    @Test
+    public void test04() {
+        Category category = new Category(null, "手机", "111", "111", 0, 0, 0, null, null);
+        categoryMapper.insert(category);
+    }
+
+    @Test
+    public void test05() {
+        categoryMapper.delete(100);
+    }
+
+    @Test
+    public void test06() {
+        Category category = new Category(200, "手机", "111", "111", 0, 0, 0, null, null);
+        categoryMapper.update(category);
+    }
+
+    @Test
+    public void test07() {
+        Category category = new Category(1, "手机", "111", "111", 2, 0, 0, null, null);
+        categoryMapper.update(category);
+    }
+
+    @Test
+    public void test08() {
+        Category category = new Category(1, "手机", "111", "111", 1, 0, 0, null, null);
+        categoryMapper.update(category);
+    }
+
 }
