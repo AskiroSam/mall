@@ -1,6 +1,6 @@
 #应用端口
 server:
-  port: 8080
+  port: 8090
 
 #连接池
 spring:
