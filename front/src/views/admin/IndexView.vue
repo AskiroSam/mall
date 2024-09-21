@@ -5,12 +5,15 @@
           :default-active="1"
           class="el-menu-demo"
           mode="horizontal"
-          background-color="#545c64"
+          background-color="#000000"
           text-color="#fff"
           active-text-color="#ffd04b"
+          style="border-bottom: none"
           :ellipsis="false"
       >
-        <el-menu-item index="1">STEDU - 在线商城</el-menu-item>
+        <el-menu-item index="1">
+            <img src="../.././images/MyLogo2.png" style="height: 40px; width: 250px;">
+        </el-menu-item>
         <el-sub-menu index="2">
           <template #title>Admin</template>
           <el-menu-item index="2-1">个人中心</el-menu-item>
@@ -24,7 +27,7 @@
       <el-aside width="200px">
         <el-menu
             active-text-color="#ffd04b"
-            background-color="#545c64"
+            background-color="#261E47"
             class="el-menu-vertical-demo"
             default-active="2"
             text-color="#fff"
@@ -92,5 +95,10 @@
 
 .el-header {
   padding: 0px;
+}
+
+.el-menu {
+  background-color: #000000;
+
 }
 </style>
