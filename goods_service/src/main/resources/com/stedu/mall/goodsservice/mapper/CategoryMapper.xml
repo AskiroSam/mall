@@ -12,7 +12,7 @@
         <collection column="id" property="childList" ofType="category" select="selectByParentId" />
     </resultMap>
     <insert id="insert" parameterType="category" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-        INSERT INTO `category`(`id`, `name`, `dscp`, `pic`, `parent_id`, `recom`, `status`)
+        INSERT INTO `category`(`name`, `dscp`, `pic`, `parent_id`, `recom`, `status`)
         VALUES (#{name}, #{dscp}, #{pic}, #{parentId}, #{recom}, #{status})
     </insert>
     <update id="update" parameterType="category">
@@ -30,7 +30,7 @@
             <if test="parentId!=null">
                 `parent_id`=#{parentId},
             </if>
-            <if test="recomm!=null">
+            <if test="recom!=null">
                 `recom`=#{recom},
             </if>
             <if test="status!=null">
@@ -51,7 +51,7 @@
             <if test="parentId!=null">
                 AND `parent_id`=#{parentId}
             </if>
-            <if test="recomm!=null">
+            <if test="recom!=null">
                 AND `recom`=#{recom}
             </if>
             <if test="status!=null">

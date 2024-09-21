@@ -2,6 +2,7 @@ package com.stedu.mall.goodsservice;
 
 import com.github.pagehelper.PageInfo;
 import com.stedu.mall.common.bean.Category;
+import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.CategoryService;
 import com.stedu.mall.goodsservice.mapper.CategoryMapper;
 import org.junit.jupiter.api.Test;
@@ -14,12 +15,18 @@ import java.util.List;
 class GoodsServiceApplicationTests {
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
     private CategoryService categoryService;
 
     @Test
     public void test01() {
-        System.out.println(categoryMapper.selectById(1));
+        System.out.println(categoryMapper.selectById(2));
     }
+    @Test
+    public void test11() {
+        System.out.println(categoryMapper.selectByParentId(2));
+    }
+
 
     @Test
     public void test02() {
@@ -43,20 +50,20 @@ class GoodsServiceApplicationTests {
     }
 
     @Test
-    public void test04() {
-        Category category = new Category(null, "手机", "111", "111", 0, 0, 0, null, null);
-        categoryMapper.insert(category);
+    public void test04() throws SteduException {
+        Category category = new Category(null, "XIXI", "111", "111", 0, 0, 0, null, null);
+        categoryService.insert(category);
     }
 
     @Test
-    public void test05() {
-        categoryMapper.delete(100);
+    public void test05() throws SteduException {
+        categoryService.delete(7);
     }
 
     @Test
-    public void test06() {
-        Category category = new Category(200, "手机", "111", "111", 0, 0, 0, null, null);
-        categoryMapper.update(category);
+    public void test06() throws SteduException {
+        Category category = new Category(6, "手机", "111", "111", 0, 0, 0, null, null);
+        categoryService.update(category);
     }
 
     @Test
