@@ -15,9 +15,9 @@ const categoryApi = {
     },
     //分页搜索
     selectByPage(condition, pageNum, pageSize) {
-        condition.pageNUm = pageNum;
+        condition.pageNum = pageNum;
         condition.pageSize = pageSize;
-        return service.get('/category', {
+        return service.get('/category/search', {
             params: condition
         })
     },
