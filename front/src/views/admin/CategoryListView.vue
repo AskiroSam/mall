@@ -3,10 +3,8 @@
 </template>
 
 <script setup>
-  function test123() {
-    console.log(import.meta.env.VITE_SERVER_ADDR)
-  }
-  test123();
+import categoryApi from "@/api/categoryApi.js";
+
 </script>
 
 <style scoped>
