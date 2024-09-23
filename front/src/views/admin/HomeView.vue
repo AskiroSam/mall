@@ -12,7 +12,7 @@
           :ellipsis="false"
       >
         <el-menu-item index="/admin/index" @click="router.push('/admin/index')" style="width: 200px;">
-            <img src="../.././images/MyLogo2.png" style="height: 40px; width: 200px;">
+            <img src="../.././images/MyLogo2.png" style="height: 40px; width: 190px;">
         </el-menu-item>
         <el-sub-menu index="2">
           <template #title>Admin</template>
