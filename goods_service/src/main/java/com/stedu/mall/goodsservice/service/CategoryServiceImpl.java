@@ -101,7 +101,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryMapper.selectByParentId(parentId)
                 .stream()
                 .anyMatch(item -> item.getName().equals(name) && !item.getId().equals(category.getId()))) {
-            throw new SteduException("修改之后的分类名和同击毙的其它分类名相同，不允许修改");
+            throw new SteduException("修改之后的分类名和同级别的其它分类名相同，不允许修改");
         }
 
         //修改

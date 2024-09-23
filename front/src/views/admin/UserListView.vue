@@ -1,5 +1,5 @@
 <template>
-  index
+user
 </template>
 
 <script setup>

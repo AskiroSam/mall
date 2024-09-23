@@ -1,5 +1,5 @@
 <template>
-  index
+goods
 </template>
 
 <script setup>

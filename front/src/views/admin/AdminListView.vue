@@ -1,5 +1,5 @@
 <template>
-  index
+admin
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-  index
+category
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-  index
+order
 </template>
 
 <script setup>
