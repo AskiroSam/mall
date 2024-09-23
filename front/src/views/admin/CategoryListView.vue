@@ -60,8 +60,8 @@
           </el-table-column>
           <el-table-column label="操作" width="150px">
             <template #default="scope">
-              <el-button size="small" type="primary">修改</el-button>
-              <el-popconfirm title="你确定要删除该分类吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px">
+              <el-button size="small" type="primary" @click="selectById(scope.row.id)">修改</el-button>
+              <el-popconfirm title="你确定要删除该分类吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteCategory(scope.row.id)">
                 <template #reference>
                   <el-button size="small" type="danger">删除</el-button>
                 </template>
@@ -125,6 +125,52 @@
   </el-dialog>
   <!-- 添加分类的对话框结束 -->
 
+  <!-- 修改分类的对话框开始 -->
+  <el-dialog v-model="updateDialogShow" title="修改分类" width="500">
+    <el-form>
+      <el-form-item label="名称:" label-width="18%" prop="sno">
+        <el-input v-model="categoryUpdate.name" placeholder="请输入名称" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="描述:" label-width="18%" prop="sname">
+        <el-input v-model="categoryUpdate.dscp" placeholder="请输入描述" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="夫分类" label-width="18%" prop="did">
+        <el-select v-model="categoryUpdate.parentId" placeholder="请选择夫分类" clearable :empty-values="[0]" :value-on-clear="0" size="large" style="width: 300px">
+          <el-option v-for="(category, index) in allParent" :key="index" :label="category.name"
+                     :value="category.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="是否推荐:" label-width="18%" prop="sgender">
+        <el-radio-group v-model="categoryUpdate.recom" style="width: 300px">
+          <el-radio label="不推荐" :value="0" size="large" />
+          <el-radio label="推荐" :value="1" size="large" />
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="是否上架:" label-width="18%" prop="sgender">
+        <el-radio-group v-model="categoryUpdate.status" style="width: 300px">
+          <el-radio label="下架" :value="0" size="large" />
+          <el-radio label="上架" :value="1" size="large" />
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="图片:" label-width="20%">
+        <el-upload class="avatar-uploader" :action="SERVER_ADDR + '/category/upload'" name="pic"
+                   :show-file-list="false" :on-success="picUpdateUploadSuccess" :before-upload="beforeAvatarUpload" >
+          <img v-if="categoryUpdate.pic" :src="SERVER_ADDR + '/category/pic/' + categoryUpdate.pic" class="avatar" />
+          <el-icon v-else class="avatar-uploader-icon">
+            <Plus />
+          </el-icon>
+        </el-upload>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="updateDialogShow = false">取消</el-button>
+        <el-button type="primary" @click="update">确认</el-button>
+      </div>
+    </template>
+  </el-dialog>
+  <!-- 修改分类的对话框结束 -->
+
 
 </template>
 
@@ -164,6 +210,28 @@ const categoryAdd = ref({
 //是否显示添加的对话框
 const addDialogShow = ref(false);
 
+//被修改的分类信息
+const categoryUpdate = ref({
+  id: null,
+  name: null,
+  dscp: null,
+  pic: null,
+  parentId: 0,
+  recom: 1,
+  status: 1
+});
+//是否显示修改的对话框
+const updateDialogShow = ref(false);
+
+//根据id查询被修改分类的信息
+function selectById(id) {
+  categoryApi.selectById(id)
+      .then(resp => {
+        categoryUpdate.value = resp.data;
+        updateDialogShow.value = true;
+      });
+}
+
 //添加分类
 function insert() {
   categoryApi.insert(categoryAdd.value)
@@ -189,6 +257,19 @@ function insert() {
       });
 }
 
+//删除分类
+function deleteCategory(id) {
+  categoryApi.delete(id)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+          //查询第一页
+          selectByPage(1);
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
+}
 
 //分页查询
 function selectByPage(pageNum) {
@@ -217,6 +298,31 @@ function picAddUploadSuccess(resp) {
   } else {
     ElMessage.error(resp.msg);
   }
+}
+
+//成功修改图片之后的回调
+function picUpdateUploadSuccess(resp) {
+  if (resp.code == 10000) {
+    ElMessage.success(resp.msg);
+    categoryUpdate.value.pic = resp.data;
+  } else {
+    ElMessage.error(resp.msg);
+  }
+}
+//修改
+function update() {
+  categoryApi.update(categoryUpdate.value)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+          //隐藏对话框
+          updateDialogShow.value = false;
+          //查询第一页
+          selectByPage(pageInfo.value.pageNum);
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
 }
 
 //获取所有的夫分类
