@@ -40,7 +40,7 @@ public class GoodsController {
 
     //搜索
     @GetMapping
-    public RespBean selectByCondition(Goods condition, Integer pageNum, Integer pageSize) {
+    public RespBean selectByPage(Goods condition, Integer pageNum, Integer pageSize) {
         pageNum = pageNum == null ? 1 : pageNum;
         pageSize = pageSize == null ? 5 : pageSize;
 
