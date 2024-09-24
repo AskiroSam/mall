@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stedu.mall.goodsservice.mapper.GoodsPicMapper">
+    <insert id="insert">
+        INSERT INTO `goods_pic`(`url`, `goods_id`) VALUES
+        <foreach collection="picList" item="pic" separator=",">
+            (#{pic.url}, #{pic.goodsId})
+        </foreach>
+    </insert>
+    <delete id="delete">
+        DELETE FROM `goods_pic` WHERE `goods_id`=#{goodsId}
+    </delete>
+    <select id="selectByGoodsId" resultType="goodsPic">
+        SELECT * FROM `goods_pic` WHERE `goods_id`=#{goodsId}
+    </select>
+</mapper>

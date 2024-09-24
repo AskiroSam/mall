@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stedu.mall.goodsservice.mapper.GoodsMapper">
+    <resultMap id="goodsMap" type="goods">
+        <id column="id" property="id" />
+        <result column="category_id" property="categoryId" />
+        <!-- 分类 -->
+        <association column="category_id" property="category" javaType="category" select="com.stedu.mall.goodsservice.mapper.CategoryMapper.selectById" />
+        <!-- 图片 -->
+        <collection column="id" property="picList" ofType="goodsPic" select="com.stedu.mall.goodsservice.mapper.GoodsPicMapper.selectByGoodsId" />
+    </resultMap>
+    <!-- 添加 - 主键回填 -->
+    <insert id="insert" parameterType="goods" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO `goods`(`id`, `name`, `dscp`, `detail`, `price`, `mark_price`, `purchase_price`, `color`, `version`, `count`, `recom`, `category_id`, `score`, `status`)
+        VALUES (#{id}, #{name}, #{dscp}, #{detail}, #{price}, #{markPrice}, #{purchasePrice}, #{color}, #{version}, #{count}, #{recom}, #{categoryId}, #{score}, #{status})
+    </insert>
+    <update id="update" parameterType="goods">
+        UPDATE `goods`
+        <set>
+            <if test="name!=null and name.length>0">
+                `name`=#{name},
+            </if>
+            <if test="dscp!=null and dscp.length>0">
+                `dscp`=#{dscp},
+            </if>
+            <if test="detail!=null and detail.length>0">
+                `detail`=#{detail},
+            </if>
+            <if test="price!=null">
+                `price`=#{price},
+            </if>
+            <if test="markPrice!=null">
+                `mark_price`=#{markPrice},
+            </if>
+            <if test="purchasePrice!=null">
+                `purchase_price`=#{purchasePrice},
+            </if>
+            <if test="color!=null and color.length>0">
+                `color`=#{color},
+            </if>
+            <if test="version!=null and version.length>0">
+                `version`=#{version},
+            </if>
+            <if test="count!=null">
+                `count`=#{count},
+            </if>
+            <if test="recom!=null">
+                `recom`=#{recom},
+            </if>
+            <if test="categoryId!=null">
+                `category_id`=#{categoryId},
+            </if>
+            <if test="score!=null">
+                `score`=#{score},
+            </if>
+            <if test="status!=null">
+                `status`=#{status},
+            </if>
+        </set>
+        WHERE `id`=#{id}
+    </update>
+    <delete id="delete">
+        DELETE FROM `goods` WHERE `id`=#{id}
+    </delete>
+    <select id="selectByCondition" resultMap="goodsMap">
+        SELECT * FROM `goods`
+        <where>
+            <if test="name!=null and name.length>0">
+                AND `name` LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="dscp!=null and dscp.length>0">
+                AND `dscp`=#{dscp}
+            </if>
+            <if test="detail!=null and detail.length>0">
+                AND `detail`=#{detail}
+            </if>
+            <if test="price!=null">
+                AND `price`=#{price}
+            </if>
+            <if test="markPrice!=null">
+                AND `mark_price`=#{markPrice}
+            </if>
+            <if test="purchasePrice!=null">
+                AND `purchase_price`=#{purchasePrice}
+            </if>
+            <if test="color!=null and color.length>0">
+                AND `color`=#{color}
+            </if>
+            <if test="version!=null and version.length>0">
+                AND `version`=#{version}
+            </if>
+            <if test="count!=null">
+                AND `count`=#{count}
+            </if>
+            <if test="recom!=null">
+                AND `recom`=#{recom}
+            </if>
+            <if test="categoryId!=null">
+                AND `category_id`=#{categoryId}
+            </if>
+            <if test="score!=null">
+                AND `score`=#{score}
+            </if>
+            <if test="status!=null">
+                AND `status`=#{status}
+            </if>
+        </where>
+    </select>
+    <select id="selectById" resultMap="goodsMap">
+        SELECT * FROM `goods` WHERE `id`=#{id}
+    </select>
+</mapper>
