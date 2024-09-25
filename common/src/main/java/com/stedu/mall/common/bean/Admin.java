@@ -1,0 +1,23 @@
+package com.stedu.mall.common.bean;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Admin {
+    private Integer id;
+    private String username;
+    private String password;
+    private String salt;
+    private String phone;
+    private String email;
+    private String realname;
+    private Date createTime;
+    private Integer status;
+}
+

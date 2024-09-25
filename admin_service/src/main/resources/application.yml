@@ -1,0 +1,18 @@
+#应用端口
+server:
+  port: 8091
+
+#连接池
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mall?useSSL=false
+    username: root
+    password: 2669019760
+
+#MyBatis
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.stedu.mall.common.bean

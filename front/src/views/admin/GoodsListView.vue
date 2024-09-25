@@ -53,7 +53,7 @@
               <el-text class="mx-1" type="primary">{{scope.row.category.name}}</el-text>
             </template>
           </el-table-column>
-          <el-table-column prop="score" label="评分" />
+          <el-table-column prop="score" label="评分"  />
           <el-table-column label="是否上架">
             <template #default="scope">
               <el-tag type="primary" v-if="scope.row.status == 1">上架</el-tag>
@@ -70,8 +70,9 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="150px">
+          <el-table-column label="操作" width="200px">
             <template #default="scope">
+              <el-button size="small" type="success" @click="showDetailDialog(scope.row)">详情</el-button>
               <el-button size="small" type="primary" @click="selectById(scope.row.id)">修改</el-button>
               <el-popconfirm title="你确定要删除该分类吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteGoods(scope.row.id)">
                 <template #reference>
@@ -237,14 +238,43 @@
   </el-dialog>
   <!-- 修改商品的对话框结束 -->
 
+  <!-- 商品详情对话框开始 -->
+  <el-dialog v-model="detailDialogShow" title="商品详情">
+      <div v-if="detailDialogShow" style="border: 1px solid #ccc">
+        <Toolbar
+            style="border-bottom: 1px solid #ccc"
+            :editor="editorRef"
+            :defaultConfig="toolbarConfig"
+            :mode="mode"
+        />
+        <Editor
+            style="height: 500px; overflow-y: hidden;"
+            v-model="goodsUpdate.detail"
+            :defaultConfig="editorConfig"
+            :mode="mode"
+            @onCreated="handleCreated"
+        />
+      </div>
+    <div class="dialog-footer">
+      <el-button @click="detailDialogShow = false">取消</el-button>
+      <el-button type="primary" @click="updateDetail">确认</el-button>
+    </div>
+  </el-dialog>
+  <!--商品详情对话框结束-->
+
 
 </template>
 
 <script setup>
+import '@wangeditor/editor/dist/css/style.css'
 import categoryApi from "@/api/categoryApi.js";
 import goodsApi from "@/api/goodsApi.js";
-import {ref} from "vue";
+import {ref, onBeforeUnmount, shallowRef, onMounted} from "vue";
 import {ElMessage} from "element-plus";
+import {Editor, Toolbar} from "@wangeditor/editor-for-vue";
+
+
+
 
 
 //服务器路径
@@ -294,8 +324,10 @@ const goodsAdd = ref({
 
 //被修改的商品信息
 const goodsUpdate = ref({
+  id: 0,
   name: '',
   dscp: '',
+  detail: '',
   price: null,
   markPrice: null,
   purchasePrice: null,
@@ -312,6 +344,16 @@ const goodsUpdate = ref({
 const addDialogShow = ref(false);
 //是否显示修改的对话框
 const updateDialogShow = ref(false);
+//是否显示商品详情对话框
+const detailDialogShow = ref(false);
+//显示商品详情
+function showDetailDialog(goods) {
+  goodsUpdate.value.id = goods.id;
+  goodsUpdate.value.detail = goods.detail;
+  goodsUpdate.value.picList = goods.picList;
+  console.log(goodsUpdate.value)
+  detailDialogShow.value = true;
+}
 
 //添加商品
 function insert() {
@@ -319,7 +361,7 @@ function insert() {
   for (let i = 0; i < goodsAdd.value.picList.length; i++) {
     goodsAdd.value.picList[i].url = goodsAdd.value.picList[i].realName;
   }
-
+  console.log(goodsAdd.value)
   goodsApi.insert(goodsAdd.value)
       .then(resp => {
         if (resp.code == 10000) {
@@ -388,13 +430,47 @@ function selectById(id) {
         //处理图片
         for (let i = 0; i < goodsUpdate.value.picList.length; i++) {
           //保存图片真实的名字
-          goodsUpdate.value.realName = goodsUpdate.value.picList[i].url;
+          goodsUpdate.value.picList[i].realName = goodsUpdate.value.picList[i].url;
           //回显图片
           goodsUpdate.value.picList[i].url = `${SERVER_ADDR.value}/goods/pic/${goodsUpdate.value.picList[i].url}`;
         }
 
         updateDialogShow.value = true;
+        console.log(goodsUpdate.value)
       });
+}
+
+//修改商品详情
+function updateDetail() {
+  goodsApi.update(goodsUpdate.value)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+          //隐藏对话框
+          detailDialogShow.value = false;
+          //重置
+          goodsUpdate.value =  {
+            id: 0,
+            name: '',
+            dscp: '',
+            detail: '',
+            price: null,
+            markPrice: null,
+            purchasePrice: null,
+            color: null,
+            version: null,
+            count: null,
+            recom: null,
+            categoryId: null,
+            status: null,
+            picList: []
+          };
+          //查询第一页
+          selectByPage(pageInfo.value.pageNum);
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
 }
 //修改
 function update() {
@@ -411,8 +487,10 @@ function update() {
           updateDialogShow.value = false;
           //重置
           goodsUpdate.value =  {
+            id: 0,
             name: '',
             dscp: '',
+            detail: '',
             price: null,
             markPrice: null,
             purchasePrice: null,
@@ -446,6 +524,35 @@ function deleteGoods(id) {
       })
 }
 
+
+/*----------------------详情开始----------------------*/
+// 编辑器实例，必须用 shallowRef
+const editorRef = shallowRef()
+const mode = ref('default');
+
+const toolbarConfig = {}
+const editorConfig = {
+  placeholder: '请输入内容...',
+  MENU_CONF: {
+    uploadImage: {
+      server: `${SERVER_ADDR.value}/goods/upload`,
+      fieldName: 'pic',
+      customInsert(resp, insertFn) {
+        // res 即服务端的返回结果
+        let url = `${SERVER_ADDR.value}/goods/pic/${resp.data}`;
+        // url - 图片公国后台访问的地址
+        console.log("插入的图片 URL:", url);
+        insertFn(url)
+
+      },
+    }
+  }
+}
+const handleCreated = (editor) => {
+  editorRef.value = editor // 记录 editor 实例，重要！
+}
+/*----------------------详情结束----------------------*/
+
 //获取所有的夫分类
 function selectAllParent() {
   categoryApi.selectAllParent()
@@ -453,6 +560,7 @@ function selectAllParent() {
         allParent.value = resp.data;
       })
 }
+
 //分页搜索
 function selectByPage(pageNum) {
   goodsApi.selectByPage(condition.value, pageNum, 10)

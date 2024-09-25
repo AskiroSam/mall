@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stedu.mall.adminservice.mapper.AdminMapper">
+    <insert id="insert" parameterType="admin" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO `admin`(`username`, `password`, `salt`, `phone`, `email`, `realname`, `create_time`, `status`)
+        VALUES (#{username}, #{password}, #{salt}, #{phone}, #{email}, #{realname}, #{createTime}, #{status})
+    </insert>
+    <update id="update">
+        UPDATE `admin`
+        <set>
+            <if test="username!=null and username.length>0">
+                `username`=#{username},
+            </if>
+            <if test="password!=null and password.length>0">
+                `password`=#{password},
+            </if>
+            <if test="salt!=null and salt.length>0">
+                `salt`=#{salt},
+            </if>
+            <if test="phone!=null and phone.length>0">
+                `phone`=#{phone},
+            </if>
+            <if test="email!=null and email.length>0">
+                `email`=#{email},
+            </if>
+            <if test="realname!=null and realname.length>0">
+                `realname`=#{realname},
+            </if>
+            <if test="createTime!=null and createTime.length>0">
+                `create_time`=#{createTime},
+            </if>
+            <if test="status!=null">
+                `status`=#{status},
+            </if>
+        </set>
+        WHERE `id`=#{id}
+    </update>
+    <update id="setStatus">
+        UPDATE `admin` SET `status`=#{status} WHERE `id`=#{id}
+    </update>
+    <delete id="delete">
+        DELETE FROM `admin` WHERE `id`=#{id}
+    </delete>
+    <select id="selectById" resultType="admin">
+        SELECT * FROM `admin` WHERE `id`=#{id}
+    </select>
+    <select id="selectByCondition" resultType="admin">
+        SELECT * FROM `admin`
+        <where>
+            <if test="username!=null and username.length>0">
+                AND `username` LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="status!=null">
+                AND `status`=#{status}
+            </if>
+        </where>
+    </select>
+</mapper>
