@@ -1,61 +1,61 @@
-package com.stedu.mall.adminservice.controller;
+package com.stedu.mall.userservice.controller;
 
 import com.stedu.mall.common.bean.Admin;
-import com.stedu.mall.common.bean.Category;
 import com.stedu.mall.common.bean.RespBean;
+import com.stedu.mall.common.bean.User;
 import com.stedu.mall.common.exception.SteduException;
-import com.stedu.mall.common.service.AdminService;
+import com.stedu.mall.common.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/user")
+public class UserController {
     @Autowired
-    private AdminService adminService;
+    private UserService userService;
 
     //添加
     @PostMapping
-    public RespBean insert(@RequestBody Admin admin) throws SteduException {
-        adminService.insert(admin);
+    public RespBean insert(@RequestBody User user) throws SteduException {
+        userService.insert(user);
         return RespBean.ok("添加成功");
     }
 
     //根据id删除
     @DeleteMapping("/{id}")
     public RespBean delete(@PathVariable("id") Integer id) throws SteduException {
-        adminService.delete(id);
+        userService.delete(id);
         return RespBean.ok("删除成功");
     }
 
-    //修改可用状态
+    //修改状态
     @PutMapping("/{id}")
-    public RespBean setStatus(@PathVariable("id") Integer id) throws SteduException {
-        adminService.setStatus(id);
-        return RespBean.ok("设置禁用成功");
+    public RespBean setStatus(@PathVariable("id") Integer id, @RequestParam Integer status) throws SteduException {
+        userService.setStatus(id, status);
+        return RespBean.ok("修改状态成功");
     }
 
     //根据id修改
     @PutMapping
-    public RespBean update(@RequestBody Admin admin) throws SteduException {
-        adminService.update(admin);
+    public RespBean update(@RequestBody User user) throws SteduException {
+        userService.update(user);
         return RespBean.ok("修改成功");
     }
 
     //根据id查询
     @GetMapping("/{id}")
     public RespBean selectById(@PathVariable("id") Integer id) {
-        return RespBean.ok("", adminService.selectById(id));
+        return RespBean.ok("", userService.selectById(id));
     }
 
     //分页搜索
     @GetMapping("/search")
-    public RespBean selectByPage(Admin admin, Integer pageNum, Integer pageSize) {
+    public RespBean selectByPage(User user, Integer pageNum, Integer pageSize) {
         pageNum = pageNum == null ? 1 : pageNum;
         pageSize = pageSize == null ? 5 : pageSize;
 
-        Object data = adminService.selectByCondition(admin, pageNum, pageSize);
+        Object data = userService.selectByCondition(user, pageNum, pageSize);
         return RespBean.ok("", data);
     }
 }

@@ -39,7 +39,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public boolean update(Admin admin) throws SteduException {
         Admin oldAdmin = adminMapper.selectById(admin.getId());
-        if (admin.getUsername() != null && admin.getRealname().equals(oldAdmin.getUsername())) {
+        if (admin.getUsername() != null && admin.getUsername().equals(oldAdmin.getUsername())) {
             throw new SteduException("用户名已经存在，无法添加");
         }
         return false;
