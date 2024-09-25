@@ -1,4 +1,4 @@
-package com.stedu.mall.goodsservice.config;
+package com.stedu.mall.goodsservice.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.stedu.mall.common.bean.Goods;
@@ -8,6 +8,7 @@ import com.stedu.mall.common.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/goods")
 public class GoodsController {
@@ -17,6 +18,7 @@ public class GoodsController {
     //添加
     @PostMapping
     public RespBean insert(@RequestBody Goods goods) throws SteduException {
+        goods.setScore(5F);
         goodsService.insert(goods);
 
         return RespBean.ok("添加成功");

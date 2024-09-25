@@ -11,6 +11,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class GoodsPic implements Serializable {
     private Integer id; //主键
-    private String url; //图片地址
+    private String url; //图片名字
     private Integer goodsId; //商品ID - 商品主键
 }
