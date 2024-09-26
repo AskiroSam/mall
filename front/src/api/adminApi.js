@@ -1,4 +1,5 @@
 import service from "@/api/index.js";
+import qs from "qs";
 
 const adminApi = {
     //添加
@@ -28,6 +29,14 @@ const adminApi = {
         return service.get('/admin/search', {
             params: admin
         });
+    },
+    //获取验证码
+    captcha() {
+        return service.get("/admin/captcha");
+    },
+    //登录
+    login(admin) {
+        return service.post("/admin/login", qs.stringify(admin));
     }
 }
 export default adminApi;
