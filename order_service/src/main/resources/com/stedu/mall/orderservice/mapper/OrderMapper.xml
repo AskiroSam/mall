@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stedu.mall.orderservice.mapper.OrderMapper">
+    <resultMap id="orderMapper" type="order">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="create_time" property="createTime" />
+        <result column="express" property="express" />
+        <result column="pay_type" property="payType" />
+        <result column="addr_id" property="addrId" />
+        <result column="addr_detail" property="addrDetail" />
+        <result column="status" property="status" />
+        <!-- 详情 -->
+        <collection column="id" property="orderDetailList" ofType="orderDetail" select="com.stedu.mall.orderservice.mapper.OrderDetailMapper.selectByOrderId" />
+    </resultMap>
+    <insert id="insert">
+        INSERT INTO `order`(`id`, `user_id`, `create_time`, `express`, `pay_type`, `addr_id`, `addr_detail`, `status`)
+        VALUES (#{id}, #{userId}, #{createTime}, #{express}, #{payType}, #{addrId}, #{addrDetail}, #{status})
+    </insert>
+    <update id="update" parameterType="order">
+        UPDATE `order`
+        <set>
+            <if test="userId!=null">
+                `user_id`=#{userId},
+            </if>
+            <if test="createTime!=null">
+                `create_time`=#{createTime},
+            </if>
+            <if test="express!=null and express.length>0">
+                `express`=#{express},
+            </if>
+            <if test="payType!=null">
+                `pay_type`=#{payType},
+            </if>
+            <if test="addrId!=null">
+                `addr_id`=#{addrId},
+            </if>
+            <if test="addrDetail!=null">
+                `addr_detail`=#{addrDetail},
+            </if>
+            <if test="status!=null">
+                `status`=#{status},
+            </if>
+        </set>
+        WHERE `id`=#{id}
+    </update>
+    <delete id="delete">
+        DELETE FROM `order` WHERE `id`=#{id}
+    </delete>
+    <select id="selectByCondition" resultMap="orderMapper">
+        SELECT * FROM `goods`
+        <where>
+            <if test="userId!=null">
+                AND `user_id`=#{userId}
+            </if>
+            <if test="createTime!=null">
+                AND `create_time`=#{createTime}
+            </if>
+            <if test="express!=null and express.length>0">
+                AND `express` LIKE CONCAT('%', #{express}, '%')
+            </if>
+            <if test="payType!=null">
+                AND `pay_type`=#{payType}
+            </if>
+            <if test="addrId!=null">
+                AND `addr_id`=#{addrId}
+            </if>
+            <if test="addrDetail!=null and addrDetail.length>0">
+                AND `addr_detail`=#{addrDetail}
+            </if>
+            <if test="status!=null">
+                AND `status`=#{status}
+            </if>
+        </where>
+    </select>
+    <select id="selectById" resultMap="orderMapper">
+        SELECT * FROM `order` WHERE `id`=#{id}
+    </select>
+</mapper>

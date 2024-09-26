@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stedu.mall.orderservice.mapper.OrderDetailMapper">
+    <resultMap id="orderDetailMapper" type="orderDetail">
+        <id column="id" property="id" />
+        <result column="count" property="count" />
+        <result column="price" property="price" />
+        <result column="order_id" property="orderId" />
+        <result column="goods_id" property="goodsId" />
+        <!-- 详情 -->
+        <collection column="goods_id" property="goodsList" ofType="goods" select="com.stedu.mall.goodsservice.mapper.GoodsMapper.selectById" />
+    </resultMap>
+    <select id="selectByOrderId" resultMap="orderDetailMapper">
+        SELECT * FROM `order_detail` WHERE `order_id`=#{orderId}
+    </select>
+    <select id="selectById" resultMap="orderDetailMapper">
+        SELECT * FROM `order_detail` WHERE `goods_id`=#{goodsId}
+    </select>
+</mapper>
