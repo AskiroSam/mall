@@ -5,7 +5,9 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stedu.mall.common.bean.RespBean;
+import com.stedu.mall.common.config.WhiteListConfig;
 import com.stedu.mall.common.utils.JwtUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -15,8 +17,21 @@ import java.util.Map;
 
 @Component
 public class JwInterceptor implements HandlerInterceptor {
+    @Autowired
+    private WhiteListConfig whiteListConfig;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //获取请求路径
+        String path = request.getRequestURI();
+        //获取请求方式
+        String method = request.getMethod();
+        //白名单 -- 判断请求是否在白名单中 -- 放行
+        if (whiteListConfig.getRules()
+                .stream()
+                .anyMatch(rule -> rule.getMethod().equalsIgnoreCase(method) && path.matches(rule.getRegPath()))) {
+            return true;
+        }
+
         /*
          * 预判浏览器发送过来的JWT是否正确
          * 1.正确 - 放行

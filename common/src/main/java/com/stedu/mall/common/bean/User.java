@@ -1,5 +1,6 @@
 package com.stedu.mall.common.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class User {
     private String idCard;
     private String phone;
     private String email;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Date regTime;
     private BigDecimal money;
     private Integer status;

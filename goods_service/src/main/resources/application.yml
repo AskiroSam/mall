@@ -16,6 +16,14 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
   type-aliases-package: com.stedu.mall.common.bean
-
+#配置JWT拦截器放行的白名单
+white-list:
+  rules:
+    - regPath: ^/goods.*
+      method: GET
+    - regPath: ^/category/[\\d]+
+      method: GET
+# /category/{id} GET
+# /goods/** GET
 stedu:
   picDir: D:/pic/

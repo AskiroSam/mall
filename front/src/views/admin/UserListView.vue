@@ -76,6 +76,59 @@
       </el-card>
     </el-col>
   </el-row>
+
+
+  <!-- 添加用户的对话框开始 -->
+  <el-dialog v-model="addDialogShow" title="添加用户" width="500">
+    <el-form>
+      <el-form-item label="用户名:" label-width="18%" prop="sno">
+        <el-input v-model="userAdd.username" placeholder="请输入用户名" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="密码:" label-width="18%" prop="sno">
+        <el-input v-model="userAdd.password" placeholder="请输入密码" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="支付密码:" label-width="18%" prop="sno">
+        <el-input v-model="userAdd.payPassword" placeholder="请输入支付密码" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="真实姓名:" label-width="18%" prop="sno">
+        <el-input v-model="userAdd.realname" placeholder="请输入真实姓名" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="性别:" label-width="18%" prop="sno">
+        <el-input v-model="userAdd.sex" placeholder="请输入性别" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="身份证号:" label-width="18%" prop="sno">
+        <el-input v-model="userAdd.idCard" placeholder="请输入身份证号" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="手机号:" label-width="18%" prop="sno">
+        <el-input v-model="userAdd.phone" placeholder="请输入手机号" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="邮箱:" label-width="18%" prop="sno">
+        <el-input v-model="userAdd.email" placeholder="请输入邮箱" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="注册时间:" label-width="18%">
+        <el-date-picker v-model="userAdd.regTime" type="date" placeholder="请选择日期" format="yyyy-MM-dd HH:mm"
+                        value-format="yyyy-MM-dd HH:mm" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="余额:" label-width="18%" prop="sno">
+        <el-input v-model="userAdd.money" placeholder="请输入余额" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="状态:" label-width="18%" prop="sgender">
+        <el-radio-group v-model="userAdd.status" style="width: 300px">
+          <el-radio label="未认证" :value="0" size="large" />
+          <el-radio label="已认证" :value="1" size="large" />
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="addDialogShow = false">取消</el-button>
+        <el-button type="primary" @click="insert">确认</el-button>
+      </div>
+    </template>
+  </el-dialog>
+  <!-- 添加用户的对话框结束 -->
+
+
 </template>
 
 <script setup>
@@ -96,6 +149,23 @@ const pageInfo = ref({
 });
 
 const addDialogShow = ref(false);
+
+
+//被添加的用户信息
+const userAdd = ref({
+  username: null,
+  password: null,
+  payPassword: null,
+  realname: null,
+  sex: null,
+  idCard: null,
+  phone: null,
+  email: null,
+  regTime: null,
+  money: 0,
+  status: 0,
+});
+
 
 //停用管理员
 function setStatus(id) {

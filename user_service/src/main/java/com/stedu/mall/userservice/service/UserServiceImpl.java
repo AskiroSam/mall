@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,8 +21,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean insert(User user) {
-        String password = SecureUtil.md5(SecureUtil.md5(user.getPassword()));
-        user.setPassword(password);
+        //设置盐
+        String string = UUID.randomUUID().toString();
+        String last8Chars = string.substring(string.length() - 8);
+        user.setSalt(last8Chars);
+        //密码MD5和盐加密
+        String md5Pwd = SecureUtil.md5(SecureUtil.md5(user.getPassword() + user.getSalt()));
+        user.setPassword(md5Pwd);
         return userMapper.insert(user) == 1;
     }
 
