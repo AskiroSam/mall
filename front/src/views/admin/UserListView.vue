@@ -112,7 +112,7 @@ function setStatus(id) {
       })
 }
 
-//删除管理员
+//删除用户
 function deleteUser(id) {
   userApi.delete(id)
       .then(resp => {

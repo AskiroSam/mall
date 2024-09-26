@@ -55,4 +55,7 @@
             </if>
         </where>
     </select>
+    <select id="selectByUserName" resultType="admin">
+        SELECT * FROM `admin` WHERE `username`=#{username}
+    </select>
 </mapper>

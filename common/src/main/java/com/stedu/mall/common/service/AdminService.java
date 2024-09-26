@@ -19,4 +19,7 @@ public interface AdminService {
     //根据条件查询
     Object selectByCondition(Admin condition, Integer pageNum, Integer pageSize);
 
+
+    //登录
+    Admin login(String username, String password) throws SteduException;
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -20,9 +21,15 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean insert(Admin admin) {
+        //初始化状态
         admin.setStatus(1);
-        String password = SecureUtil.md5(SecureUtil.md5(admin.getPassword()));
-        admin.setPassword(password);
+        //设置盐
+        String string = UUID.randomUUID().toString();
+        String last8Chars = string.substring(string.length() - 8);
+        admin.setSalt(last8Chars);
+        //密码MD5和盐加密
+        String md5Pwd = SecureUtil.md5(SecureUtil.md5(admin.getPassword() + admin.getSalt()));
+        admin.setPassword(md5Pwd);
         return adminMapper.insert(admin) == 1;
     }
 
@@ -64,5 +71,22 @@ public class AdminServiceImpl implements AdminService {
 
             return pageInfo;
         }
+    }
+
+    @Override
+    public Admin login(String username, String password) throws SteduException {
+        //根据用户名进行查询
+        Admin admin = adminMapper.selectByUserName(username);
+        if (admin == null) {
+            throw new SteduException("用户名错误");
+        }
+        //对用户输入的密码进行加密 -- 使用MD5算法和盐进行加密
+        String md5Pwd = SecureUtil.md5(SecureUtil.md5(password + admin.getSalt()));
+        //对加密之后的密码和数据库中的密码进行比较
+        if (!md5Pwd.equals(admin.getPassword())) {
+            throw new SteduException("密码错误");
+        }
+
+        return admin;
     }
 }

@@ -18,4 +18,7 @@ public interface AdminMapper {
     Admin selectById(Integer id);
     //根据条件查询
     List<Admin> selectByCondition(Admin condition);
+
+    //根据用户名进行查询
+    Admin selectByUserName(String userName);
 }
