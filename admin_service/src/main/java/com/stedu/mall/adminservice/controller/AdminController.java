@@ -74,7 +74,7 @@ public class AdminController {
         LineCaptcha captcha = new LineCaptcha(120, 38, 4, 10);
         //生成唯一的key -- 雪花算法生成
         String key = IdUtil.getSnowflakeNextIdStr();
-        //将key和验证码的文本保存在Redis中
+        //将key和验证码的文本保存在Redis中 -- 超时时间60秒
         redisUtil.set(key, captcha.getCode(),60);
         //将验证码图片转换成Base64编码的形式
         String imageBase64Data = captcha.getImageBase64Data();
@@ -108,4 +108,6 @@ public class AdminController {
         return RespBean.ok("登录成功", jwtStr);
 
     }
+
+
 }
