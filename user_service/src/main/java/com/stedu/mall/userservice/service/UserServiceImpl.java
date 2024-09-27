@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public boolean insert(User user) {
+    public boolean insert(User user) throws SteduException {
         //设置盐
         String string = UUID.randomUUID().toString();
         String last8Chars = string.substring(string.length() - 8);
@@ -28,6 +28,12 @@ public class UserServiceImpl implements UserService {
         //密码MD5和盐加密
         String md5Pwd = SecureUtil.md5(SecureUtil.md5(user.getPassword() + user.getSalt()));
         user.setPassword(md5Pwd);
+        //身份证号不能重复
+        for (User checkUser : userMapper.selectAll()) {
+            if (user.getIdCard().equals(checkUser.getIdCard())) {
+                throw new SteduException("身份证号已存在，无法添加");
+            }
+        }
         return userMapper.insert(user) == 1;
     }
 
@@ -48,7 +54,7 @@ public class UserServiceImpl implements UserService {
         if (user.getIdCard() != null && !user.getIdCard().equals(oldUser.getIdCard())) {
             for (User checkUser : userMapper.selectAll()) {
                 if (user.getIdCard().equals(checkUser.getIdCard())) {
-                    throw new SteduException("身份证号码已存在，无法添加");
+                    throw new SteduException("身份证号码已存在，无法修改");
                 }
             }
         }

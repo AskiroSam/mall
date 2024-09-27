@@ -4,7 +4,7 @@
       <el-card style="opacity: 0.9;">
         <el-form :inline="true" class="demo-form-inline">
           <el-form-item>
-            <el-button type="primary" @click="addDialogShow = true">添加</el-button>
+            <el-button type="primary" @click="openUserAddDialog">添加</el-button>
           </el-form-item>
           <el-form-item style="float: right;">
             <el-input v-model="condition.username" placeholder="请输入要搜索的名称" @input="selectByPage(1);" />
@@ -108,7 +108,7 @@
         <el-input v-model="userAdd.email" placeholder="请输入邮箱" autocomplete="off" style="width: 300px" />
       </el-form-item>
       <el-form-item label="注册时间:" label-width="18%">
-        <el-date-picker v-model="userAdd.regTime" type="date" placeholder="请选择日期"  style="width: 300px" />
+        <el-date-picker v-model="userAdd.regTime" type="datetime" disabled placeholder="请选择日期"  style="width: 300px" />
       </el-form-item>
       <el-form-item label="余额:" label-width="18%" prop="sno">
         <el-input v-model="userAdd.money" placeholder="请输入余额" autocomplete="off" style="width: 300px" />
@@ -250,7 +250,11 @@ function selectById(id) {
       });
 }
 
-
+//添加用户时间
+function openUserAddDialog() {
+  addDialogShow.value = true;
+  userAdd.value.regTime = new Date(); // 设置当前时间为默认值
+}
 //添加
 function insert() {
   userApi.insert(userAdd.value)

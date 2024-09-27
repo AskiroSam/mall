@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserService {
     //添加
-    boolean insert(User user);
+    boolean insert(User user) throws SteduException;
     //删除
     boolean delete(Integer id);
     //修改认证状态
