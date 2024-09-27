@@ -24,11 +24,6 @@
             <artifactId>common</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.stedu.mall</groupId>
-            <artifactId>goods_service</artifactId>
-            <version>1.0.0</version>
-        </dependency>
 
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

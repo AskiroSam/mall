@@ -19,5 +19,6 @@ public class Order {
     private Integer addrId;
     private String addrDetail;
     private Integer status;
+    private User user;
     private List<OrderDetail> orderDetailList;
 }

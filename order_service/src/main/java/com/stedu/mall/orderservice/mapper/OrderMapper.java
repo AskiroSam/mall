@@ -9,7 +9,7 @@ public interface OrderMapper {
     //添加
     int insert(Order Order);
     //根据id删除
-    int delete(Integer id);
+    int delete(String id);
     //根据i修改
     int update(Order Order);
     //根据条件查询

@@ -11,8 +11,13 @@ const service = axios.create({
 //Axios的请求拦截器
 // service.interceptors.request.use(req => {
 //     const tokenStore = useTokenStore();
+//     if (tokenStore.tokenStr) {
+//         req.headers.token = tokenStore.tokenStr;
+//     }
+//     return req;
+// }, error => {
 //
-// })
+// });
 service.interceptors.request.use(function (config) {
     const tokenStore = useTokenStore();
     // 如果不是登录请求就要在请求头中添加token
