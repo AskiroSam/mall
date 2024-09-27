@@ -42,14 +42,11 @@ class GoodsServiceApplicationTests3 {
     @Test
     public void test04() {
         String path1 = "/goods/1";
-        String path2 = "/goods/2";
-        String path3 = "/goods";
+
 
         //要求：以/goods开始
         String reg = "^/goods.*";
         System.out.println(path1.matches(reg));
-        System.out.println(path2.matches(reg));
-        System.out.println(path3.matches(reg));
     }
 
     @Test

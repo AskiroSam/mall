@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+
 export const useTokenStore = defineStore("token", () => {
     //定义state - 需要分享的数据都要定义为state
     const token = ref(null);
@@ -11,7 +12,7 @@ export const useTokenStore = defineStore("token", () => {
     })
 
     //更新token
-    function updateToken(tk) {
+    function update(tk) {
         token.value = tk;
     }
 
@@ -20,7 +21,7 @@ export const useTokenStore = defineStore("token", () => {
         token.value = null;
     }
 
-    return { token, tokenStr, updateToken, $reset};
+    return { token, tokenStr, update, $reset};
 }, {
     persist: {
         key: 'token',

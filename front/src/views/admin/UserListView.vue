@@ -50,15 +50,14 @@
           <el-table-column label="状态">
             <template #default="scope">
               <el-tag type="primary" v-if="scope.row.status == 0">未认证</el-tag>
-              <el-tag type="warning" v-if="scope.row.status == 1">已认证</el-tag>
+              <el-tag type="success" v-if="scope.row.status == 1">已认证</el-tag>
               <el-tag type="warning" v-if="scope.row.status == 2">禁用</el-tag>
-              <el-tag type="warning" v-if="scope.row.status == 3">注销</el-tag>
+              <el-tag type="danger" v-if="scope.row.status == 3">注销</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="250px">
             <template #default="scope">
-              <el-button size="small" type="primary">修改</el-button>
-              <el-button size="small" type="primary">修改状态</el-button>
+              <el-button size="small" type="primary" @click="selectById(scope.row.id)">修改</el-button>
               <el-popconfirm title="你确定要删除该分类吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteUser(scope.row.id)">
                 <template #reference>
                   <el-button size="small" type="danger">删除</el-button>
@@ -93,8 +92,11 @@
       <el-form-item label="真实姓名:" label-width="18%" prop="sno">
         <el-input v-model="userAdd.realname" placeholder="请输入真实姓名" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="性别:" label-width="18%" prop="sno">
-        <el-input v-model="userAdd.sex" placeholder="请输入性别" autocomplete="off" style="width: 300px" />
+      <el-form-item label="性别:" label-width="18%" prop="sgender">
+        <el-radio-group v-model="userAdd.sex" style="width: 300px">
+          <el-radio label="男" :value='男' size="large" />
+          <el-radio label="女" :value='女' size="large" />
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="身份证号:" label-width="18%" prop="sno">
         <el-input v-model="userAdd.idCard" placeholder="请输入身份证号" autocomplete="off" style="width: 300px" />
@@ -106,8 +108,7 @@
         <el-input v-model="userAdd.email" placeholder="请输入邮箱" autocomplete="off" style="width: 300px" />
       </el-form-item>
       <el-form-item label="注册时间:" label-width="18%">
-        <el-date-picker v-model="userAdd.regTime" type="date" placeholder="请选择日期" format="yyyy-MM-dd HH:mm"
-                        value-format="yyyy-MM-dd HH:mm" style="width: 300px" />
+        <el-date-picker v-model="userAdd.regTime" type="date" placeholder="请选择日期"  style="width: 300px" />
       </el-form-item>
       <el-form-item label="余额:" label-width="18%" prop="sno">
         <el-input v-model="userAdd.money" placeholder="请输入余额" autocomplete="off" style="width: 300px" />
@@ -127,6 +128,61 @@
     </template>
   </el-dialog>
   <!-- 添加用户的对话框结束 -->
+
+
+  <!-- 修改用户的对话框开始 -->
+  <el-dialog v-model="updateDialogShow" title="添加用户" width="500">
+    <el-form>
+      <el-form-item label="用户名:" label-width="18%" prop="sno">
+        <el-input v-model="userUpdate.username" placeholder="请输入用户名" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="密码:" label-width="18%" prop="sno">
+        <el-input v-model="userUpdate.password" type="password"  placeholder="请输入密码" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="支付密码:" label-width="18%" prop="sno">
+        <el-input v-model="userUpdate.payPassword" type="password"  placeholder="请输入支付密码" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="真实姓名:" label-width="18%" prop="sno">
+        <el-input v-model="userUpdate.realname" placeholder="请输入真实姓名" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="性别:" label-width="18%" prop="sgender">
+        <el-radio-group v-model="userUpdate.sex" style="width: 300px">
+          <el-radio label="男" :value='男' size="large" />
+          <el-radio label="女" :value='女' size="large" />
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="身份证号:" label-width="18%" prop="sno">
+        <el-input v-model="userUpdate.idCard" placeholder="请输入身份证号" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="手机号:" label-width="18%" prop="sno">
+        <el-input v-model="userUpdate.phone" placeholder="请输入手机号" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="邮箱:" label-width="18%" prop="sno">
+        <el-input v-model="userUpdate.email" placeholder="请输入邮箱" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="注册时间:" label-width="18%">
+        <el-date-picker v-model="userUpdate.regTime" type="date" placeholder="请选择日期"  style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="余额:" label-width="18%" prop="sno">
+        <el-input v-model="userUpdate.money" placeholder="请输入余额" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="状态:" label-width="18%" prop="sgender">
+        <el-select v-model="userUpdate.status" placeholder="请选择状态" style="width: 300px">
+          <el-option label="未认证" :value="0" />
+          <el-option label="已认证" :value="1" />
+          <el-option label="禁用" :value="2" />
+          <el-option label="注销" :value="3" />
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="updateDialogShow = false">取消</el-button>
+        <el-button type="primary" @click="update">确认</el-button>
+      </div>
+    </template>
+  </el-dialog>
+  <!-- 修改用户的对话框结束 -->
 
 
 </template>
@@ -149,6 +205,7 @@ const pageInfo = ref({
 });
 
 const addDialogShow = ref(false);
+const updateDialogShow = ref(false);
 
 
 //被添加的用户信息
@@ -157,7 +214,7 @@ const userAdd = ref({
   password: null,
   payPassword: null,
   realname: null,
-  sex: null,
+  sex: '男',
   idCard: null,
   phone: null,
   email: null,
@@ -166,6 +223,79 @@ const userAdd = ref({
   status: 0,
 });
 
+//被修改的用户信息
+const userUpdate = ref({
+  username: null,
+  password: null,
+  payPassword: null,
+  realname: null,
+  sex: '',
+  idCard: null,
+  phone: null,
+  email: null,
+  regTime: null,
+  money: 0,
+  status: 0,
+});
+//被修改的用户状态信息
+const userStatusUpdate = ref({
+  status: 0,
+});
+//根据id查询被修改用户的信息
+function selectById(id) {
+  userApi.selectById(id)
+      .then(resp => {
+        userUpdate.value = resp.data;
+        updateDialogShow.value = true;
+      });
+}
+
+
+//添加
+function insert() {
+  userApi.insert(userAdd.value)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+          //隐藏对话框
+          addDialogShow.value = false;
+          //清空对话框
+          userAdd.value = {
+            username: null,
+            password: null,
+            payPassword: null,
+            realname: null,
+            sex: null,
+            idCard: null,
+            phone: null,
+            email: null,
+            regTime: null,
+            money: 0,
+            status: 0,
+          };
+          //查询第一页
+          selectByPage(1);
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      });
+}
+
+//修改
+function update() {
+  userApi.update(userUpdate.value)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+          //隐藏对话框
+          updateDialogShow.value = false;
+          //查询第一页
+          selectByPage(pageInfo.value.pageNum);
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
+}
 
 //停用管理员
 function setStatus(id) {

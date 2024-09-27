@@ -21,6 +21,11 @@ class AdminServiceApplicationTests {
     private AdminService adminService;
 
     @Test
+    public void test11() throws SteduException {
+        adminService.chgPwd("12345", "123", 1);
+    }
+
+    @Test
     public void test01() {
         redisUtil.set("name", "zhangsan");
     }

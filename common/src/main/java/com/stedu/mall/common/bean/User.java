@@ -23,7 +23,7 @@ public class User {
     private String idCard;
     private String phone;
     private String email;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date regTime;
     private BigDecimal money;
     private Integer status;

@@ -37,6 +37,10 @@ const adminApi = {
     //登录
     login(admin) {
         return service.post("/admin/login", qs.stringify(admin));
+    },
+    //获取已登录用户的信息
+    getInfo() {
+        return service.get("/admin/info");
     }
 }
 export default adminApi;

@@ -148,6 +148,7 @@
                    v-model:file-list="goodsAdd.picList"
                    name="pic"
                    list-type="picture-card"
+                   :headers="headers"
                    :on-success="picAddUploadSuccess"
                    :before-upload="beforeAvatarUpload" >
           <el-icon class="avatar-uploader-icon">
@@ -221,6 +222,7 @@
                    v-model:file-list="goodsUpdate.picList"
                    name="pic"
                    list-type="picture-card"
+                   :headers="headers"
                    :on-success="picUpdateUploadSuccess"
                    :before-upload="beforeAvatarUpload" >
           <el-icon class="avatar-uploader-icon">
@@ -269,13 +271,20 @@
 import '@wangeditor/editor/dist/css/style.css'
 import categoryApi from "@/api/categoryApi.js";
 import goodsApi from "@/api/goodsApi.js";
-import {ref, onBeforeUnmount, shallowRef, onMounted} from "vue";
+import {ref, onBeforeUnmount, shallowRef, onMounted, computed} from "vue";
 import {ElMessage} from "element-plus";
 import {Editor, Toolbar} from "@wangeditor/editor-for-vue";
+import { useTokenStore } from "@/stores/token.js";
 
 
 
-
+const tokenStore = useTokenStore();
+const headers = computed(() => {
+  const token = tokenStore.tokenStr;
+  return {
+    token: token
+  }
+})
 
 //服务器路径
 const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
@@ -361,7 +370,6 @@ function insert() {
   for (let i = 0; i < goodsAdd.value.picList.length; i++) {
     goodsAdd.value.picList[i].url = goodsAdd.value.picList[i].realName;
   }
-  console.log(goodsAdd.value)
   goodsApi.insert(goodsAdd.value)
       .then(resp => {
         if (resp.code == 10000) {
@@ -478,7 +486,6 @@ function update() {
   for (let i = 0; i < goodsUpdate.value.picList.length; i++) {
     goodsUpdate.value.picList[i].url = goodsUpdate.value.picList[i].realName;
   }
-
   goodsApi.update(goodsUpdate.value)
       .then(resp => {
         if (resp.code == 10000) {
@@ -537,6 +544,9 @@ const editorConfig = {
     uploadImage: {
       server: `${SERVER_ADDR.value}/goods/upload`,
       fieldName: 'pic',
+      headers: {
+        token: tokenStore.tokenStr
+      },
       customInsert(resp, insertFn) {
         // res 即服务端的返回结果
         let url = `${SERVER_ADDR.value}/goods/pic/${resp.data}`;

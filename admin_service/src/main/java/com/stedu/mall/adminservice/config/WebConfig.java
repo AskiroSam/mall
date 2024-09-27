@@ -1,5 +1,7 @@
 package com.stedu.mall.adminservice.config;
 
+
+
 import com.stedu.mall.common.interceptor.JwInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

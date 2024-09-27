@@ -16,3 +16,10 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
   type-aliases-package: com.stedu.mall.common.bean
+
+white-list:
+  rules:
+    - regPath: ^/user/captcha*
+      method: GET
+    - regPath: ^/user/login
+      method: POST

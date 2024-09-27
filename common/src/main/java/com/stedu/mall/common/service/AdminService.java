@@ -12,8 +12,10 @@ public interface AdminService {
     boolean delete(Integer id);
     //修改可用状态
     boolean setStatus(Integer id);
-    //修改
+    //修改个人信息
     boolean update(Admin admin) throws SteduException;
+    //修改密码
+    boolean chgPwd(String oldPwd, String newPwd, Integer id) throws SteduException;
     //根据id查询
     Admin selectById(Integer id);
     //根据条件查询

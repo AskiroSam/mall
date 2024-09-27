@@ -31,7 +31,7 @@ import adminApi from '@/api/adminApi';
 import router from '@/router';
 import { ElMessage } from 'element-plus';
 import { reactive, ref } from 'vue';
-import { useTokenStore } from '@/stores/token';
+import { useTokenStore } from '@/stores/token.js';
 
 const tokenStore = useTokenStore();
 
@@ -91,11 +91,11 @@ function login() {
                     type: 'success',
                     duration: 1200,
                     onClose: () => {
-                        //保存JWT到sessionStorage
-                        // sessionStorage.setItem('token', resp.data);    
+                        // //保存JWT到sessionStorage
+                        // sessionStorage.setItem('token', resp.data);
                               
                         //将jwt保存在tokenStore中
-                        tokenStore.updateToken(resp.data);
+                        tokenStore.update(resp.data);
                         
 ;                       //跳转到后台首页
                         router.push('/admin/index');
@@ -163,7 +163,6 @@ getCaptcha();
 }
 
 body {
-    background-image: url('../../images/background.jpeg');
     background-size: cover;
     /* 背景图片完全覆盖容器 */
     background-position: center;

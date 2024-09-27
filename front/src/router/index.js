@@ -7,10 +7,19 @@ import GoodsListView from "@/views/admin/GoodsListView.vue";
 import OrderListView from "@/views/admin/OrderListView.vue";
 import UserListView from "@/views/admin/UserListView.vue";
 import LoginView from "@/views/admin/LoginView.vue";
+import UserLoginView from "@/views/user/LoginView.vue"
+import UserHomeView from "@/views/user/HomeView.vue"
+import { useTokenStore } from "@/stores/token";
+
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
+        {
+          path: '/',
+          name: 'user_home',
+          component: UserHomeView
+        },
         {
           path: '/admin/login',
           name: '/admin_login',
@@ -48,8 +57,47 @@ const router = createRouter({
                     component: UserListView
                 }
             ]
+        }, {
+            path: '/user/login',
+            name: 'user_login',
+            component: UserLoginView
         }
     ]
 })
+
+/*
+* 导航守卫
+*   1.为什么要配置导航守卫
+*       判断页面跳转是不是合法
+*           合法 - 跳转
+*           不合法 - 不跳转/跳转到特定的页面
+*   2.应用
+*       判断是否已经登录
+*           登录 - 允许跳转
+*           未登录 - 跳转到登录页
+* */
+router.beforeEach((to, from) => {
+    //to - 要访问的位置 "/"
+    //from - 起始位置
+    // TODO 将来还会对其它的页面放行（例如：前台首页，搜索页，详情页，用户登录/注册页）
+    if (to.path == '/admin/login' || to.path == '/user/login' || to.path == "/") {
+        return true;
+    } else {
+        //判断是否有token 有-放行 没有-跳转到登录页
+        const tokenStore = useTokenStore();
+        if (tokenStore.tokenStr) {
+            return true;
+        } else {
+            //判断跳转到管理员登录页还是用户登录页
+            let currentPath = router.currentRoute.value.path;
+            if (currentPath.startsWith("/admin")) {
+                return "/admin/login";
+            } else {
+                return "/user/login";
+            }
+        }
+    }
+})
+
 
 export default router

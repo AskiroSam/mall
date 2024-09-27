@@ -37,17 +37,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean setStatus(Integer id, Integer status) {
-        return userMapper.setStatus(id, status) == 1;
+    public boolean setStatus(Integer status) {
+        return userMapper.setStatus(status) == 1;
     }
 
     @Override
     public boolean update(User user) throws SteduException {
         User oldUser = userMapper.selectById(user.getId());
-        if (user.getUsername() != null && user.getUsername().equals(oldUser.getUsername())) {
-            throw new SteduException("用户名已经存在，无法添加");
+        // 检查身份证号码是否已存在且与当前用户不同
+        if (user.getIdCard() != null && !user.getIdCard().equals(oldUser.getIdCard())) {
+            for (User checkUser : userMapper.selectAll()) {
+                if (user.getIdCard().equals(checkUser.getIdCard())) {
+                    throw new SteduException("身份证号码已存在，无法添加");
+                }
+            }
         }
-        return false;
+        return userMapper.update(user) == 1;
     }
 
     @Override
@@ -70,5 +75,10 @@ public class UserServiceImpl implements UserService {
 
             return pageInfo;
         }
+    }
+
+    @Override
+    public List<User> selectAll() {
+        return userMapper.selectAll();
     }
 }

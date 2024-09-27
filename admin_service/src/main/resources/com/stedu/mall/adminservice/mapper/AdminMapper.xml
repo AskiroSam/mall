@@ -14,9 +14,6 @@
             <if test="password!=null and password.length>0">
                 `password`=#{password},
             </if>
-            <if test="salt!=null and salt.length>0">
-                `salt`=#{salt},
-            </if>
             <if test="phone!=null and phone.length>0">
                 `phone`=#{phone},
             </if>
@@ -25,9 +22,6 @@
             </if>
             <if test="realname!=null and realname.length>0">
                 `realname`=#{realname},
-            </if>
-            <if test="createTime!=null and createTime.length>0">
-                `create_time`=#{createTime},
             </if>
             <if test="status!=null">
                 `status`=#{status},

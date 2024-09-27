@@ -30,9 +30,9 @@ public class UserController {
     }
 
     //修改状态
-    @PutMapping("/{id}")
-    public RespBean setStatus(@PathVariable("id") Integer id, @RequestParam Integer status) throws SteduException {
-        userService.setStatus(id, status);
+    @PutMapping("/{status}")
+    public RespBean setStatus(Integer status) throws SteduException {
+        userService.setStatus(status);
         return RespBean.ok("修改状态成功");
     }
 

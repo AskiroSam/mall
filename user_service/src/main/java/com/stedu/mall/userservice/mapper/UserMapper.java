@@ -12,11 +12,13 @@ public interface UserMapper {
     //根据id删除
     int delete(Integer id);
     //修改状态
-    int setStatus(@Param("id") Integer id, @Param("status") Integer status);
+    int setStatus(Integer status);
     //根据id修改
     int update(User user);
     //根据id查询
     User selectById(Integer id);
     //根据条件查询
     List<User> selectByCondition(User condition);
+    //查询所有
+    List<User> selectAll();
 }

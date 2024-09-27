@@ -5,6 +5,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stedu.mall.common.bean.RespBean;
+import com.stedu.mall.common.bean.Rule;
 import com.stedu.mall.common.config.WhiteListConfig;
 import com.stedu.mall.common.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -25,8 +27,18 @@ public class JwInterceptor implements HandlerInterceptor {
         String path = request.getRequestURI();
         //获取请求方式
         String method = request.getMethod();
+        //// 获取白名单规则
+        //List<Rule> rules = whiteListConfig.getRules();
+        //// 规则为空
+        //if (rules == null || rules.isEmpty()) {
+        //    return false;
+        //} else if(whiteListConfig.getRules()
+        //        .stream()
+        //        .anyMatch(rule -> rule.getMethod().equalsIgnoreCase(method) && path.matches(rule.getRegPath()))) {
+        //    return true;
+        //}
         //白名单 -- 判断请求是否在白名单中 -- 放行
-        if (whiteListConfig.getRules()
+        if (whiteListConfig.getRules() != null && whiteListConfig.getRules()
                 .stream()
                 .anyMatch(rule -> rule.getMethod().equalsIgnoreCase(method) && path.matches(rule.getRegPath()))) {
             return true;

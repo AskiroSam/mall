@@ -53,6 +53,33 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public boolean chgPwd(String oldPwd, String newPwd, Integer id) throws SteduException {
+        /*
+        * 判断原密码是否正确
+        *   1.根据id查询用户信息 - 获取原密码和盐
+        *   2.使用用户输入的新密码和盐加密
+        *   3.和数据库中的原密码比较
+        * */
+        //根据id查询用户信息 - 获取原密码和盐
+        Admin admin = adminMapper.selectById(id);
+        String salt = admin.getSalt();
+        //使用用户输入的新密码和盐加密 -> 加密之后的用户输入的密码
+        String md5InputOldPwd = SecureUtil.md5(SecureUtil.md5(oldPwd + salt));
+        if (!admin.getPassword().equals(md5InputOldPwd)) {
+            throw new SteduException("原密码输入错误，请确认后重新输入");
+        }
+        //对新密码结合盐进行加密
+        String md5NewPwd = SecureUtil.md5(SecureUtil.md5(newPwd + salt));
+
+        //修改密码
+        admin = new Admin();
+        admin.setId(id);
+        admin.setPassword(md5NewPwd);
+
+        return adminMapper.update(admin) == 1;
+    }
+
+    @Override
     public Admin selectById(Integer id) {
         return adminMapper.selectById(id);
     }

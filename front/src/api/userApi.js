@@ -14,8 +14,8 @@ const userApi = {
         return service.put('/user', user);
     },
     //修改可用状态
-    setStatus(id) {
-        return service.put(`/user/${id}`);
+    setStatus(status) {
+        return service.put(`/user/${status}`);
     },
     //根据id查询
     selectById(id) {

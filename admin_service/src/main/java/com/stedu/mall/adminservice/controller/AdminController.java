@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -45,9 +46,8 @@ public class AdminController {
     }
 
     //根据id修改
-    @PutMapping
-    public RespBean update(@RequestBody Admin admin) throws SteduException {
-        adminService.update(admin);
+    @PutMapping("/chgPwd")
+    public RespBean update(String oldPwd, String newPwd, @RequestHeader("token") String token) throws SteduException {
         return RespBean.ok("修改成功");
     }
 
@@ -107,6 +107,17 @@ public class AdminController {
         //将token返回给用户
         return RespBean.ok("登录成功", jwtStr);
 
+    }
+
+    @GetMapping("/info")
+    public RespBean getLogin(@RequestHeader("token") String token) {
+        //解析token
+        Map<String, Object> map = JwtUtils.parseJwtToMap(token);
+        //获取用户id - 根据id查询用户的信息
+        Integer id = (Integer) map.get("id");
+        Admin admin = adminService.selectById(id);
+        //返回
+        return RespBean.ok("", admin);
     }
 
 

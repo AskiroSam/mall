@@ -15,10 +15,10 @@
             <img src="../.././images/MyLogo2.png" style="height: 40px; width: 190px;">
         </el-menu-item>
         <el-sub-menu index="2">
-          <template #title>Admin</template>
+          <template #title>{{ admin.username }}</template>
           <el-menu-item index="center">个人中心</el-menu-item>
           <el-menu-item index="chgPwd">修改密码</el-menu-item>
-          <el-menu-item index="logOut">退出</el-menu-item>
+          <el-menu-item index="logOut" @click="logout">退出</el-menu-item>
         </el-sub-menu>
       </el-menu>
     </el-header>
@@ -94,7 +94,31 @@
 <script setup>
 import router from "@/router/index.js";
 import {HomeFilled} from "@element-plus/icons-vue";
+import { useTokenStore } from "@/stores/token.js";
+import adminApi from "@/api/adminApi.js";
+import {ref} from "vue";
 
+const tokenStore = useTokenStore();
+const admin =  ref({
+  username: null
+})
+
+//退出
+function logout() {
+  //将token重置
+  tokenStore.$reset();
+  //跳转到管理员登录
+  router.push("/admin/login");
+}
+
+//获取已登录用户的信息
+function getInfo() {
+  adminApi.getInfo()
+      .then(resp => {
+        admin.value = resp.data;
+      })
+}
+getInfo();
 </script>
 
 <style scoped>

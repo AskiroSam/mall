@@ -67,4 +67,7 @@
             </if>
         </where>
     </select>
+    <select id="selectAll" resultType="user">
+        SELECT * FROM `user`;
+    </select>
 </mapper>
