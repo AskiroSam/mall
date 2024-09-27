@@ -21,4 +21,7 @@ public interface AdminMapper {
 
     //根据用户名进行查询
     Admin selectByUserName(String userName);
+
+    //查询所哟
+    List<Admin> selectAll();
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AdminService {
     //添加
-    boolean insert(Admin admin);
+    boolean insert(Admin admin) throws SteduException;
     //删除
     boolean delete(Integer id);
     //修改可用状态
@@ -21,7 +21,9 @@ public interface AdminService {
     //根据条件查询
     Object selectByCondition(Admin condition, Integer pageNum, Integer pageSize);
 
-
     //登录
     Admin login(String username, String password) throws SteduException;
+
+    //查询所有
+    List<Admin> selectAll();
 }

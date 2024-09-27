@@ -52,4 +52,7 @@
     <select id="selectByUserName" resultType="admin">
         SELECT * FROM `admin` WHERE `username`=#{username}
     </select>
+    <select id="selectAll" resultType="admin">
+        SELECT * FROM `admin`;
+    </select>
 </mapper>

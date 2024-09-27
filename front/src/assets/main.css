@@ -12,4 +12,14 @@ body,
 .el-container,
 ul {
   height: 100%;
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+.center {
+  width: 1200px;
+  margin: auto;
 }

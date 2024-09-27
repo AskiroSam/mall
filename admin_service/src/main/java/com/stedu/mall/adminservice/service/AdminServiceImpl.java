@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.stedu.mall.adminservice.mapper.AdminMapper;
 import com.stedu.mall.common.bean.Admin;
 import com.stedu.mall.common.bean.Category;
+import com.stedu.mall.common.bean.User;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class AdminServiceImpl implements AdminService {
     private AdminMapper adminMapper;
 
     @Override
-    public boolean insert(Admin admin) {
+    public boolean insert(Admin admin) throws SteduException {
         //初始化状态
         admin.setStatus(1);
         //设置盐
@@ -30,6 +31,12 @@ public class AdminServiceImpl implements AdminService {
         //密码MD5和盐加密
         String md5Pwd = SecureUtil.md5(SecureUtil.md5(admin.getPassword() + admin.getSalt()));
         admin.setPassword(md5Pwd);
+        //用户名不能重复
+        for (Admin checkAdmin : adminMapper.selectAll()) {
+            if (admin.getUsername().equals(checkAdmin.getUsername())) {
+                throw new SteduException("用户名已存在，无法添加");
+            }
+        }
         return adminMapper.insert(admin) == 1;
     }
 
@@ -40,7 +47,15 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean setStatus(Integer id) {
-        return adminMapper.setStatus(id, 1) == 1;
+        Admin admin = adminMapper.selectById(id);
+        Integer status = admin.getStatus();
+        Integer newStatus = 0;
+        if (status == 1) {
+            newStatus = 0;
+        } else if (status == 0) {
+            newStatus = 1;
+        }
+        return adminMapper.setStatus(id, newStatus) == 1;
     }
 
     @Override
@@ -49,7 +64,7 @@ public class AdminServiceImpl implements AdminService {
         if (admin.getUsername() != null && admin.getUsername().equals(oldAdmin.getUsername())) {
             throw new SteduException("用户名已经存在，无法添加");
         }
-        return false;
+        return adminMapper.update(admin) == 1;
     }
 
     @Override
@@ -115,5 +130,10 @@ public class AdminServiceImpl implements AdminService {
         }
 
         return admin;
+    }
+
+    @Override
+    public List<Admin> selectAll() {
+        return adminMapper.selectAll();
     }
 }

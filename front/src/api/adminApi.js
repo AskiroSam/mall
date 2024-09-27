@@ -41,6 +41,14 @@ const adminApi = {
     //获取已登录用户的信息
     getInfo() {
         return service.get("/admin/info");
-    }
+    },
+    //修改密码
+    chgPwd(chgPwdObj) {
+        return service.put("/admin/chgPwd", qs.stringify(chgPwdObj));
+    },
+    //修改个人信息
+    chgInfo(admin) {
+        return service.put("/admin/chgInfo", admin);
+    },
 }
 export default adminApi;

@@ -163,6 +163,7 @@ getCaptcha();
 }
 
 body {
+    background-image: url('../../images/2.jpg');
     background-size: cover;
     /* 背景图片完全覆盖容器 */
     background-position: center;

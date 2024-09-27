@@ -2,36 +2,14 @@
   <el-row>
     <el-col :span="24">
       <el-card style="opacity: 0.9;">
-        <!--<el-form :inline="true" class="demo-form-inline">-->
-        <!--  <el-form-item>-->
-        <!--    <el-button type="primary" @click="addDialogShow = true">添加</el-button>-->
-        <!--  </el-form-item>-->
-        <!--  <el-form-item style="float: right;">-->
-        <!--    <el-input v-model="condition.name" placeholder="请输入要搜索的名称" @input="selectByPage(1);" />-->
-        <!--  </el-form-item>-->
-        <!--  <el-form-item style="float: right;">-->
-        <!--    <el-select-->
-        <!--        v-model="condition.status"-->
-        <!--        clearable placeholder="请选择是否上架"-->
-        <!--        :value-on-clear="null"-->
-        <!--        style="width: 200px;"-->
-        <!--        @change="selectByPage(1)">-->
-        <!--      <el-option label="上架" value="1" />-->
-        <!--      <el-option label="下架" value="0" />-->
-        <!--    </el-select>-->
-        <!--  </el-form-item>-->
-        <!--  <el-form-item style="float: right;">-->
-        <!--    <el-select-->
-        <!--        v-model="condition.parentId"-->
-        <!--        clearable placeholder="请选择夫分类"-->
-        <!--        :value-on-clear="null"-->
-        <!--        style="width: 200px;"-->
-        <!--        @change="selectByPage(1)">-->
-        <!--      <el-option label="没有夫分类" value="0" />-->
-        <!--      <el-option v-for="(parent, item) in allParent" :key="item" :label="parent.name" :value="parent.id" />-->
-        <!--    </el-select>-->
-        <!--  </el-form-item>-->
-        <!--</el-form>-->
+        <el-form :inline="true" class="demo-form-inline">
+          <el-form-item>
+            <el-button type="primary" @click="openAdminAddDialog">添加</el-button>
+          </el-form-item>
+          <el-form-item style="float: right;">
+            <el-input v-model="condition.username" placeholder="请输入要搜索的名称" @input="selectByPage(1);" />
+          </el-form-item>
+        </el-form>
         <el-table :data="pageInfo.list" border style="width: 100%">
           <el-table-column prop="id" label="ID" />
           <el-table-column prop="username" label="名称" />
@@ -54,9 +32,9 @@
               <el-tag type="warning" v-if="scope.row.status == 0">正常</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="150px">
+          <el-table-column label="操作" width="200px">
             <template #default="scope">
-              <el-button size="small" type="primary" @click="setStatus(scope.row.id)">停用</el-button>
+              <el-button size="small" type="primary" @click="setStatus(scope.row.id)">停用/启用</el-button>
               <el-popconfirm title="你确定要删除该分类吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteAdmin(scope.row.id)">
                 <template #reference>
                   <el-button size="small" type="danger">删除</el-button>
@@ -74,6 +52,45 @@
       </el-card>
     </el-col>
   </el-row>
+
+  <!-- 添加管理员对话框开始 -->
+  <el-dialog v-model="adminAddDiaLogShow" title="添加管理员" width="500">
+    <el-form>
+      <el-form-item label="用户名:" label-width="18%" prop="sno">
+        <el-input v-model="adminAdd.username" placeholder="请输入用户名" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="密码:" label-width="18%" prop="sname">
+        <el-input type="password" v-model="adminAdd.password" placeholder="请输入密码" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="手机号:" label-width="18%" prop="sname">
+        <el-input v-model="adminAdd.phone" placeholder="请输入手机号" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="邮箱:" label-width="18%" prop="sname">
+        <el-input v-model="adminAdd.email" placeholder="请输入邮箱" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="真实姓名:" label-width="18%" prop="sname">
+        <el-input type="password" v-model="adminAdd.realname" placeholder="请输入真实姓名" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="注册时间:" label-width="18%">
+        <el-date-picker v-model="adminAdd.createTime" type="datetime" disabled placeholder="请选择日期"  style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="状态:" label-width="18%" prop="sgender">
+        <el-radio-group v-model="adminAdd.status" style="width: 300px">
+          <el-radio label="正常" :value="0" size="large" />
+          <el-radio label="禁用" :value="1" size="large" />
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="adminAddDiaLogShow = false">取消</el-button>
+        <el-button type="primary" @click="insert">确认</el-button>
+      </div>
+    </template>
+  </el-dialog>
+  <!-- 添加管理员对话框结束 -->
+
+
 </template>
 
 <script setup>
@@ -93,6 +110,52 @@ const pageInfo = ref({
   pageNum: 0
 });
 
+//添加管理员的信息
+const adminAdd = ref({
+  id: 0,
+  username: null,
+  password: null,
+  phone: null,
+  email: null,
+  realname: null,
+  createTime: null,
+  status: 0,
+});
+
+//添加管理员对话框是否显示
+const adminAddDiaLogShow = ref(false);
+
+
+// 打开添加管理员对话框并设置默认创建时间
+function openAdminAddDialog() {
+  adminAddDiaLogShow.value = true;
+  adminAdd.value.createTime = new Date(); // 设置当前时间为默认值
+}
+//添加管理员
+function insert() {
+  adminApi.insert(adminAdd.value)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+          //隐藏对话框
+          adminAddDiaLogShow.value = false;
+          //清空对话框
+          adminAdd.value = {
+            id: 0,
+            username: null,
+            password: null,
+            phone: null,
+            email: null,
+            realname: null,
+            status: 0,
+          };
+          //查询第一页
+          selectByPage(1);
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
+}
 //停用管理员
 function setStatus(id) {
   adminApi.setStatus(id)

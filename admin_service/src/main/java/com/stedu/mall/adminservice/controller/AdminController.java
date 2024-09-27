@@ -42,13 +42,28 @@ public class AdminController {
     @PutMapping("/{id}")
     public RespBean setStatus(@PathVariable("id") Integer id) throws SteduException {
         adminService.setStatus(id);
-        return RespBean.ok("设置禁用成功");
+        return RespBean.ok("修改状态成功");
+    }
+
+    //修改管理员信息
+    @PutMapping("/chgInfo")
+    public RespBean chgInfo(@RequestBody Admin admin) throws SteduException {
+        admin.setUsername(null);
+        adminService.update(admin);
+
+        return RespBean.ok("修改个人信息成功");
     }
 
     //根据id修改
     @PutMapping("/chgPwd")
-    public RespBean update(String oldPwd, String newPwd, @RequestHeader("token") String token) throws SteduException {
-        return RespBean.ok("修改成功");
+    public RespBean chgPwd(String oldPwd, String newPwd, String newPwd1, @RequestHeader("token") String token) throws SteduException {
+        if (!newPwd.equals(newPwd1)) {
+            throw new SteduException("两次输入的新密码不一致，无法修改");
+        }
+        Map<String, Object> map = JwtUtils.parseJwtToMap(token);
+        Integer id = (Integer)map.get("id");
+        adminService.chgPwd(oldPwd, newPwd, id);
+        return RespBean.ok("修改密码成功，请重新登录");
     }
 
     //根据id查询
@@ -119,6 +134,8 @@ public class AdminController {
         //返回
         return RespBean.ok("", admin);
     }
+
+
 
 
 }

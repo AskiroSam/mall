@@ -21,7 +21,6 @@ public class Admin {
     private String phone;
     private String email;
     private String realname;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Date createTime;
     private Integer status;
 }
