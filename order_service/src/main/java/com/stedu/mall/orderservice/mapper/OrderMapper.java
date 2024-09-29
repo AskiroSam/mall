@@ -1,5 +1,6 @@
 package com.stedu.mall.orderservice.mapper;
 
+import com.github.pagehelper.PageInfo;
 import com.stedu.mall.common.bean.Goods;
 import com.stedu.mall.common.bean.Order;
 

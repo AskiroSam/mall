@@ -22,11 +22,11 @@ const orderApi = {
         return service.get(`/user/${id}`);
     },
     //分页搜索
-    selectByPage(user, pageNum, pageSize) {
-        user.pageNum = pageNum;
-        user.pageSize = pageSize;
-        return service.get('/user/search', {
-            params: user
+    selectByPage(order, pageNum, pageSize) {
+        order.pageNum = pageNum;
+        order.pageSize = pageSize;
+        return service.get('/order', {
+            params: order
         });
     }
 }

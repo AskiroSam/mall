@@ -16,6 +16,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+
     //添加
     @PostMapping
     public RespBean insert(@RequestBody Category category) throws SteduException {

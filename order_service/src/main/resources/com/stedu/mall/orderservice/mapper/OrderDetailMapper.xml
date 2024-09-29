@@ -1,10 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.stedu.mall.orderservice.mapper.OrderDetailMapper">
+    <insert id="insert" parameterType="orderDetail">
+        INSERT INTO `order_detail`(`count`, `price`, `order_id`, `goods_id`) VALUES
+        <foreach collection="orderDetailList" item="detail" separator=",">
+            (#{detail.count}, #{detail.price}, #{detail.orderId}, #{detail.goodsId})
+        </foreach>
+    </insert>
+    <update id="update">
+        UPDATE `order_detail`
+        <set>
+            <if test="count!=null">
+                `count`=#{count},
+            </if>
+            <if test="price!=null and price.length>0">
+                `price`=#{price},
+            </if>
+        </set>
+        WHERE `id`=#{id}
+    </update>
+    <delete id="delete" parameterType="orderDetail">
+        DELETE FROM `order_detail` WHERE `order_id`=#{orderId}
+    </delete>
     <select id="selectByOrderId" resultType="orderDetail">
         SELECT * FROM `order_detail` WHERE `order_id`=#{orderId}
     </select>
-    <select id="selectById" resultType="orderDetail">
+    <select id="selectByGoodsId" resultType="orderDetail">
         SELECT * FROM `order_detail` WHERE `goods_id`=#{goodsId}
     </select>
 </mapper>

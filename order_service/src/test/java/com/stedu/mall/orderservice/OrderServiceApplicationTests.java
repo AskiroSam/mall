@@ -17,9 +17,9 @@ class OrderServiceApplicationTests {
     void test01() {
         System.out.println(orderMapper.selectById("1762766797406343168"));
     }
-    @Test
-    void test02() {
-        System.out.println(orderDetailMapper.selectById(1));
-    }
+    //@Test
+    //void test02() {
+    //    System.out.println(orderDetailMapper.selectById(1));
+    //}
 
 }

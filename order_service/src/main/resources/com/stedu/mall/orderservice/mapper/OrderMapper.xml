@@ -48,8 +48,11 @@
         DELETE FROM `order` WHERE `id`=#{id}
     </delete>
     <select id="selectByCondition" resultMap="orderMapper">
-        SELECT * FROM `goods`
+        SELECT * FROM `order`
         <where>
+            <if test="id!=null and id.length>0">
+                AND `id`=#{id}
+            </if>
             <if test="userId!=null">
                 AND `user_id`=#{userId}
             </if>
