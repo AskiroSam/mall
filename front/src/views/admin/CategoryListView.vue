@@ -203,6 +203,7 @@ import categoryApi from "@/api/categoryApi.js";
 import {computed, ref} from "vue";
 import {ElMessage} from "element-plus";
 import {useTokenStore} from "@/stores/token.js";
+import goodsApi from "@/api/goodsApi.js";
 
 const tokenStore = useTokenStore();
 const headers = computed(() => {
@@ -230,6 +231,7 @@ const pageInfo = ref({
   pageSize: 0,
   pageNum: 0
 });
+
 
 //被添加的分类信息
 const categoryAdd = ref({

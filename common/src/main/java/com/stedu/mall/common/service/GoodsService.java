@@ -11,6 +11,11 @@ public interface GoodsService {
     void delete(Integer id) throws SteduException;
     //根据id修改
     void update(Goods goods) throws SteduException;
+    //是否推荐
+    boolean chgRecom(Goods goods);
+    //是否上级
+    boolean chgStatus(Goods goods);
+
     //根据id查询
     Goods selectById(Integer id);
     //搜索 - 分页查询

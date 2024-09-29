@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.stedu.mall.common.bean.Category;
 import com.stedu.mall.common.bean.Goods;
+import com.stedu.mall.common.bean.RespBean;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.GoodsService;
 import com.stedu.mall.goodsservice.mapper.CategoryMapper;
@@ -153,6 +154,16 @@ public class GoodsServiceImpl implements GoodsService {
             //添加图片
             goodsPicMapper.insert(newInfo.getPicList());
         }
+    }
+
+    @Override
+    public boolean chgRecom(Goods goods) {
+        return goodsMapper.update(goods) == 1;
+    }
+
+    @Override
+    public boolean chgStatus(Goods goods) {
+        return goodsMapper.update(goods) == 1;
     }
 
     @Override

@@ -13,6 +13,14 @@ const goodsApi = {
     update(goods) {
         return service.put('/goods', goods);
     },
+    //是否推荐
+    chgRecom(goods) {
+        return service.put(`/goods/chgRecom`, goods);
+    },
+    //是否上架
+    chgStatus(goods) {
+        return service.put(`/goods/chgStatus`, goods);
+    },
     //根据id查询
     selectById(id) {
     return service.get(`/goods/${id}`);

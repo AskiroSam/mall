@@ -44,8 +44,16 @@
           <el-table-column prop="count" label="数量" />
           <el-table-column label="是否推荐">
             <template #default="scope">
-              <el-tag type="primary" v-if="scope.row.recom == 1">推荐</el-tag>
-              <el-tag type="warning" v-if="scope.row.recom == 0">不推荐</el-tag>
+              <el-switch
+                  v-model="scope.row.recom"
+                  inline-prompt
+                  :inactive-value="0"
+                  :active-value="1"
+                  inactive-text="不推荐"
+                  active-text="推荐"
+                  style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                  @change = "chgRecom(scope.row.id, scope.row.recom)"
+              />
             </template>
           </el-table-column>
           <el-table-column label="分类">
@@ -54,10 +62,18 @@
             </template>
           </el-table-column>
           <el-table-column prop="score" label="评分"  />
-          <el-table-column label="是否上架">
+          <el-table-column label="是否推荐">
             <template #default="scope">
-              <el-tag type="primary" v-if="scope.row.status == 1">上架</el-tag>
-              <el-tag type="warning" v-if="scope.row.status == 0">下架</el-tag>
+              <el-switch
+                  v-model="scope.row.status"
+                  inline-prompt
+                  :inactive-value="0"
+                  :active-value="1"
+                  inactive-text="下架"
+                  active-text="上架"
+                  style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                  @change = "chgStatus(scope.row.id, scope.row.status)"
+              />
             </template>
           </el-table-column>
           <el-table-column label="图片">
@@ -511,6 +527,42 @@ function update() {
           };
           //查询第一页
           selectByPage(pageInfo.value.pageNum);
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
+}
+
+//是否推荐
+function chgRecom(id, recom) {
+  const goods = {
+    id,
+    recom
+  }
+
+  goodsApi.chgRecom(goods)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+          selectByPage(pageInfo.value.pageNum)
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
+}
+
+//是否上架
+function chgStatus(id, status) {
+  const goods = {
+    id,
+    status
+  }
+
+  goodsApi.chgStatus(goods)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+          selectByPage(pageInfo.value.pageNum)
         } else {
           ElMessage.error(resp.msg);
         }

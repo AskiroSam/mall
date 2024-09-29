@@ -1,6 +1,7 @@
 package com.stedu.mall.goodsservice.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.stedu.mall.common.bean.Category;
 import com.stedu.mall.common.bean.Goods;
 import com.stedu.mall.common.bean.RespBean;
 import com.stedu.mall.common.exception.SteduException;
@@ -39,6 +40,21 @@ public class GoodsController {
 
         return RespBean.ok("修改成功");
     }
+
+    //修改是否推荐
+    @PutMapping("/chgRecom")
+    public RespBean chgRecom(@RequestBody Goods goods) throws SteduException {
+        goodsService.chgRecom(goods);
+        return RespBean.ok("修改成功");
+    }
+
+    //修改是否上架
+    @PutMapping("/chgStatus")
+    public RespBean chgStatus(@RequestBody Goods goods) throws SteduException {
+        goodsService.chgStatus(goods);
+        return RespBean.ok("修改成功");
+    }
+
 
     //搜索
     @GetMapping
