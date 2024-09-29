@@ -1,5 +1,5 @@
 <template>
-login
+reg
 </template>
 
 <script setup>

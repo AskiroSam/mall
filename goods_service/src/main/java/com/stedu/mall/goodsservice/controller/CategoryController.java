@@ -38,11 +38,25 @@ public class CategoryController {
         return RespBean.ok("修改成功");
     }
 
+    //修改是否推荐
+    @PutMapping("/chgRecom")
+    public RespBean chgRecom(@RequestBody Category category) throws SteduException {
+        categoryService.update(category);
+        return RespBean.ok("修改成功");
+    }
+
+    //修改是否上架
+    @PutMapping("/chgStatus")
+    public RespBean chgStatus(@RequestBody Category category) throws SteduException {
+        categoryService.update(category);
+        return RespBean.ok("修改成功");
+    }
+
     //分页搜索
     @GetMapping("/search")
     public RespBean selectByPage(Category category, Integer pageNum, Integer pageSize) {
-       pageNum = pageNum == null ? 1 : pageNum;
-       pageSize = pageSize == null ? 5 : pageSize;
+       //pageNum = pageNum == null ? 1 : pageNum;
+       //pageSize = pageSize == null ? 5 : pageSize;
 
        Object data = categoryService.selectByCondition(category, pageNum, pageSize);
        return RespBean.ok("", data);

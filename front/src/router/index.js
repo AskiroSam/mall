@@ -9,6 +9,9 @@ import UserListView from "@/views/admin/UserListView.vue";
 import LoginView from "@/views/admin/LoginView.vue";
 import UserLoginView from "@/views/user/LoginView.vue"
 import UserHomeView from "@/views/user/HomeView.vue"
+import UserIndexView from "@/views/user/IndexView.vue"
+import SearchView from "@/views/user/SearchView.vue"
+import RegView from "@/views/user/RegView.vue";
 import { useTokenStore } from "@/stores/token";
 
 
@@ -18,7 +21,30 @@ const router = createRouter({
         {
           path: '/',
           name: 'user_home',
-          component: UserHomeView
+          component: UserHomeView,
+          redirect: '/user/index',
+          children: [
+              {
+                  path: '/user/login',
+                  name: 'user_login',
+                  component: UserLoginView
+              },
+              {
+                  path: '/user/index',
+                  name: 'user_index',
+                  component: UserIndexView
+              },
+              {
+                  path: '/user/search',
+                  name: 'user_search',
+                  component: SearchView
+              },
+              {
+                  path: '/user/reg',
+                  name: 'user_reg',
+                  component: RegView
+              }
+          ]
         },
         {
           path: '/admin/login',
@@ -57,10 +83,6 @@ const router = createRouter({
                     component: UserListView
                 }
             ]
-        }, {
-            path: '/user/login',
-            name: 'user_login',
-            component: UserLoginView
         }
     ]
 })
@@ -80,7 +102,12 @@ router.beforeEach((to, from) => {
     //to - 要访问的位置 "/"
     //from - 起始位置
     // TODO 将来还会对其它的页面放行（例如：前台首页，搜索页，详情页，用户登录/注册页）
-    if (to.path == '/admin/login' || to.path == '/user/login' || to.path == "/") {
+    if (to.path == '/admin/login' ||
+        to.path == '/' ||
+        to.path == '/user/login' ||
+        to.path == "/user/index" ||
+        to.path == "/user/reg" ||
+        to.path == "/user/search") {
         return true;
     } else {
         //判断是否有token 有-放行 没有-跳转到登录页
@@ -90,7 +117,7 @@ router.beforeEach((to, from) => {
         } else {
             //判断跳转到管理员登录页还是用户登录页
             let currentPath = router.currentRoute.value.path;
-            if (currentPath.startsWith("/admin")) {
+            if (to.path.startsWith("/admin")) {
                 return "/admin/login";
             } else {
                 return "/user/login";

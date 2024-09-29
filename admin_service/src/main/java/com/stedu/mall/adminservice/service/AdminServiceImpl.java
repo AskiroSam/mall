@@ -28,6 +28,7 @@ public class AdminServiceImpl implements AdminService {
         String string = UUID.randomUUID().toString();
         String last8Chars = string.substring(string.length() - 8);
         admin.setSalt(last8Chars);
+        admin.setPassword("123");
         //密码MD5和盐加密
         String md5Pwd = SecureUtil.md5(SecureUtil.md5(admin.getPassword() + admin.getSalt()));
         admin.setPassword(md5Pwd);
@@ -41,8 +42,24 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public boolean delete(Integer id) throws SteduException {
+        Admin admin = adminMapper.selectById(id);
+        if (admin.getStatus() == 0) {
+            throw new SteduException("管理员未禁用，无法删除");
+        }
         return adminMapper.delete(id) == 1;
+    }
+
+    @Override
+    public boolean resetPwd(Integer id) {
+        Admin admin = adminMapper.selectById(id);
+        //默认重置密码为123
+        String password = SecureUtil.md5(SecureUtil.md5("123" + admin.getSalt()));
+
+        admin = new Admin();
+        admin.setId(id);
+        admin.setPassword(password);
+        return adminMapper.update(admin) == 1;
     }
 
     @Override
@@ -62,7 +79,7 @@ public class AdminServiceImpl implements AdminService {
     public boolean update(Admin admin) throws SteduException {
         Admin oldAdmin = adminMapper.selectById(admin.getId());
         if (admin.getUsername() != null && admin.getUsername().equals(oldAdmin.getUsername())) {
-            throw new SteduException("用户名已经存在，无法添加");
+            throw new SteduException("用户名已经存在，无法修改");
         }
         return adminMapper.update(admin) == 1;
     }
@@ -127,6 +144,10 @@ public class AdminServiceImpl implements AdminService {
         //对加密之后的密码和数据库中的密码进行比较
         if (!md5Pwd.equals(admin.getPassword())) {
             throw new SteduException("密码错误");
+        }
+
+        if (admin.getStatus().equals(0)) {
+            throw new SteduException("你已被禁用，请联系其他管理员");
         }
 
         return admin;

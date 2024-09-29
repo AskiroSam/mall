@@ -1,1 +1,9 @@
 /* color palette from <https://github.com/vuejs/theme> */
+
+:root {
+    /*背景色*/
+    --theme-color: #FC6700;
+    /*主题颜色 - 跟logo颜色相同*/
+    --theme-bg-color: #333;
+
+}

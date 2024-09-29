@@ -13,10 +13,24 @@ const categoryApi = {
     update(category) {
         return service.put('/category', category);
     },
+    //是否推荐
+    chgRecom(category) {
+        return service.put(`/category/chgRecom`, category);
+    },
+    //是否上架
+    chgStatus(category) {
+        return service.put(`/category/chgStatus`, category);
+    },
     //分页搜索
     selectByPage(condition, pageNum, pageSize) {
-        condition.pageNum = pageNum;
-        condition.pageSize = pageSize;
+        if (pageNum) {
+            condition.pageNum = pageNum;
+        }
+
+        if (pageSize) {
+            condition.pageSize = pageSize;
+        }
+
         return service.get('/category/search', {
             params: condition
         })

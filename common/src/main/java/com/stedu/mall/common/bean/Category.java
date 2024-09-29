@@ -23,4 +23,5 @@ public class Category {
 
     private Category parent; //夫分类
     private List<Category> childList; //当前分类下所有的子分类
+    private List<Goods> goodsList; //分类下的商品
 }

@@ -1,29 +1,30 @@
 <template>
+  <div class="login">
     <div class="container" style="height: 300px;">
-        <h1 style="margin-bottom: 30px; opacity: 0.8">管理员登录</h1>
-        <el-form ref="form" label-width="85px" :model="admin" :rules="state.rules">
-            <el-form-item label="用户名" :style="{ width: '450px', height: 'auto' }" prop="username">
-                <el-input type="text" v-model="admin.username"
+      <h1 style="margin-bottom: 30px; opacity: 0.8">管理员登录</h1>
+      <el-form ref="form" label-width="85px" :model="admin" :rules="state.rules">
+        <el-form-item label="用户名" :style="{ width: '450px', height: 'auto' }" prop="username">
+          <el-input type="text" v-model="admin.username"
                     :style="{ backgroundColor: 'black', color: 'white', opacity: 0.8 }" @blur="handleLoginNull"></el-input>
-            </el-form-item>
-            <el-form-item label="密码" :style="{ width: '450px', height: 'auto' }" prop="password">
-                <el-input type="password" v-model="admin.password"
+        </el-form-item>
+        <el-form-item label="密码" :style="{ width: '450px', height: 'auto' }" prop="password">
+          <el-input type="password" v-model="admin.password"
                     :style="{ backgroundColor: 'black', color: 'white', opacity: 0.8 }" @blur="handleLoginNull"></el-input>
-            </el-form-item>
-            <el-form-item label="验证码" :style="{ width: '450px', height: 'auto' }" prop="captchaInput">
-                <el-input type="text" v-model="admin.captchaInput"
+        </el-form-item>
+        <el-form-item label="验证码" :style="{ width: '450px', height: 'auto' }" prop="captchaInput">
+          <el-input type="text" v-model="admin.captchaInput"
                     :style="{ backgroundColor: 'black', color: 'white', opacity: 0.8 }" @blur="handleLoginNull">
-                </el-input>
-                <el-image style="width: 120px; height: 38px; margin-top: 20px; margin-left: 105px;" :src="imgBase64Data" @click=getCaptcha />
-            </el-form-item>
-            <el-form-item style="text-align: center; width: 700px; margin-top: 30px; margin-left: 150px;">
-                <el-button type="primary"
-                    style="background-color: black; width: 280px; border: 1px solid black; margin-left: -120px;"
-                    @click=login :disabled="loginButtonDisabled">登录</el-button>
-            </el-form-item>
-        </el-form>
+          </el-input>
+          <el-image style="width: 120px; height: 38px; margin-top: 20px; margin-left: 105px;" :src="imgBase64Data" @click=getCaptcha />
+        </el-form-item>
+        <el-form-item style="text-align: center; width: 700px; margin-top: 30px; margin-left: 150px;">
+          <el-button type="primary"
+                     style="background-color: black; width: 280px; border: 1px solid black; margin-left: -120px;"
+                     @click=login :disabled="loginButtonDisabled">登录</el-button>
+        </el-form-item>
+      </el-form>
     </div>
-
+  </div>
 </template>
 
 <script setup>
@@ -174,5 +175,9 @@ body {
     /* 清除默认边距 */
     padding: 0;
     /* 清除默认内边距 */
+}
+
+.login {
+  //background-image: url('../../images/2.jpg');
 }
 </style>

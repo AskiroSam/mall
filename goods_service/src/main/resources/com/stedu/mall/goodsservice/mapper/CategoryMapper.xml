@@ -10,6 +10,7 @@
         <result column="parent_id" property="parentId" />
         <association column="parent_id" property="parent" javaType="category" select="selectById" />
         <collection column="id" property="childList" ofType="category" select="selectByParentId" />
+        <collection column="id" property="goodsList" ofType="goods" select="com.stedu.mall.goodsservice.mapper.GoodsMapper.selectByCategoryIdGoods" />
     </resultMap>
     <insert id="insert" parameterType="category" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         INSERT INTO `category`(`name`, `dscp`, `pic`, `parent_id`, `recom`, `status`)

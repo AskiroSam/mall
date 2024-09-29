@@ -1,5 +1,5 @@
 <template>
-login
+search
 </template>
 
 <script setup>

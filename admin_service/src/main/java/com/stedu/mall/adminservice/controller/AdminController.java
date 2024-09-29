@@ -38,11 +38,11 @@ public class AdminController {
         return RespBean.ok("删除成功");
     }
 
-    //修改可用状态
+    //重置密码
     @PutMapping("/{id}")
-    public RespBean setStatus(@PathVariable("id") Integer id) throws SteduException {
-        adminService.setStatus(id);
-        return RespBean.ok("修改状态成功");
+    public RespBean restPwd(@PathVariable("id") Integer id) throws SteduException {
+        adminService.resetPwd(id);
+        return RespBean.ok("重置密码成功");
     }
 
     //修改管理员信息
@@ -51,7 +51,7 @@ public class AdminController {
         admin.setUsername(null);
         adminService.update(admin);
 
-        return RespBean.ok("修改个人信息成功");
+        return RespBean.ok("状态状态成功");
     }
 
     //根据id修改
