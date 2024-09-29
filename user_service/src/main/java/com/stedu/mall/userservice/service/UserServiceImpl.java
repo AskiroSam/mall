@@ -8,6 +8,7 @@ import com.stedu.mall.common.bean.User;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.UserService;
 import com.stedu.mall.userservice.mapper.UserMapper;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+//Dubbo注册服务
+@DubboService
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;

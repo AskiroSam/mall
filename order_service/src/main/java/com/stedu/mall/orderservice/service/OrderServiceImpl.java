@@ -5,10 +5,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.stedu.mall.common.bean.Goods;
 import com.stedu.mall.common.bean.Order;
+import com.stedu.mall.common.bean.User;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.OrderService;
+import com.stedu.mall.common.service.UserService;
 import com.stedu.mall.orderservice.mapper.OrderDetailMapper;
 import com.stedu.mall.orderservice.mapper.OrderMapper;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,9 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
     @Autowired
     private OrderDetailMapper orderDetailMapper;
+    //Doubbo 调用服务
+    @DubboReference
+    private UserService userService;
 
     @Override
     public void insert(Order order) {
@@ -67,6 +74,10 @@ public class OrderServiceImpl implements OrderService {
     public PageInfo<Order> selectByCondition(Order condition, Integer pageNum, Integer pageSize) {
         //设置分页信息
         PageHelper.startPage(pageNum, pageSize);
+
+        Integer userId = condition.getUserId();
+        User user = userService.selectById(userId);
+        condition.setUser(user);
         //查询
         List<Order> orders = orderMapper.selectByCondition(condition);
         //创建分页信息

@@ -25,7 +25,7 @@
         <!--</el-form>-->
         <el-table :data="pageInfo.list" border style="width: 100%">
           <el-table-column prop="id" label="ID" width="200px" />
-          <el-table-column prop="userId" label="用户" />
+          <el-table-column prop="user" label="用户" />
           <el-table-column prop="createTime" label="创建时间" />
           <el-table-column prop="express" label="快递单号" />
           <el-table-column prop="payType" label="支付方式" />

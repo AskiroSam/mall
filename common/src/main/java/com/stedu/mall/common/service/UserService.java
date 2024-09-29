@@ -6,6 +6,8 @@ import com.stedu.mall.common.exception.SteduException;
 
 import java.util.List;
 
+
+
 public interface UserService {
     //添加
     boolean insert(User user) throws SteduException;
