@@ -28,14 +28,22 @@
           </el-table-column>
           <el-table-column label="可用状态">
             <template #default="scope">
-              <el-tag type="primary" v-if="scope.row.status == 1">禁用</el-tag>
-              <el-tag type="warning" v-if="scope.row.status == 0">正常</el-tag>
+              <el-switch
+                  v-model="scope.row.status"
+                  inline-prompt
+                  :inactive-value="0"
+                  :active-value="1"
+                  inactive-text="禁用"
+                  active-text="启用"
+                  style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                  @change = "chgStatus(scope.row.id, scope.row.status)"
+              />
             </template>
           </el-table-column>
           <el-table-column label="操作" width="200px">
             <template #default="scope">
-              <el-button size="small" type="primary" @click="setStatus(scope.row.id)">停用/启用</el-button>
-              <el-popconfirm title="你确定要删除该分类吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteAdmin(scope.row.id)">
+              <el-button size="small" type="primary" @click="restPwd(scope.row.id)">重置密码</el-button>
+              <el-popconfirm title="你确定要删除该分管理员吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteAdmin(scope.row.id)">
                 <template #reference>
                   <el-button size="small" type="danger">删除</el-button>
                 </template>
@@ -59,9 +67,6 @@
       <el-form-item label="用户名:" label-width="18%" prop="sno">
         <el-input v-model="adminAdd.username" placeholder="请输入用户名" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="密码:" label-width="18%" prop="sname">
-        <el-input type="password" v-model="adminAdd.password" placeholder="请输入密码" autocomplete="off" style="width: 300px" />
-      </el-form-item>
       <el-form-item label="手机号:" label-width="18%" prop="sname">
         <el-input v-model="adminAdd.phone" placeholder="请输入手机号" autocomplete="off" style="width: 300px" />
       </el-form-item>
@@ -71,7 +76,7 @@
       <el-form-item label="真实姓名:" label-width="18%" prop="sname">
         <el-input type="password" v-model="adminAdd.realname" placeholder="请输入真实姓名" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="注册时间:" label-width="18%">
+      <el-form-item label="注册时间:" label-width="18%" v-show="false">
         <el-date-picker v-model="adminAdd.createTime" type="datetime" disabled placeholder="请选择日期"  style="width: 300px" />
       </el-form-item>
       <el-form-item label="状态:" label-width="18%" prop="sgender">
@@ -157,14 +162,32 @@ function insert() {
       })
 }
 //停用管理员
-function setStatus(id) {
-  adminApi.setStatus(id)
+function chgStatus(id, status) {
+  const admin = {
+    id,
+    status
+  }
+
+  adminApi.chgInfo(admin)
       .then(resp => {
         if (resp.code == 10000) {
           ElMessage.success(resp.msg);
-          selectByPage(1)
+          selectByPage(pageInfo.value.pageNum)
           //刷新部门人数
-          adminApi.selectByPage(1);
+          // adminApi.selectByPage(1);
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
+}
+
+//重置密码
+function restPwd(id) {
+  adminApi.restPwd(id)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+          selectByPage(pageInfo.value.pageNum)
         } else {
           ElMessage.error(resp.msg);
         }

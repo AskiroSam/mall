@@ -9,6 +9,11 @@
         <!-- 图片 -->
         <collection column="id" property="picList" ofType="goodsPic" select="com.stedu.mall.goodsservice.mapper.GoodsPicMapper.selectByGoodsId" />
     </resultMap>
+    <resultMap id="goodsMap1" type="goods">
+        <id column="id" property="id" />
+        <!-- 图片 -->
+        <collection column="id" property="picList" ofType="goodsPic" select="com.stedu.mall.goodsservice.mapper.GoodsPicMapper.selectByGoodsId" />
+    </resultMap>
     <!-- 添加 - 主键回填 -->
     <insert id="insert" parameterType="goods" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO `goods`(`id`, `name`, `dscp`, `detail`, `price`, `mark_price`, `purchase_price`, `color`, `version`, `count`, `recom`, `category_id`, `score`, `status`)
@@ -108,5 +113,13 @@
     </select>
     <select id="selectById" resultMap="goodsMap">
         SELECT * FROM `goods` WHERE `id`=#{id}
+    </select>
+    <select id="selectByCategoryIdGoods" resultMap="goodsMap1">
+        SELECT
+            g.*
+        FROM
+            `goods` g, `category` c
+        WHERE
+            g.`category_id` = c.`id` AND (c.id=#{id} OR c.`parent_id`=#{parentId})
     </select>
 </mapper>

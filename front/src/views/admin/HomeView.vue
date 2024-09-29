@@ -240,4 +240,9 @@ getInfo();
   background-color: #000000;
 
 }
+
+.el-container, .el-menu {
+  height: 100%;
+}
+
 </style>

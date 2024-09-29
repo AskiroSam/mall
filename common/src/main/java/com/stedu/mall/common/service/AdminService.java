@@ -9,7 +9,7 @@ public interface AdminService {
     //添加
     boolean insert(Admin admin) throws SteduException;
     //删除
-    boolean delete(Integer id);
+    boolean delete(Integer id) throws SteduException;
     //修改可用状态
     boolean setStatus(Integer id);
     //修改个人信息
@@ -23,6 +23,9 @@ public interface AdminService {
 
     //登录
     Admin login(String username, String password) throws SteduException;
+
+    //重置密码
+    boolean resetPwd(Integer id);
 
     //查询所有
     List<Admin> selectAll();

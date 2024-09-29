@@ -15,7 +15,7 @@ const adminApi = {
         return service.put('/admin', admin);
     },
     //修改可用状态
-    setStatus(id) {
+    restPwd(id) {
         return service.put(`/admin/${id}`);
     },
     //根据id查询

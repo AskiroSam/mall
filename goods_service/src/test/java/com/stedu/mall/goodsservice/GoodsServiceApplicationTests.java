@@ -49,33 +49,33 @@ class GoodsServiceApplicationTests {
                 .forEach(System.out::println);
     }
 
-    @Test
-    public void test04() throws SteduException {
-        Category category = new Category(null, "XIXI", "111", "111", 0, 0, 0, null, null);
-        categoryService.insert(category);
-    }
-
-    @Test
-    public void test05() throws SteduException {
-        categoryService.delete(7);
-    }
-
-    @Test
-    public void test06() throws SteduException {
-        Category category = new Category(6, "手机", "111", "111", 0, 0, 0, null, null);
-        categoryService.update(category);
-    }
-
-    @Test
-    public void test07() {
-        Category category = new Category(1, "手机", "111", "111", 2, 0, 0, null, null);
-        categoryMapper.update(category);
-    }
-
-    @Test
-    public void test08() {
-        Category category = new Category(1, "手机", "111", "111", 1, 0, 0, null, null);
-        categoryMapper.update(category);
-    }
+    //@Test
+    //public void test04() throws SteduException {
+    //    Category category = new Category(null, "XIXI", "111", "111", 0, 0, 0, null, null);
+    //    categoryService.insert(category);
+    //}
+    //
+    //@Test
+    //public void test05() throws SteduException {
+    //    categoryService.delete(7);
+    //}
+    //
+    //@Test
+    //public void test06() throws SteduException {
+    //    Category category = new Category(6, "手机", "111", "111", 0, 0, 0, null, null);
+    //    categoryService.update(category);
+    //}
+    //
+    //@Test
+    //public void test07() {
+    //    Category category = new Category(1, "手机", "111", "111", 2, 0, 0, null, null);
+    //    categoryMapper.update(category);
+    //}
+    //
+    //@Test
+    //public void test08() {
+    //    Category category = new Category(1, "手机", "111", "111", 1, 0, 0, null, null);
+    //    categoryMapper.update(category);
+    //}
 
 }

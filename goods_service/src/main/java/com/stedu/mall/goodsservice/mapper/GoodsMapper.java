@@ -15,4 +15,6 @@ public interface GoodsMapper {
     List<Goods> selectByCondition(Goods condition);
     //根据id查询
     Goods selectById(Integer id);
+    //根据分类的id查询商品 -- 这个分类id可能是夫分类的id也可能是子分类的id
+    List<Goods> selectByCategoryIdGoods(Integer categoryId);
 }
