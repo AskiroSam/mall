@@ -20,4 +20,6 @@ public interface GoodsService {
     Goods selectById(Integer id);
     //搜索 - 分页查询
     PageInfo<Goods> selectByCondition(Goods condition, Integer pageNum, Integer pageSize);
+
+    PageInfo<Goods> selectByCondition1(Goods condition, Integer pageNum, Integer pageSize);
 }

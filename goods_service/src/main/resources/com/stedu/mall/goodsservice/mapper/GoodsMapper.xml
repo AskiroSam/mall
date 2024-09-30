@@ -122,4 +122,52 @@
         WHERE
             g.`category_id` = c.`id` AND g.`status`=1 AND (c.id=#{categoryId} OR c.`parent_id`=#{categoryId})
     </select>
+    <select id="selectByCondition1" resultMap="goodsMap1">
+        SELECT
+            g.*
+        FROM
+            `goods` g, `category` c
+        <where>
+            g.`category_id` = c.`id`
+            <if test="name!=null and name.length>0">
+                AND g.`name` LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="dscp!=null and dscp.length>0">
+                AND g.`dscp`=#{dscp}
+            </if>
+            <if test="detail!=null and detail.length>0">
+                AND g.`detail`=#{detail}
+            </if>
+            <if test="price!=null">
+                AND g.`price`=#{price}
+            </if>
+            <if test="markPrice!=null">
+                AND g.`mark_price`=#{markPrice}
+            </if>
+            <if test="purchasePrice!=null">
+                AND g.`purchase_price`=#{purchasePrice}
+            </if>
+            <if test="color!=null and color.length>0">
+                AND g.`color`=#{color}
+            </if>
+            <if test="version!=null and version.length>0">
+                AND g.`version`=#{version}
+            </if>
+            <if test="count!=null">
+                AND g.`count`=#{count}
+            </if>
+            <if test="recom!=null">
+                AND g.`recom`=#{recom}
+            </if>
+            <if test="categoryId!=null">
+                AND (c.id=#{categoryId} OR c.`parent_id`=#{categoryId})
+            </if>
+            <if test="score!=null">
+                AND g.`score`=#{score}
+            </if>
+            <if test="status!=null">
+                AND g.`status`=#{status}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -67,6 +67,17 @@ public class GoodsController {
         return RespBean.ok("查询成功", pageInfo);
     }
 
+    //前台使用
+    @GetMapping("/search")
+    public RespBean selectByPage1(Goods condition, Integer pageNum, Integer pageSize) {
+        pageNum = pageNum == null ? 1 : pageNum;
+        pageSize = pageSize == null ? 5 : pageSize;
+
+        PageInfo<Goods> pageInfo = goodsService.selectByCondition1(condition, pageNum, pageSize);
+
+        return RespBean.ok("查询成功", pageInfo);
+    }
+
     //根据id查询
     @GetMapping("/{id}")
     public RespBean selectById(@PathVariable("id") Integer id) {

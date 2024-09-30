@@ -184,4 +184,16 @@ public class GoodsServiceImpl implements GoodsService {
         return pageInfo;
 
     }
+
+    @Override
+    public PageInfo<Goods> selectByCondition1(Goods condition, Integer pageNum, Integer pageSize) {
+        //设置分页信息
+        PageHelper.startPage(pageNum, pageSize);
+        //查询
+        List<Goods> goods = goodsMapper.selectByCondition1(condition);
+        //创建分页信息
+        PageInfo<Goods> pageInfo = new PageInfo<>(goods);
+        return pageInfo;
+
+    }
 }

@@ -62,6 +62,7 @@ public class CategoryController {
        return RespBean.ok("", data);
     }
 
+
     //根据id查询
     @GetMapping("/{id}")
     public RespBean selectById(@PathVariable("id") Integer id) {
