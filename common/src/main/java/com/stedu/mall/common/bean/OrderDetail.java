@@ -16,5 +16,6 @@ public class OrderDetail {
     private BigDecimal price;
     private String orderId;
     private Integer goodsId;
+    private Goods goods;
     private List<Goods> goodsList;
 }

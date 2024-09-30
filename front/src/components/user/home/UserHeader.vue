@@ -49,7 +49,7 @@
   <!--上架的第一级分类-->
   <div class="center">
     <ul class="category">
-      <li v-for="(category, index) in parentList" :key="index"><RouterLink to="/user/search">{{category.name}}</RouterLink></li>
+      <li v-for="(category, index) in parentList" :key="index"><RouterLink :to="`/user/search/${category.id}`">{{category.name}}</RouterLink></li>
     </ul>
   </div>
 

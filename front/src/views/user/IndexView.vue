@@ -90,6 +90,7 @@
     margin-bottom: 20px;
     text-align: center;
     background-color: #EEE;
+    cursor: pointer;
   }
 
   .recom .goodsList ul li:hover {

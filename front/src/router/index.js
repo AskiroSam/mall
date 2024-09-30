@@ -35,8 +35,9 @@ const router = createRouter({
                   component: UserIndexView
               },
               {
-                  path: '/user/search',
+                  path: '/user/search/:categoryId?',
                   name: 'user_search',
+                  props: true,
                   component: SearchView
               },
               {
@@ -107,7 +108,7 @@ router.beforeEach((to, from) => {
         to.path == '/user/login' ||
         to.path == "/user/index" ||
         to.path == "/user/reg" ||
-        to.path == "/user/search") {
+        to.path.startsWith("/user/search")) {
         return true;
     } else {
         //判断是否有token 有-放行 没有-跳转到登录页

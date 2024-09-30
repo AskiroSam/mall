@@ -19,7 +19,7 @@ const orderApi = {
     },
     //根据id查询
     selectById(id) {
-        return service.get(`/user/${id}`);
+        return service.get(`/order/${id}`);
     },
     //分页搜索
     selectByPage(order, pageNum, pageSize) {

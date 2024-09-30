@@ -10,6 +10,7 @@ import com.stedu.mall.common.service.GoodsService;
 import com.stedu.mall.goodsservice.mapper.CategoryMapper;
 import com.stedu.mall.goodsservice.mapper.GoodsMapper;
 import com.stedu.mall.goodsservice.mapper.GoodsPicMapper;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@DubboService
 public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private GoodsMapper goodsMapper;

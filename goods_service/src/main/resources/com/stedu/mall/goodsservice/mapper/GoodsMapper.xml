@@ -120,6 +120,6 @@
         FROM
             `goods` g, `category` c
         WHERE
-            g.`category_id` = c.`id` AND (c.id=#{id} OR c.`parent_id`=#{parentId})
+            g.`category_id` = c.`id` AND g.`status`=1 AND (c.id=#{categoryId} OR c.`parent_id`=#{categoryId})
     </select>
 </mapper>

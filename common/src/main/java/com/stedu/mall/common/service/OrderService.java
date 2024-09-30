@@ -2,6 +2,7 @@ package com.stedu.mall.common.service;
 
 import com.github.pagehelper.PageInfo;
 import com.stedu.mall.common.bean.Order;
+import com.stedu.mall.common.bean.OrderDetail;
 import com.stedu.mall.common.exception.SteduException;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface OrderService {
     PageInfo<Order> selectByCondition(Order condition, Integer pageNum, Integer pageSize);
     //根据id查询
     Order selectById(String id);
+
+
 }

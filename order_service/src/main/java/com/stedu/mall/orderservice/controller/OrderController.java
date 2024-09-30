@@ -5,9 +5,11 @@ import com.stedu.mall.common.bean.Goods;
 import com.stedu.mall.common.bean.Order;
 import com.stedu.mall.common.bean.RespBean;
 import com.stedu.mall.common.exception.SteduException;
+import com.stedu.mall.common.service.OrderDetailService;
 import com.stedu.mall.common.service.OrderService;
 
 import com.stedu.mall.common.service.UserService;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private OrderDetailService orderDetailService;
 
 
     //添加
@@ -58,7 +62,8 @@ public class OrderController {
     @GetMapping("/{id}")
     public RespBean selectById(@PathVariable("id") String id) {
         Order order = orderService.selectById(id);
-
         return RespBean.ok("查询成功", order);
     }
+
+
 }
