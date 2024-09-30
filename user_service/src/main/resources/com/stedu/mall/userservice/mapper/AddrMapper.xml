@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stedu.mall.userservice.mapper.AddrMapper">
+    <insert id="insert" parameterType="addr" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO `addr`(`contact`, `phone`, `province`, `city`, `district`, `street`, `address`, `user_id`, `status`)
+        VALUES (#{contact}, #{phone}, #{province}, #{city}, #{district}, #{street}, #{address}, #{userId}, #{status})
+    </insert>
+    <update id="setStatus">
+        UPDATE `addr` SET `status`=#{status} WHERE `id`=#{id}
+    </update>
+    <update id="update">
+        UPDATE `addr`
+        <set>
+            <if test="contact!=null and contact.length>0">
+                `contact`=#{contact},
+            </if>
+            <if test="phone!=null and phone.length>0">
+                `phone`=#{phone},
+            </if>
+            <if test="province!=null and province.length>0">
+                `province`=#{province},
+            </if>
+            <if test="city!=null and city.length>0">
+                `city`=#{city},
+            </if>
+            <if test="district!=null and district.length>0">
+                `district`=#{district},
+            </if>
+            <if test="street!=null and street.length>0">
+                `street`=#{street},
+            </if>
+            <if test="address!=null and address.length>0">
+                `address`=#{address},
+            </if>
+            <if test="phone!=null and phone.length>0">
+                `phone`=#{phone},
+            </if>
+            <if test="userId!=null">
+                `user_id`=#{userId},
+            </if>
+            <if test="status!=null">
+                `status`=#{status},
+            </if>
+        </set>
+        WHERE `id`=#{id}
+    </update>
+    <delete id="delete">
+        DELETE FROM `addr` WHERE `id`=#{id}
+    </delete>
+    <select id="selectById" resultType="addr">
+        SELECT * FROM `addr` WHERE `id`=#{id}
+    </select>
+    <select id="selectByCondition" resultType="addr">
+        SELECT * FROM `addr`
+        <where>
+            <if test="city!=null and city.length>0">
+                AND `city` LIKE CONCAT('%', #{city}, '%')
+            </if>
+            <if test="address!=null and address.length>0">
+                AND `address` LIKE CONCAT('%', #{address}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="selectAll" resultType="addr">
+        SELECT * FROM `addr`;
+    </select>
+</mapper>

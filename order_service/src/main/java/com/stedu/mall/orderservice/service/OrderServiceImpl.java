@@ -3,10 +3,7 @@ package com.stedu.mall.orderservice.service;
 import cn.hutool.core.util.IdUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.stedu.mall.common.bean.Goods;
-import com.stedu.mall.common.bean.Order;
-import com.stedu.mall.common.bean.OrderDetail;
-import com.stedu.mall.common.bean.User;
+import com.stedu.mall.common.bean.*;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.GoodsService;
 import com.stedu.mall.common.service.OrderService;
@@ -95,6 +92,12 @@ public class OrderServiceImpl implements OrderService {
             }
             order.setOrderDetailList(orderDetails);
         }
+        //设置地址
+        for (Order order : orders) {
+            Integer addrId = order.getAddrId();
+            Addr addr = userService.selectByAddrId(addrId);
+            order.setAddr(addr);
+        }
         //创建分页信息
         PageInfo<Order> pageInfo = new PageInfo<>(orders);
         return pageInfo;
@@ -103,7 +106,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order selectById(String id) {
-        return orderMapper.selectById(id);
+        Order order = orderMapper.selectById(id);
+        List<OrderDetail> orderDetails = orderDetailMapper.selectByOrderId(id);
+        for (OrderDetail orderDetail : orderDetails) {
+            Goods goods = goodsService.selectById(orderDetail.getGoodsId());
+            orderDetail.setGoods(goods);
+        }
+        order.setOrderDetailList(orderDetails);
+
+        return order;
     }
 
 

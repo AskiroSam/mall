@@ -3,10 +3,11 @@ package com.stedu.mall.userservice.service;
 import cn.hutool.crypto.SecureUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.stedu.mall.common.bean.Admin;
+import com.stedu.mall.common.bean.Addr;
 import com.stedu.mall.common.bean.User;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.UserService;
+import com.stedu.mall.userservice.mapper.AddrMapper;
 import com.stedu.mall.userservice.mapper.UserMapper;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private AddrMapper addrMapper;
 
     @Override
     public boolean insert(User user) throws SteduException {
@@ -89,5 +92,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> selectAll() {
         return userMapper.selectAll();
+    }
+
+    @Override
+    public Addr selectByAddrId(Integer id) {
+        return addrMapper.selectById(id);
     }
 }

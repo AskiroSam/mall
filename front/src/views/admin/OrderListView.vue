@@ -36,9 +36,17 @@
             </template>
           </el-table-column>
           <el-table-column prop="express" label="快递单号" />
-          <el-table-column prop="payType" label="支付方式" />
-          <el-table-column prop="addrId" label="地址" />
-          <el-table-column prop="addrDetail" label="当时地址" />
+          <el-table-column label="支付方式">
+            <template #default="scope">
+              <el-tag type="primary" v-if="scope.row.payType == 0">余额支付</el-tag>
+              <el-tag type="success" v-if="scope.row.payType == 1">支付宝</el-tag>
+              <el-tag type="warning" v-if="scope.row.payType == 2">微信</el-tag>
+              <el-tag type="danger" v-if="scope.row.payType == 3">银联</el-tag>
+              <el-tag type="danger" v-if="scope.row.payType == 4">其它</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="addr.address" label="地址" />
+          <!--<el-table-column prop="addrDetail" label="当时地址" />-->
           <el-table-column label="状态">
             <template #default="scope">
               <el-tag type="primary" v-if="scope.row.status == 0">未支付</el-tag>
@@ -55,7 +63,7 @@
 
           <el-table-column label="操作" width="250px">
             <template #default="scope">
-              <el-button size="small" type="success" @click="getOrderDetailList(scope.row.id)">订单列表</el-button>
+              <el-button size="small" type="success" @click="getOrderDetailList(scope.row.id)">订单详情</el-button>
               <el-button size="small" type="primary" @click="">修改</el-button>
               <el-popconfirm title="你确定要删除该订单吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="">
                 <template #reference>
@@ -77,9 +85,16 @@
 
 
   <!--订单列表开始-->
-  <el-dialog v-model="orderDetailListShow" title="订单详情列表">
+  <el-dialog v-model="orderDetailListShow" title="订单详情">
       <el-table :data="orderDetailList" style="width: 100%">
-        <el-table-column prop="goodsId" label="商品" width="180" />
+        <el-table-column prop="goods.name" label="商品" width="180" />
+        <el-table-column prop="" label="商品图片" width="120">
+          <template #default="scope">
+            <div v-if="scope.row.goods.picList.length > 0">
+              <img :src="`${SERVER_ADDR}/goods/pic/${scope.row.goods.picList[0].url}`" alt="商品图片" style="width: 100%; height: auto;" />
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="count" label="数量" width="180" />
         <el-table-column prop="price" label="价格" width="180" />
 
@@ -121,6 +136,9 @@ import orderApi from "@/api/orderApi.js";
 import {ref, shallowRef} from "vue";
 import {Editor, Toolbar} from "@wangeditor/editor-for-vue";
 
+
+//服务器地址
+const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 //是否显示订单详情列表对话框
 const orderDetailListShow = ref(false);
 //是否显示商品详情对话框
@@ -195,6 +213,7 @@ function selectByPage(pageNum) {
   orderApi.selectByPage(condition.value, pageNum, 5)
       .then(resp => {
         pageInfo.value = resp.data;
+        console.log(pageInfo.value)
       });
 }
 selectByPage(1);

@@ -18,6 +18,7 @@ public class Order implements Serializable {
     private String express;
     private Integer payType;
     private Integer addrId;
+    private Addr addr;
     private String addrDetail;
     private Integer status;
     private User user;

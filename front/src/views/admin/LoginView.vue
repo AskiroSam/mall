@@ -163,7 +163,8 @@ getCaptcha();
     /* 隐藏溢出内容，防止滚动条出现 */
 }
 
-body {
+.login {
+    height: 100%;
     background-image: url('../../images/2.jpg');
     background-size: cover;
     /* 背景图片完全覆盖容器 */

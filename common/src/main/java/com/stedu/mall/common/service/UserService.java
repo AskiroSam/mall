@@ -1,5 +1,6 @@
 package com.stedu.mall.common.service;
 
+import com.stedu.mall.common.bean.Addr;
 import com.stedu.mall.common.bean.Admin;
 import com.stedu.mall.common.bean.User;
 import com.stedu.mall.common.exception.SteduException;
@@ -23,4 +24,6 @@ public interface UserService {
     Object selectByCondition(User condition, Integer pageNum, Integer pageSize);
     //查询所有
     List<User> selectAll();
+    //查询地址
+    Addr selectByAddrId(Integer id);
 }
