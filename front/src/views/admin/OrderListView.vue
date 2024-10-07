@@ -2,27 +2,26 @@
   <el-row>
     <el-col :span="24">
       <el-card style="opacity: 0.9;">
-        <!--<el-form :inline="true" class="demo-form-inline">-->
-        <!--  <el-form-item>-->
-        <!--    <el-button type="primary" @click="openUserAddDialog">添加</el-button>-->
-        <!--  </el-form-item>-->
-        <!--  <el-form-item style="float: right;">-->
-        <!--    <el-input v-model="condition.username" placeholder="请输入要搜索的名称" @input="selectByPage(1);" />-->
-        <!--  </el-form-item>-->
-        <!--  <el-form-item style="float: right;">-->
-        <!--    <el-select-->
-        <!--        v-model="condition.status"-->
-        <!--        clearable placeholder="请选择状态"-->
-        <!--        :value-on-clear="null"-->
-        <!--        style="width: 200px;"-->
-        <!--        @change="selectByPage(1)">-->
-        <!--      <el-option label="未认证" value="0" />-->
-        <!--      <el-option label="已认证" value="1" />-->
-        <!--      <el-option label="禁用" value="2" />-->
-        <!--      <el-option label="注销" value="3" />-->
-        <!--    </el-select>-->
-        <!--  </el-form-item>-->
-        <!--</el-form>-->
+        <el-form :inline="true" class="demo-form-inline">
+          <el-form-item style="float: right;">
+            <el-select
+                v-model="condition.status"
+                clearable placeholder="请选择状态"
+                :value-on-clear="null"
+                style="width: 200px;"
+                @change="selectByPage(1)">
+              <el-option label="未支付" value="0" />
+              <el-option label="已支付" value="1" />
+              <el-option label="已发货" value="2" />
+              <el-option label="已收货" value="3" />
+              <el-option label="退货退款" value="4" />
+              <el-option label="退换货" value="5" />
+              <el-option label="仅退款" value="6" />
+              <el-option label="售后" value="7" />
+              <el-option label="其它" value="8" />
+            </el-select>
+          </el-form-item>
+        </el-form>
         <el-table :data="pageInfo.list" border style="width: 100%">
           <el-table-column prop="id" label="ID" width="200px" />
           <el-table-column prop="user" label="用户">
@@ -64,12 +63,11 @@
           <el-table-column label="操作" width="250px">
             <template #default="scope">
               <el-button size="small" type="success" @click="getOrderDetailList(scope.row.id)">订单详情</el-button>
-              <el-button size="small" type="primary" @click="">修改</el-button>
-              <el-popconfirm title="你确定要删除该订单吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="">
-                <template #reference>
-                  <el-button size="small" type="danger">删除</el-button>
-                </template>
-              </el-popconfirm>
+              <!--<el-popconfirm title="你确定要删除该订单吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteOrder(scope.row.id)">-->
+              <!--  <template #reference>-->
+              <!--    <el-button size="small" type="danger">删除</el-button>-->
+              <!--  </template>-->
+              <!--</el-popconfirm>-->
             </template>
           </el-table-column>
         </el-table>
@@ -85,13 +83,13 @@
 
 
   <!--订单列表开始-->
-  <el-dialog v-model="orderDetailListShow" title="订单详情">
+  <el-dialog v-model="orderDetailListShow" title="订单详情" width="40%">
       <el-table :data="orderDetailList" style="width: 100%">
         <el-table-column prop="goods.name" label="商品" width="180" />
         <el-table-column prop="" label="商品图片" width="120">
           <template #default="scope">
             <div v-if="scope.row.goods.picList.length > 0">
-              <img :src="`${SERVER_ADDR}/goods/pic/${scope.row.goods.picList[0].url}`" alt="商品图片" style="width: 100%; height: auto;" />
+              <img :src="`${SERVER_ADDR}/goods/pic/${scope.row.goods.picList[0].url}`" alt="商品图片" style="width: 100%; height: 100px;" />
             </div>
           </template>
         </el-table-column>
@@ -103,31 +101,6 @@
   <!--订单列表结束-->
 
 
-  <!-- 订单详情对话框开始 -->
-  <el-dialog v-model="detailDialogShow" title="商品详情">
-    <div v-if="detailDialogShow" style="border: 1px solid #ccc">
-      <Toolbar
-          style="border-bottom: 1px solid #ccc"
-          :editor="editorRef"
-          :defaultConfig="toolbarConfig"
-          :mode="mode"
-      />
-      <Editor
-          style="height: 500px; overflow-y: hidden;"
-          v-model="orderUpdate.orderDetailList"
-          :defaultConfig="editorConfig"
-          :mode="mode"
-          @onCreated="handleCreated"
-      />
-    </div>
-    <div class="dialog-footer">
-      <el-button @click="detailDialogShow = false">取消</el-button>
-      <el-button type="primary" @click="">确认</el-button>
-    </div>
-  </el-dialog>
-  <!--订单详情对话框结束-->
-
-
 </template>
 
 <script setup>
@@ -135,16 +108,17 @@
 import orderApi from "@/api/orderApi.js";
 import {ref, shallowRef} from "vue";
 import {Editor, Toolbar} from "@wangeditor/editor-for-vue";
+import {ElMessage} from "element-plus";
 
 
 //服务器地址
 const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 //是否显示订单详情列表对话框
 const orderDetailListShow = ref(false);
-//是否显示商品详情对话框
-const detailDialogShow = ref(false);
 //订单列表
 const orderDetailList = ref([]);
+//是否显示订单修改对话框
+// const updateOrderDialog = ref(false);
 
 //搜索条件
 const condition = ref({
@@ -161,24 +135,18 @@ const pageInfo = ref({
 });
 
 //被修改的商品信息
-const orderUpdate = ref({
-  id: '',
-  userId: '',
-  express: '',
-  payType: 0,
-  addrId: 0,
-  addrDetail: null,
-  status: null,
-  orderDetailList: []
-});
+// const orderUpdate = ref({
+//   id: '',
+//   userId: '',
+//   express: '',
+//   payType: 0,
+//   addrId: 0,
+//   addrDetail: null,
+//   status: null,
+//   orderDetailList: []
+// });
 
 
-//显示商品详情
-function showDetailDialog(order) {
-  orderUpdate.value.id = order.id;
-  orderUpdate.value.orderDetailList = order.orderDetailList;
-  detailDialogShow.value = true;
-}
 
 
 /*----------------------详情开始----------------------*/
@@ -194,6 +162,21 @@ const handleCreated = (editor) => {
   editorRef.value = editor // 记录 editor 实例，重要！
 }
 /*----------------------详情结束----------------------*/
+
+//删除订单
+// function deleteOrder(id) {
+//   orderApi.delete(id)
+//       .then(resp => {
+//         if (resp.code == 10000) {
+//           ElMessage.success(resp.msg);
+//           //查询第一页
+//           selectByPage(1);
+//         } else {
+//           ElMessage.error(resp.msg);
+//         }
+//       })
+// }
+
 
 //获取订单详情列表
 function getOrderDetailList(id) {
