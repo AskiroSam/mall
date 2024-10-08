@@ -44,7 +44,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public boolean delete(Integer id) throws SteduException {
+        //先注销再删除
+        User user = userMapper.selectById(id);
+        if (user.getStatus() != 3) {
+            throw new SteduException("请先注销后再删除");
+        }
         return userMapper.delete(id) == 1;
     }
 

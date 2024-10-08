@@ -26,6 +26,7 @@
     <el-container>
       <el-aside width="200px">
         <el-menu
+            default-active="2"
             active-text-color="#ffd04b"
             background-color="#261E47"
             class="el-menu-vertical-demo"

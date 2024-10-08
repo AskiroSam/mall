@@ -58,7 +58,7 @@
           <el-table-column label="操作" width="250px">
             <template #default="scope">
               <el-button size="small" type="primary" @click="selectById(scope.row.id)">修改</el-button>
-              <el-popconfirm title="你确定要删除该分类吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteUser(scope.row.id)">
+              <el-popconfirm title="你确定要删除该用户吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteUser(scope.row.id)">
                 <template #reference>
                   <el-button size="small" type="danger">删除</el-button>
                 </template>

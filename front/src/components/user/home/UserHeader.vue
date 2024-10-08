@@ -65,6 +65,7 @@ const parentList = ref([]);
 function getParent() {
   const condition = {
     parentId: 0,
+    recom: 1,
     status: 1,
   }
 

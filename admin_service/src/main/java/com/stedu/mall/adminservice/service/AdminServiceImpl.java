@@ -44,7 +44,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public boolean delete(Integer id) throws SteduException {
         Admin admin = adminMapper.selectById(id);
-        if (admin.getStatus() == 0) {
+        if (admin.getStatus() != 0) {
             throw new SteduException("管理员未禁用，无法删除");
         }
         return adminMapper.delete(id) == 1;

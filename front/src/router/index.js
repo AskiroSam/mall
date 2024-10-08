@@ -13,6 +13,7 @@ import UserIndexView from "@/views/user/IndexView.vue"
 import SearchView from "@/views/user/SearchView.vue"
 import RegView from "@/views/user/RegView.vue";
 import { useTokenStore } from "@/stores/token";
+import GoodsView from "@/views/user/GoodsView.vue";
 
 
 const router = createRouter({
@@ -44,6 +45,11 @@ const router = createRouter({
                   path: '/user/reg',
                   name: 'user_reg',
                   component: RegView
+              },
+              {
+                  path: '/user/goods',
+                  name: 'user_goods',
+                  component: GoodsView
               }
           ]
         },
@@ -108,6 +114,7 @@ router.beforeEach((to, from) => {
         to.path == '/user/login' ||
         to.path == "/user/index" ||
         to.path == "/user/reg" ||
+        to.path == "/user/goods" ||
         to.path.startsWith("/user/search")) {
         return true;
     } else {

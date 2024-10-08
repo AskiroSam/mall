@@ -13,7 +13,7 @@ public interface UserService {
     //添加
     boolean insert(User user) throws SteduException;
     //删除
-    boolean delete(Integer id);
+    boolean delete(Integer id) throws SteduException;
     //修改认证状态
     boolean setStatus(Integer status);
     //修改

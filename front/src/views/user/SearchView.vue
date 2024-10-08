@@ -21,7 +21,7 @@
   <!--显示搜索到的商品-->
   <div class="goodsList">
     <ul>
-      <li v-for="(goods, index) in pageInfo.list" :key="index">
+      <li v-for="(goods, index) in pageInfo.list" :key="index" @click="toGoodsView(goods.id)">
         <div class="pic"><el-image :src="`${SERVER_ADDR}/goods/pic/${goods.picList[0].url}`" style="width: 200px; height: 200px; margin-top: 10px" fit="contain" /></div>
         <div class="name">{{goods.name}}</div>
         <div class="dscp">{{goods.dscp}}</div>
@@ -42,6 +42,9 @@
 import {ref, watch} from "vue";
 import categoryApi from "@/api/categoryApi.js";
 import goodsApi from "@/api/goodsApi.js";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 
 //服务器地址
@@ -151,6 +154,16 @@ function search(pageNum) {
       .then(resp => {
         pageInfo.value = resp.data;
       })
+}
+
+//跳转到商品详情页面
+function toGoodsView(id) {
+  router.push({
+    path: '/user/goods',//跳转到的位置，值和页面路径中配置的路径相同
+    query: {
+      id
+    }
+  });
 }
 
 getParent();
