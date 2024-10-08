@@ -30,6 +30,10 @@ import UserFooter from "@/components/user/home/UserFooter.vue";
   height: auto;
 }
 
+.el-main {
+  background-color: #EEE;
+}
+
 .el-footer {
   margin-top: 20px;
   padding: 10px 0;
