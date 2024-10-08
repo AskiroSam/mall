@@ -28,6 +28,9 @@ const userApi = {
         return service.get('/user/search', {
             params: user
         });
+    },
+    captcha() {
+        return service.get("/user/captcha");
     }
 }
 export default userApi;

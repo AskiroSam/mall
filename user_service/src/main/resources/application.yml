@@ -22,6 +22,10 @@ spring:
     url: jdbc:mysql://localhost:3306/mall?useSSL=false
     username: root
     password: 2669019760
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
 
 #MyBatis
 mybatis:
@@ -35,4 +39,6 @@ white-list:
     - regPath: ^/user/captcha*
       method: GET
     - regPath: ^/user/login
+      method: POST
+    - regPath: ^/user/reg
       method: POST

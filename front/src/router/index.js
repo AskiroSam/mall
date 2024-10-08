@@ -26,25 +26,25 @@ const router = createRouter({
           redirect: '/user/index',
           children: [
               {
-                  path: '/user/login',
-                  name: 'user_login',
-                  component: UserLoginView
-              },
-              {
                   path: '/user/index',
                   name: 'user_index',
                   component: UserIndexView
+              },
+              {
+                  path: '/user/reg',
+                  name: 'user_reg',
+                  component: RegView
+              },
+              {
+                  path: '/user/login',
+                  name: 'user_login',
+                  component: UserLoginView
               },
               {
                   path: '/user/search/:categoryId?',
                   name: 'user_search',
                   props: true,
                   component: SearchView
-              },
-              {
-                  path: '/user/reg',
-                  name: 'user_reg',
-                  component: RegView
               },
               {
                   path: '/user/goods',

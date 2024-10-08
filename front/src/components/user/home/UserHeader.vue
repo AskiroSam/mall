@@ -18,6 +18,8 @@
          <ul class="user">
            <li><RouterLink to="/user/login">登录</RouterLink></li>
            <li><RouterLink to="/user/reg">注册</RouterLink></li>
+           <!--<li>tom123</li>-->
+           <!--<li>退出</li>-->
          </ul>
        </el-col>
      </el-row>

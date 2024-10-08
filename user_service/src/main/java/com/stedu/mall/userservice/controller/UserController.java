@@ -94,7 +94,7 @@ public class UserController {
         String captcha = (String)redisUtil.get(key);
         //登录
         if (captcha == null || !captcha.equalsIgnoreCase(captchaInput)) {
-            throw new SteduException("验证码错误，请确认后重新登录");
+            throw new SteduException("验证码错误，请确认后重新输入");
         }
         User user = userService.login(username, password);
 
@@ -106,7 +106,7 @@ public class UserController {
         String jwtStr = JwtUtils.generateJwt(map);
 
         //将token返回给用户
-        return RespBean.ok("登录成功", jwtStr);
+        return RespBean.ok("注册成功", jwtStr);
 
     }
 
