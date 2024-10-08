@@ -12,6 +12,10 @@ import java.util.List;
 public interface UserService {
     //添加
     boolean insert(User user) throws SteduException;
+    //登录
+    User login(String username, String password) throws SteduException;
+    //注册
+    boolean reg(User user) throws SteduException;
     //删除
     boolean delete(Integer id) throws SteduException;
     //修改认证状态

@@ -5,6 +5,10 @@
         INSERT INTO `user`(`username`, `password`, `pay_password`, `salt`, `realname`, `sex`, `id_card`, `phone`, `email`, `reg_time`, `money`, `status`)
         VALUES (#{username}, #{password}, #{payPassword}, #{salt}, #{realname}, #{sex}, #{idCard}, #{phone}, #{email}, #{regTime}, #{money}, #{status})
     </insert>
+    <insert id="insert1">
+        INSERT INTO `user`(`username`, `password`, `salt`)
+        VALUES (#{username}, #{password}, #{salt})
+    </insert>
     <update id="update">
         UPDATE `user`
         <set>
@@ -69,5 +73,8 @@
     </select>
     <select id="selectAll" resultType="user">
         SELECT * FROM `user`;
+    </select>
+    <select id="selectByUserName" resultType="user">
+        SELECT * FROM `user` WHERE `username`=#{username};
     </select>
 </mapper>

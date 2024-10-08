@@ -1,5 +1,6 @@
 package com.stedu.mall.userservice.service;
 
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -41,6 +43,53 @@ public class UserServiceImpl implements UserService {
             }
         }
         return userMapper.insert(user) == 1;
+    }
+
+    //登录
+    @Override
+    public User login(String username, String password) throws SteduException {
+        //根据用户名查询判断用户是否存在
+        User user = userMapper.selectByUserName(username);
+        if (user == null) {
+            throw new SteduException("该用户不存在，无法登录");
+        }
+
+        //判断用户是否禁用或注销
+        if (user.getStatus().equals(2) || user.getStatus().equals(3)) {
+            throw new SteduException("该用户被禁用或注销，无法登录");
+        }
+
+        //对输入的密码进行加密
+        String md5Pwd = SecureUtil.md5(SecureUtil.md5(password + user.getSalt()));
+
+        //和数据库中的密码对比
+        if (!md5Pwd.equals(user.getPassword())) {
+            throw new SteduException("密码输入错误。无法登录");
+        }
+
+        return user;
+    }
+
+    //注册
+    @Override
+    public boolean reg(User user) throws SteduException {
+        //判断该用户名在系统中是否存在
+        if (userMapper.selectByUserName(user.getUsername()) != null) {
+            throw new SteduException("该用户已经存在，无法注册");
+        }
+
+        //生成盐
+        String salt = RandomUtil.randomString(8);
+        user.setSalt(salt);
+
+        //对密码进行加密
+        String md5Pwd = SecureUtil.md5(SecureUtil.md5(user.getPassword() + salt));
+        user.setPassword(md5Pwd);
+
+
+        //添加用户
+        return userMapper.insert1(user) == 1;
+
     }
 
     @Override
