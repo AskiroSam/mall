@@ -29,7 +29,7 @@
           />
         </div>
         <div class="goodsBtn">
-          <el-button type="primary" size="large"><el-icon><ShoppingCart /></el-icon>加入购物车</el-button>
+          <el-button type="primary" size="large" @click="insertCart"><el-icon><ShoppingCart /></el-icon>加入购物车</el-button>
           <el-button type="success" size="large"><el-icon><Money /></el-icon>直接购买</el-button>
           <el-button type="info" size="large" v-if="!collectInfo" @click="collect"><el-icon><StarFilled /></el-icon>收藏</el-button>
           <el-button type="danger" size="large" v-else @click="cancelCollect"><el-icon><Star /></el-icon>取消收藏</el-button>
@@ -52,6 +52,7 @@ import goodsApi from "@/api/goodsApi.js";
 import {ref} from "vue";
 import {Money, Paperclip, ShoppingCart, Star, StarFilled} from "@element-plus/icons-vue";
 import collectApi from "@/api/collectApi.js";
+import CartApi from "@/api/cartApi.js";
 import {ElMessage} from "element-plus";
 import {useTokenStore} from "@/stores/token.js";
 
@@ -63,6 +64,19 @@ const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 const goods = ref({});
 //商品收藏的状态
 const collectInfo = ref(null);
+
+//加入购物车
+function insertCart() {
+  CartApi.insert(goods.value.id)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
+}
+
 //根据商品id查询商品的详情信息
 function selectById() {
   let id = route.query.id;

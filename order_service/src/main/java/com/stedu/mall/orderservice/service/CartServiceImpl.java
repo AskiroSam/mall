@@ -25,7 +25,7 @@ public class CartServiceImpl implements CartService {
         } else {
             //修改 - 累加
             c.setCount(c.getCount() + 1);
-            return cartMapper.update(cart) == 1;
+            return cartMapper.update(c) == 1;
         }
 
     }
