@@ -1,4 +1,5 @@
 import service from "@/api/index.js";
+import qs from "qs";
 
 const userApi = {
     //添加
@@ -29,8 +30,21 @@ const userApi = {
             params: user
         });
     },
+    //验证码
     captcha() {
         return service.get("/user/captcha");
+    },
+    //注册
+    reg(userInfo) {
+        return service.post('/user/reg', qs.stringify(userInfo))
+    },
+    //登录
+    login(userInfo) {
+        return service.post('/user/login', qs.stringify(userInfo))
+    },
+    //获取用户信息
+    getInfo() {
+        return service.get('/user/info')
     }
 }
 export default userApi;

@@ -72,7 +72,7 @@ public class UserController {
     @GetMapping("/captcha")
     public RespBean captcha() {
         //创建验证码对象
-        LineCaptcha captcha = new LineCaptcha(120, 38, 5, 10);
+        LineCaptcha captcha = new LineCaptcha(120, 32, 5, 10);
         //生成唯一的key -- 雪花算法生成
         String key = IdUtil.getSnowflakeNextIdStr();
         //将key和验证码的文本保存在Redis中 -- 超时时间60秒
