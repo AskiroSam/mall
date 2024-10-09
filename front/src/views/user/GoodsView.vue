@@ -31,8 +31,8 @@
         <div class="goodsBtn">
           <el-button type="primary" size="large"><el-icon><ShoppingCart /></el-icon>加入购物车</el-button>
           <el-button type="success" size="large"><el-icon><Money /></el-icon>直接购买</el-button>
-          <el-button type="info" size="large"><el-icon><StarFilled /></el-icon>收藏</el-button>
-          <el-button type="danger" size="large"><el-icon><Star /></el-icon>取消收藏</el-button>
+          <el-button type="info" size="large" v-if="!collectInfo" @click="collect"><el-icon><StarFilled /></el-icon>收藏</el-button>
+          <el-button type="danger" size="large" v-else @click="cancelCollect"><el-icon><Star /></el-icon>取消收藏</el-button>
         </div>
       </div>
     </el-col>
@@ -51,13 +51,18 @@ import {useRoute} from "vue-router";
 import goodsApi from "@/api/goodsApi.js";
 import {ref} from "vue";
 import {Money, Paperclip, ShoppingCart, Star, StarFilled} from "@element-plus/icons-vue";
+import collectApi from "@/api/collectApi.js";
+import {ElMessage} from "element-plus";
+import {useTokenStore} from "@/stores/token.js";
 
+const tokenStore = useTokenStore();
 const route = useRoute();
 const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 
 //需要显示的商品
 const goods = ref({});
-
+//商品收藏的状态
+const collectInfo = ref(null);
 //根据商品id查询商品的详情信息
 function selectById() {
   let id = route.query.id;
@@ -65,7 +70,48 @@ function selectById() {
   goodsApi.selectById(id)
       .then(resp => {
         goods.value = resp.data;
+        //判断用户是否已经登录
+        if (tokenStore.tokenStr != null) {
+          //获取当前商品收藏的情况
+          getCollectInfo();
+        }
+
+      });
+}
+
+//获取当前商品收藏的情况
+function getCollectInfo() {
+  collectApi.selectByGoodsIdAndUserId(goods.value.id)
+      .then(resp => {
+        collectInfo.value = resp.data;
       })
+}
+
+//收藏
+function collect() {
+  collectApi.insert(goods.value.id)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+          //刷新收藏的状态
+          getCollectInfo();
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      });
+}
+//取消收藏
+function cancelCollect() {
+  collectApi.delete(collectInfo.value.id)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+          //刷新收藏的状态
+          getCollectInfo();
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      });
 }
 
 selectById();

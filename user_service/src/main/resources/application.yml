@@ -42,3 +42,5 @@ white-list:
       method: POST
     - regPath: ^/user/reg
       method: POST
+    - regPath: ^/user/[\\d]+
+      method: GET
