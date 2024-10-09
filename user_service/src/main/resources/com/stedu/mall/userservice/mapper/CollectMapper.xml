@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stedu.mall.userservice.mapper.CollectMapper">
+    <insert id="insert" parameterType="collect">
+        INSERT INTO `collect`(`goods_id`, `user_id`) VALUES (#{goodsId}, #{userId})
+    </insert>
+    <delete id="delete">
+        DELETE FROM `collect` WHERE `id`=#{id}
+    </delete>
+    <select id="selectById" resultType="collect">
+        SELECT * FROM `collect` WHERE `id`=#{id}
+    </select>
+    <select id="selectByGoodsIdAndUserId" resultType="collect">
+        SELECT * FROM `collect` WHERE `goods_id`=#{goodsId} AND `user_id`=#{userId}
+    </select>
+    <select id="selectByUserId" resultType="collect">
+        SELECT * FROM `collect` WHERE `user_id`=#{userId}
+    </select>
+</mapper>

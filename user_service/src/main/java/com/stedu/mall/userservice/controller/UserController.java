@@ -106,7 +106,7 @@ public class UserController {
         String jwtStr = JwtUtils.generateJwt(map);
 
         //将token返回给用户
-        return RespBean.ok("注册成功", jwtStr);
+        return RespBean.ok("登录成功", jwtStr);
 
     }
 

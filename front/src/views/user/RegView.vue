@@ -1,7 +1,7 @@
 <template>
   <el-row style="margin-top: 15px;">
     <el-col :span="12">
-      <el-image src="/src/images/ad.png" />
+      <el-image src="/src/images/3.jpeg" />
     </el-col>
     <el-col :span="12">
       <el-form label-width="auto" class="regForm">
@@ -17,7 +17,7 @@
           <el-image :src="imageBase64Data" @click="getCaptcha"></el-image>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="regBtn" @click="reg">注册·</el-button>
+          <el-button type="primary" class="regBtn" @click="reg">注册</el-button>
         </el-form-item>
       </el-form>
     </el-col>

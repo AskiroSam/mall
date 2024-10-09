@@ -16,10 +16,14 @@
        </el-col>
        <el-col :span="4">
          <ul class="user">
-           <li><RouterLink to="/user/login">登录</RouterLink></li>
-           <li><RouterLink to="/user/reg">注册</RouterLink></li>
-           <!--<li>tom123</li>-->
-           <!--<li>退出</li>-->
+           <template v-if="!userStore.userInfo">
+             <li><RouterLink to="/user/reg">注册</RouterLink></li>
+             <li><RouterLink to="/user/login">登录</RouterLink></li>
+           </template>
+           <template v-else>
+             <li><el-link :underline="false" @click="logout" >退出</el-link></li>
+             <li><el-link>{{userStore.userInfo.username}}</el-link></li>
+           </template>
          </ul>
        </el-col>
      </el-row>
@@ -61,6 +65,17 @@
 import {Search} from "@element-plus/icons-vue";
 import categoryApi from "@/api/categoryApi.js";
 import {ref} from "vue";
+import {useUserStore} from "@/stores/user.js";
+import {useTokenStore} from "@/stores/token.js";
+import {useRouter} from "vue-router";
+
+
+//user
+const userStore = useUserStore();
+//token
+const tokenStore = useTokenStore();
+//路由跳转
+const router = useRouter();
 
 const parentList = ref([]);
 //1.获取夫分类 2.上架
@@ -76,6 +91,17 @@ function getParent() {
         parentList.value = resp.data;
       })
 }
+
+//注销
+function logout() {
+  //清空token
+  tokenStore.$reset();
+  //清空用户信息
+  userStore.$reset();
+  //跳转到首页
+  router.push('/user/index');
+}
+
 getParent();
 </script>
 
