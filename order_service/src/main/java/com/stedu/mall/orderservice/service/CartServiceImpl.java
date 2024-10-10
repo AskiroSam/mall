@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CartServiceImpl implements CartService {
+public  class CartServiceImpl implements CartService {
     @Autowired
     private CartMapper cartMapper;
     @DubboReference
@@ -37,6 +37,7 @@ public class CartServiceImpl implements CartService {
 
     }
 
+    //单选删除
     @Override
     public boolean delete(Integer id, Integer userId) throws SteduException {
         //判断购物车是否存在
@@ -50,6 +51,17 @@ public class CartServiceImpl implements CartService {
         }
         //删除
         return cartMapper.delete(id) == 1;
+    }
+
+    //多选删除
+    @Override
+    public boolean deleteIdList(List<Integer> idList, Integer userId) throws SteduException {
+        //判断选中的商品是否存在
+        if (idList == null || idList.isEmpty()) {
+            throw new SteduException("还未选中商品，无法删除");
+        }
+        //删除
+        return cartMapper.deleteIdList(idList) == 1;
     }
 
     @Override
@@ -91,5 +103,10 @@ public class CartServiceImpl implements CartService {
         //}
 
         return cartList;
+    }
+
+    @Override
+    public Cart selectById(Integer id) {
+        return cartMapper.selectById(id);
     }
 }

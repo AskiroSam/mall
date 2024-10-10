@@ -5,6 +5,7 @@ import com.stedu.mall.common.bean.RespBean;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.CartService;
 import com.stedu.mall.common.utils.JwtUtils;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,17 @@ public class CartController {
         cartService.insertOrUpdate(cart);
 
         return RespBean.ok("添加到购物车成功");
+    }
+
+    @DeleteMapping
+    public RespBean deleteIdList(@RequestBody List<Integer> idList, @RequestHeader("token") String token) throws SteduException {
+        //解析token获取用户id
+        Map<String, Object> map = JwtUtils.parseJwtToMap(token);
+        Integer userId = (Integer)map.get("id");
+
+        cartService.deleteIdList(idList, userId);
+
+        return RespBean.ok("删除成功");
     }
 
     @DeleteMapping("/{id}")
@@ -70,5 +82,12 @@ public class CartController {
         List<Cart> cartList = cartService.search(condition);
 
         return RespBean.ok("", cartList);
+    }
+
+    @GetMapping("/{id}")
+    public RespBean selectById(@PathVariable("id") Integer id) {
+        Cart cart = cartService.selectById(id);
+
+        return RespBean.ok("", cart);
     }
 }
