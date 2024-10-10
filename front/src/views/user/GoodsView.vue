@@ -48,16 +48,18 @@
 
 <script setup>
 import {useRoute} from "vue-router";
+import {useRouter} from "vue-router";
 import goodsApi from "@/api/goodsApi.js";
 import {ref} from "vue";
 import {Money, Paperclip, ShoppingCart, Star, StarFilled} from "@element-plus/icons-vue";
 import collectApi from "@/api/collectApi.js";
 import CartApi from "@/api/cartApi.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {useTokenStore} from "@/stores/token.js";
 
 const tokenStore = useTokenStore();
 const route = useRoute();
+const router = useRouter();
 const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 
 //需要显示的商品
@@ -70,11 +72,22 @@ function insertCart() {
   CartApi.insert(goods.value.id)
       .then(resp => {
         if (resp.code == 10000) {
-          ElMessage.success(resp.msg);
+          ElMessageBox.confirm(
+              '加入购物车成功，是否跳转到购物车页面',
+              '提示',
+              {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'info',
+              }
+          ).then(() => {
+            //点击成功之后的回调
+            router.push("/user/cart");
+          })
         } else {
           ElMessage.error(resp.msg);
         }
-      })
+      });
 }
 
 //根据商品id查询商品的详情信息

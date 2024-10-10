@@ -14,4 +14,6 @@ public class Cart implements Serializable {
     private Integer count;
     private Integer userId;
     private Integer goodsId;
+    //购物车对应的商品
+    private Goods goods;
 }

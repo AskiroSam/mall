@@ -19,10 +19,27 @@
         </set>
         WHERE `id`=#{id}
     </update>
+    <delete id="delete">
+        DELETE FROM `cart` WHERE `id`=#{id}
+    </delete>
     <select id="selectByUserIdAndGoodsId" resultType="cart">
         SELECT * FROM `cart` WHERE `user_id`=#{userId} AND `goods_id`=#{goodsId}
     </select>
     <select id="selectById" resultType="cart">
         SELECT * FROM `cart` WHERE `id`=#{id}
+    </select>
+    <select id="selectByCondition" resultType="cart" parameterType="cart">
+        SELECT * FROM `cart`
+        <where>
+            <if test="count!=null">
+                AND `count`=#{count}
+            </if>
+            <if test="userId!=null">
+                AND `user_id`=#{userId}
+            </if>
+            <if test="goodsId!=null">
+                AND `goods_id`=#{goodsId}
+            </if>
+        </where>
     </select>
 </mapper>

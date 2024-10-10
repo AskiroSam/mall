@@ -14,6 +14,7 @@ import SearchView from "@/views/user/SearchView.vue"
 import RegView from "@/views/user/RegView.vue";
 import { useTokenStore } from "@/stores/token";
 import GoodsView from "@/views/user/GoodsView.vue";
+import CartView from "@/views/user/CartView.vue";
 
 
 const router = createRouter({
@@ -50,6 +51,11 @@ const router = createRouter({
                   path: '/user/goods',
                   name: 'user_goods',
                   component: GoodsView
+              },
+              {
+                  path: '/user/cart',
+                  name: 'user_cart',
+                  component: CartView
               }
           ]
         },

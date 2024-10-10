@@ -1,17 +1,24 @@
 package com.stedu.mall.orderservice.service;
 
 import com.stedu.mall.common.bean.Cart;
+import com.stedu.mall.common.bean.Goods;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.CartService;
+import com.stedu.mall.common.service.GoodsService;
 import com.stedu.mall.orderservice.mapper.CartMapper;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CartServiceImpl implements CartService {
     @Autowired
     private CartMapper cartMapper;
+    @DubboReference
+    private GoodsService goodsService;
 
     @Override
     public boolean insertOrUpdate(Cart cart) {
@@ -31,12 +38,58 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public boolean update(Cart cart) throws SteduException {
+    public boolean delete(Integer id, Integer userId) throws SteduException {
+        //判断购物车是否存在
+        Cart cart = cartMapper.selectById(id);
+        if (cart == null) {
+            throw new SteduException("该购物车不存在，无法删除");
+        }
+        //判断被删除的购物车是否属于当前的用户
+        if (!cart.getUserId().equals(userId)) {
+            throw new SteduException("该购物车属于其他用户，无法删除");
+        }
+        //删除
+        return cartMapper.delete(id) == 1;
+    }
+
+    @Override
+    public boolean update(Cart cart, Integer userId) throws SteduException {
         //判断该购物车是否存在
-        if (cartMapper.selectById(cart.getId()) == null) {
+        Cart c = cartMapper.selectById(cart.getId());
+        if (c == null) {
             throw new SteduException("该购物车记录不存在，无法修改");
         }
 
+        //判断被修改的购物车是否属于当前用户
+        if (!c.getUserId().equals(userId)) {
+            throw new SteduException("该购物车属于其他用户，无法修改");
+        }
+
+        //查询购物车对应的商品
+        Goods goods = goodsService.selectById(c.getGoodsId());
+        if (cart.getCount() != null && cart.getCount() > goods.getCount()) {
+            //当购物商品的数量超过库存，就设置购物车商品数量为库存
+            cart.setCount(goods.getCount());
+        }
+
         return cartMapper.update(cart) == 1;
+    }
+
+    @Override
+    public List<Cart> search(Cart condition) {
+        List<Cart> cartList = cartMapper.selectByCondition(condition);
+        //调用goods_service查询购物车对应的商品
+        cartList.stream()
+                .forEach(cart -> {
+                    //查询对应的商品信息
+                    Goods goods = goodsService.selectById(cart.getGoodsId());
+                    cart.setGoods(goods);
+                });
+        //for (Cart cart : cartList) {
+        //    Goods goods = goodsService.selectById(cart.getGoodsId());
+        //    cart.setGoods(goods);
+        //}
+
+        return cartList;
     }
 }

@@ -14,10 +14,10 @@ public class WebConfig implements WebMvcConfigurer {
     private JwInterceptor jwInterceptor;
 
     //配置对JWT进行校验的拦截器
-    //@Override
-    //public void addInterceptors(InterceptorRegistry registry) {
-    //    registry.addInterceptor(jwInterceptor)
-    //            .addPathPatterns("/order/**");
-    //}
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(jwInterceptor)
+                .addPathPatterns("/cart/**");
+    }
 
 }

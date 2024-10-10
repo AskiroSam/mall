@@ -4,7 +4,7 @@
       <el-image src="/src/images/3.jpeg" />
     </el-col>
     <el-col :span="12">
-      <el-form label-width="auto" class="loginForm">
+      <el-form class="loginForm">
         <h1>用户登录</h1>
         <el-form-item>
           <el-input  prefix-icon="User" placeholder="请输入用户名" v-model="userInfo.username" />

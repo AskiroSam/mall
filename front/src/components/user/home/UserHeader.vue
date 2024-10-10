@@ -21,6 +21,7 @@
              <li><RouterLink to="/user/login">登录</RouterLink></li>
            </template>
            <template v-else>
+             <li class="cartLi"><RouterLink to="/user/cart"><el-icon><ShoppingCart /></el-icon></RouterLink></li>
              <li><el-link :underline="false" @click="logout" >退出</el-link></li>
              <li><el-link>{{userStore.userInfo.username}}</el-link></li>
            </template>
@@ -62,7 +63,7 @@
 </template>
 
 <script setup>
-import {Search} from "@element-plus/icons-vue";
+import {Search, ShoppingCart} from "@element-plus/icons-vue";
 import categoryApi from "@/api/categoryApi.js";
 import {ref} from "vue";
 import {useUserStore} from "@/stores/user.js";
@@ -108,6 +109,10 @@ getParent();
 
 
 <style scoped>
+  .cartLi .el-icon {
+    top: 5px;
+  }
+
   .nav_bg {
     background-color: var(--theme-bg-color);
     line-height: 40px;
