@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        String newPwd = SecureUtil.md5(SecureUtil.md5(user.getPassword() + user.getSalt()));
+        String newPwd = SecureUtil.md5(SecureUtil.md5(user.getPassword() + oldUser.getSalt()));
         user.setPassword(newPwd);
         return userMapper.update(user) == 1;
     }

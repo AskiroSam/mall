@@ -24,7 +24,7 @@
           </el-form-item>
         </el-form>
         <el-table :data="pageInfo.list" border style="width: 100%">
-          <el-table-column prop="id" label="ID" />
+          <el-table-column prop="id" label="ID" width="60px" />
           <el-table-column prop="username" label="名称" />
           <el-table-column label="密码">
             <template #default="scope">
@@ -37,7 +37,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="realname" label="真实姓名" />
-          <el-table-column prop="sex" label="性别" />
+          <el-table-column prop="sex" label="性别" width="60px" />
           <el-table-column prop="idCard" label="身份证号" />
           <el-table-column prop="phone" label="电话" />
           <el-table-column prop="email" label="邮箱" />
@@ -55,7 +55,7 @@
               <el-tag type="danger" v-if="scope.row.status == 3">注销</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="250px">
+          <el-table-column label="操作" width="330px">
             <template #default="scope">
               <el-button size="small" type="primary" @click="selectById(scope.row.id)">修改</el-button>
               <el-popconfirm title="你确定要删除该用户吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteUser(scope.row.id)">
@@ -63,6 +63,8 @@
                   <el-button size="small" type="danger">删除</el-button>
                 </template>
               </el-popconfirm>
+              <el-button size="small" type="warning" @click="resetPwd(scope.row.id)">重置密码</el-button>
+              <el-button size="small" type="warning" @click="resetPayPwd(scope.row.id)">重置支付密码</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -226,7 +228,7 @@ const userAdd = ref({
 //被修改的用户信息
 const userUpdate = ref({
   username: null,
-  password: null,
+  password: '',
   payPassword: null,
   realname: null,
   sex: '',
@@ -283,6 +285,80 @@ function insert() {
           ElMessage.error(resp.msg);
         }
       });
+}
+
+//重置密码
+function resetPwd(id) {
+  userApi.selectById(id)
+      .then(resp => {
+        if (resp.code == 10000) {
+          userUpdate.value = resp.data;
+          userUpdate.value.password = "123";
+          userApi.update(userUpdate.value)
+              .then(resp => {
+                if (resp.code == 10000) {
+                  ElMessage.success("重置密码成功");
+                  //清空
+                  userUpdate.value = {
+                    username: null,
+                    password: '',
+                    payPassword: null,
+                    realname: null,
+                    sex: null,
+                    idCard: null,
+                    phone: null,
+                    email: null,
+                    regTime: null,
+                    money: 0,
+                    status: 0,
+                  };
+                  //查询第一页
+                  selectByPage(1);
+                } else {
+                  ElMessage.error(resp.msg);
+                }
+              })
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
+}
+
+//重置支付密码
+function resetPayPwd(id) {
+  userApi.selectById(id)
+      .then(resp => {
+        if (resp.code == 10000) {
+          userUpdate.value = resp.data;
+          userUpdate.value.payPassword = "123456";
+          userApi.update(userUpdate.value)
+              .then(resp => {
+                if (resp.code == 10000) {
+                  ElMessage.success("重置支付密码成功");
+                  //清空
+                  userUpdate.value = {
+                    username: null,
+                    password: '',
+                    payPassword: null,
+                    realname: null,
+                    sex: null,
+                    idCard: null,
+                    phone: null,
+                    email: null,
+                    regTime: null,
+                    money: 0,
+                    status: 0,
+                  };
+                  //查询第一页
+                  selectByPage(1);
+                } else {
+                  ElMessage.error(resp.msg);
+                }
+              })
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
 }
 
 //修改
