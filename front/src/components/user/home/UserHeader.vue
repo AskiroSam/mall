@@ -23,7 +23,7 @@
            <template v-else>
              <li class="cartLi"><RouterLink to="/user/cart"><el-icon><ShoppingCart /></el-icon></RouterLink></li>
              <li><el-link :underline="false" @click="logout" >退出</el-link></li>
-             <li><el-link>{{userStore.userInfo.username}}</el-link></li>
+             <li><RouterLink to="/user/center">{{userStore.userInfo.username}}</RouterLink></li>
            </template>
          </ul>
        </el-col>

@@ -30,7 +30,7 @@
         </div>
         <div class="goodsBtn">
           <el-button type="primary" size="large" @click="insertCart"><el-icon><ShoppingCart /></el-icon>加入购物车</el-button>
-          <el-button type="success" size="large"><el-icon><Money /></el-icon>直接购买</el-button>
+          <el-button type="success" size="large" @click="toCreateOrderPage"><el-icon><Money /></el-icon>直接购买</el-button>
           <el-button type="info" size="large" v-if="!collectInfo" @click="collect"><el-icon><StarFilled /></el-icon>收藏</el-button>
           <el-button type="danger" size="large" v-else @click="cancelCollect"><el-icon><Star /></el-icon>取消收藏</el-button>
         </div>
@@ -66,6 +66,18 @@ const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 const goods = ref({});
 //商品收藏的状态
 const collectInfo = ref(null);
+
+//跳转到生成订单的页面
+function toCreateOrderPage() {
+  let goodsId = route.query.id;
+
+  router.push({
+    path: "/user/createOrder",
+    query: {
+      goodsId
+    }
+  });
+}
 
 //加入购物车
 function insertCart() {

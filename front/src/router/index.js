@@ -15,6 +15,8 @@ import RegView from "@/views/user/RegView.vue";
 import { useTokenStore } from "@/stores/token";
 import GoodsView from "@/views/user/GoodsView.vue";
 import CartView from "@/views/user/CartView.vue";
+import CreateOrderView from "@/views/user/CreateOrderView.vue";
+import CenterView from "@/views/user/CenterView.vue";
 
 
 const router = createRouter({
@@ -56,6 +58,16 @@ const router = createRouter({
                   path: '/user/cart',
                   name: 'user_cart',
                   component: CartView
+              },
+              {
+                  path: '/user/createOrder',
+                  name: 'user_createOrder',
+                  component: CreateOrderView
+              },
+              {
+                  path: '/user/center',
+                  name: 'user_center',
+                  component: CenterView
               }
           ]
         },

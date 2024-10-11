@@ -42,7 +42,7 @@
         总价：￥{{ total }}
       </el-col>
       <el-col :span="2">
-        <el-button type="danger">结算</el-button>
+        <el-button type="danger" @click="toCreateOrderPage">结算</el-button>
       </el-col>
     </el-row>
   </div>
@@ -57,7 +57,9 @@ import {ref} from "vue";
 import cartApi from "@/api/cartApi.js";
 import {Delete} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 //服务器地址
 const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 //当前用户所有的购物车信息
@@ -72,6 +74,30 @@ const checkedCount = ref(0);
 const total = ref(0);
 //选中的商品
 const deleteIdList = ref([]);
+
+//跳转到生成订单的页面
+function toCreateOrderPage() {
+  //获取已选中的购物车的id
+  let cartIds = [];
+
+  cartList.value.forEach(cart => {
+    if (cart.checkState) {
+      cartIds.push(cart.id);
+    }
+  });
+
+  if (cartIds.length === 0) {
+    ElMessage.warning("您还没有选择商品，无法进行结算")
+    return;
+  }
+
+  router.push({
+    path: "/user/createOrder",
+    query: {
+      cartIds
+    }
+  });
+}
 
 //全选 - 全不选
 function checkAllOrNone() {
