@@ -9,6 +9,7 @@ import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,11 +37,23 @@ public class CartController {
         return RespBean.ok("添加到购物车成功");
     }
 
+    //@DeleteMapping
+    //public RespBean deleteIdList(@RequestBody List<Integer> idList, @RequestHeader("token") String token) throws SteduException {
+    //    //解析token获取用户id
+    //    Map<String, Object> map = JwtUtils.parseJwtToMap(token);
+    //    Integer userId = (Integer)map.get("id");
+    //
+    //    cartService.deleteIdList(idList, userId);
+    //
+    //    return RespBean.ok("删除成功");
+    //}
     @DeleteMapping
-    public RespBean deleteIdList(@RequestBody List<Integer> idList, @RequestHeader("token") String token) throws SteduException {
+    public RespBean deleteIList(@RequestBody Map<String, ArrayList<Integer>> data, @RequestHeader("token") String token) throws SteduException {
         //解析token获取用户id
         Map<String, Object> map = JwtUtils.parseJwtToMap(token);
         Integer userId = (Integer)map.get("id");
+
+        ArrayList<Integer> idList = data.get("idList");
 
         cartService.deleteIdList(idList, userId);
 

@@ -71,10 +71,6 @@ const router = createRouter({
             redirect: "/admin/index",
             children: [
                 {
-                    path: '/admin/index',
-                    name: 'admin_index',
-                    component: IndexView
-                }, {
                     path: '/admin/adminlist',
                     name: 'admin_adminlist',
                     component: AdminListView
@@ -96,7 +92,11 @@ const router = createRouter({
                     component: UserListView
                 }
             ]
-        }
+        },{
+            path: '/admin/index',
+            name: 'admin_index',
+            component: IndexView
+        },
     ]
 })
 

@@ -7,10 +7,19 @@ const cartApi = {
     },
     delete(id) {
         return service.delete(`/cart/${id}`);
-    },
+    }
+    // ,
+    // deleteIdList(idList) {
+    //     return service.delete("/cart",{
+    //         data: idList // 确保传递的是一个对象，包含 data 字段
+    //     });
+    // },
+    ,
     deleteIdList(idList) {
         return service.delete("/cart",{
-            data: idList // 确保传递的是一个对象，包含 data 字段
+            data: {
+                idList
+            }
         });
     },
     update(cart) {

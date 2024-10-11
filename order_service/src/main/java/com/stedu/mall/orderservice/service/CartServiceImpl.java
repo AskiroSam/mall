@@ -56,12 +56,21 @@ public  class CartServiceImpl implements CartService {
     //多选删除
     @Override
     public boolean deleteIdList(List<Integer> idList, Integer userId) throws SteduException {
-        //判断选中的商品是否存在
-        if (idList == null || idList.isEmpty()) {
-            throw new SteduException("还未选中商品，无法删除");
+        for (Integer id : idList) {
+            Cart cart = cartMapper.selectById(id);
+            //判断选中的商品是否存在
+            if (cart == null) {
+                throw new SteduException("该购物车不存在，无法删除");
+            }
+
+            //判断被修改的购物车是否属于当前用户
+            if (!cart.getUserId().equals(userId)) {
+                throw new SteduException("该购物车属于其他用户，无法修改");
+            }
         }
+
         //删除
-        return cartMapper.deleteIdList(idList) == 1;
+        return cartMapper.deleteIdList(idList) == idList.size();
     }
 
     @Override

@@ -1,49 +1,55 @@
 <template>
-  <el-row class="title">
-    <el-col :span="2">
-      <el-checkbox label="全选" v-model="checkAllState"  :indeterminate="halfState" @change="checkAllOrNone" :disabled="cartList.length === 0" />
-    </el-col>
-    <el-col :span="11">商品</el-col>
-    <el-col :span="2">单价</el-col>
-    <el-col :span="6">数量</el-col>
-    <el-col :span="2">小计</el-col>
-    <el-col :span="1">操作</el-col>
-  </el-row>
-  <el-row v-for="(cart, index) in cartList" :key="index" class="cartItem">
-    <el-col :span="2">
-      <el-checkbox v-model="cart.checkState" @change="changeState" />
-    </el-col>
-    <el-col :span="2">
-      <el-image :src="`${SERVER_ADDR}/goods/pic/${cart.goods.picList[0].url}`"
-      style="height: 50px; width: 50px;" fit="contain"/>
-    </el-col>
-    <el-col :span="5">{{cart.goods.name}}</el-col>
-    <el-col :span="4">{{cart.goods.color}} - {{cart.goods.version}}</el-col>
-    <el-col :span="2">{{cart.goods.price}}</el-col>
-    <el-col :span="6">
-      <el-input-number v-model="cart.count" :min="1" size="small" @change="updateCount(cart)" />
-    </el-col>
-    <el-col :span="2">{{cart.goods.price * cart.count}}</el-col>
-    <el-col :span="1">
-      <el-button type="danger" :icon="Delete" circle @click="deleteById(cart.id)" />
-    </el-col>
-  </el-row>
-  <el-row class="cartFooter">
-    <el-col :span="2">
-      <el-checkbox label="全选" v-model="checkAllState"  :indeterminate="halfState" @change="checkAllOrNone" :disabled="cartList.length === 0" />
-    </el-col>
-    <el-col :span="3" @click="deleteList"><el-link>删除选中的商品</el-link></el-col>
-    <el-col :span="11" @click="deleteAll"><el-link>清空购物车</el-link></el-col>
-    <el-col :span="3">
-      已选择{{ checkedCount }}件商品
-    </el-col>
-    <el-col :span="3">
-      总价：￥{{ total }}
-    </el-col>
-    <el-col :span="2">
-      <el-button type="danger">结算</el-button>
-    </el-col>
-  </el-row>
+  <div v-if="cartList.length > 0">
+    <el-row class="title">
+      <el-col :span="2">
+        <el-checkbox label="全选" v-model="checkAllState"  :indeterminate="halfState" @change="checkAllOrNone" :disabled="cartList.length === 0" />
+      </el-col>
+      <el-col :span="11">商品</el-col>
+      <el-col :span="2">单价</el-col>
+      <el-col :span="6">数量</el-col>
+      <el-col :span="2">小计</el-col>
+      <el-col :span="1">操作</el-col>
+    </el-row>
+    <el-row v-for="(cart, index) in cartList" :key="index" class="cartItem">
+      <el-col :span="2">
+        <el-checkbox v-model="cart.checkState" @change="changeState" />
+      </el-col>
+      <el-col :span="2">
+        <el-image :src="`${SERVER_ADDR}/goods/pic/${cart.goods.picList[0].url}`"
+                  style="height: 50px; width: 50px;" fit="contain"/>
+      </el-col>
+      <el-col :span="5">{{cart.goods.name}}</el-col>
+      <el-col :span="4">{{cart.goods.color}} - {{cart.goods.version}}</el-col>
+      <el-col :span="2">{{cart.goods.price}}</el-col>
+      <el-col :span="6">
+        <el-input-number v-model="cart.count" :min="1" size="small" @change="updateCount(cart)" />
+      </el-col>
+      <el-col :span="2">{{cart.goods.price * cart.count}}</el-col>
+      <el-col :span="1">
+        <el-button type="danger" :icon="Delete" circle @click="deleteById(cart.id)" />
+      </el-col>
+    </el-row>
+    <el-row class="cartFooter">
+      <el-col :span="2">
+        <el-checkbox label="全选" v-model="checkAllState"  :indeterminate="halfState" @change="checkAllOrNone" :disabled="cartList.length === 0" />
+      </el-col>
+      <el-col :span="3"><el-link :underline="false" @click="deleteList">删除选中的商品</el-link></el-col>
+      <el-col :span="11"><el-link :underline="false"  @click="deleteAll">清空购物车</el-link></el-col>
+      <el-col :span="3">
+        已选择{{ checkedCount }}件商品
+      </el-col>
+      <el-col :span="3">
+        总价：￥{{ total }}
+      </el-col>
+      <el-col :span="2">
+        <el-button type="danger">结算</el-button>
+      </el-col>
+    </el-row>
+  </div>
+  <div v-else class="none">
+    <div class="none_img"><el-image src="/src/images/shopping.png" style="height: 200px; width: 200px"></el-image></div>
+    <div class="none_text">购物车空空如也~，快<RouterLink to="/user/index">去购物</RouterLink>吧~</div>
+  </div>
 </template>
 
 <script setup>
@@ -174,9 +180,15 @@ function deleteById(id) {
 //删除选中的商品
 function deleteList() {
   // 获取所有选中商品的 id
-  const selectedIds = cartList.value
-      .filter(item => item.checkState)
-      .map(item => item.id);
+  let selectedIds = [];
+  cartList.value.forEach(cart => {
+    if (cart.checkState) {
+      selectedIds.push(cart.id);
+    }
+  });
+  // const selectedIds = cartList.value
+  //     .filter(item => item.checkState)
+  //     .map(item => item.id);
 
   if (selectedIds.length === 0) {
     ElMessage.warning('请先选择商品');
@@ -188,7 +200,7 @@ function deleteList() {
         if (resp.code == 10000) {
           ElMessage.success(resp.msg);
           //将被删除的项从cartList中清除
-          cartList.value = cartList.value.filter(cart => !selectedIds.includes(cart.id));
+          cartList.value = cartList.value.filter(cart => !cart.checkState);
           //设置按钮的状态
           changeState();
           getCountAndTotal();
@@ -200,11 +212,15 @@ function deleteList() {
 
 //清空购物车
 function deleteAll() {
-  const selectAll = cartList.value
-      .map(item => item.id);
+  let selectAll = [];
+  cartList.value.forEach(cart => {
+    selectAll.push(cart.id);
+  });
+  // const selectAll = cartList.value
+  //     .map(item => item.id);
 
   if (selectAll.length === 0) {
-    ElMessage.warning("购物车中没有物品");
+    ElMessage.warning("购物车中没有物品，无法清空");
     return;
   }
 
@@ -212,8 +228,8 @@ function deleteAll() {
       .then(resp => {
         if (resp.code == 10000) {
           ElMessage.success("已清空");
-          //将被删除的项从cartList中清除
-          cartList.value = cartList.value.filter(cart => !selectAll.includes(cart.id));
+          //重新获取购物车列表
+          selectCartList();
           //设置按钮的状态
           changeState();
           getCountAndTotal();
@@ -270,4 +286,21 @@ selectCartList();
    line-height: 50px;
  }
 
+ .none {
+   line-height: 300px;
+   height: 300px;
+   background-color: #FFFFFF;
+   text-align: center;
+ }
+
+ .none_img {
+   float: left;
+   margin-left: 30%;
+   margin-top: 40px;
+ }
+
+ .none_text {
+   float: right;
+   margin-right: 32%;
+ }
 </style>
