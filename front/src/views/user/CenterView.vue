@@ -3,12 +3,12 @@
     <el-aside>
       <div class="title">个人中心</div>
       <ul class="menuList">
-        <li><RouterLink to="/">我的订单</RouterLink></li>
-        <li><RouterLink to="/">我的收藏</RouterLink></li>
-        <li><RouterLink to="/">个人信息</RouterLink></li>
-        <li><RouterLink to="/">修改密码</RouterLink></li>
-        <li><RouterLink to="/">地址管理</RouterLink></li>
-        <li><RouterLink to="/">账户充值</RouterLink></li>
+        <li><RouterLink to="/user/orderList">我的订单</RouterLink></li>
+        <li><RouterLink to="/user/collectList">我的收藏</RouterLink></li>
+        <li><RouterLink to="/user/info">个人信息</RouterLink></li>
+        <li><RouterLink to="/user/password">修改密码</RouterLink></li>
+        <li><RouterLink to="/user/addrList">地址管理</RouterLink></li>
+        <li><RouterLink to="/user/recharge">账户充值</RouterLink></li>
       </ul>
     </el-aside>
     <el-main>
