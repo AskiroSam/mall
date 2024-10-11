@@ -1,0 +1,66 @@
+package com.stedu.mall.userservice.service;
+
+import com.stedu.mall.common.bean.Addr;
+import com.stedu.mall.common.exception.SteduException;
+import com.stedu.mall.common.service.AddrService;
+import com.stedu.mall.userservice.mapper.AddrMapper;
+import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AddrServiceImpl implements AddrService {
+    @Autowired
+    private AddrMapper addrMapper;
+
+    @Override
+    public int insert(Addr addr) {
+        addr.setStatus(0);
+        return addrMapper.insert(addr);
+    }
+
+    @Override
+    public int delete(Integer id, Integer userId) throws SteduException {
+        //判断这个地址是否存在
+        Addr addr = addrMapper.selectById(id);
+        if (addr == null) {
+            throw new SteduException("该地址不存在，无法删除");
+        }
+
+        //判断这个地址是否属于当前用户
+        if (!addr.getUserId().equals(userId)) {
+            throw new SteduException("该地址属于其它用户，无法删除");
+        }
+
+        //删除
+        return addrMapper.delete(id);
+    }
+
+    @Override
+    public int update(Addr addr, Integer userId) throws SteduException {
+        //判断这个地址是否存在
+        Addr a = addrMapper.selectById(addr.getId());
+        if (a == null) {
+            throw new SteduException("该地址不存在，无法删除");
+        }
+
+        //判断这个地址是否属于当前用户
+        if (!a.getUserId().equals(userId)) {
+            throw new SteduException("该地址属于其它用户，无法删除");
+        }
+
+        return addrMapper.update(addr);
+    }
+
+    @Override
+    public Addr selectById(Integer id) {
+        return addrMapper.selectById(id);
+    }
+
+    @Override
+    public List<Addr> selectByCondition(Addr condition) {
+        return addrMapper.selectByCondition(condition);
+    }
+}
