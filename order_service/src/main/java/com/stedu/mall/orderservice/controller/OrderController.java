@@ -3,15 +3,19 @@ package com.stedu.mall.orderservice.controller;
 import com.github.pagehelper.PageInfo;
 import com.stedu.mall.common.bean.Goods;
 import com.stedu.mall.common.bean.Order;
+import com.stedu.mall.common.bean.OrderVo;
 import com.stedu.mall.common.bean.RespBean;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.OrderDetailService;
 import com.stedu.mall.common.service.OrderService;
 
 import com.stedu.mall.common.service.UserService;
+import com.stedu.mall.common.utils.JwtUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -23,12 +27,17 @@ public class OrderController {
     private OrderDetailService orderDetailService;
 
 
-    //添加
+    //添加 addrId cartIds[]
     @PostMapping
-    public RespBean insert(@RequestBody Order order) throws SteduException {
-        orderService.insert(order);
+    public RespBean insert(@RequestBody OrderVo orderVo, @RequestHeader("token") String token) throws SteduException {
+        //解析token获取用户id
+        Map<String, Object> map = JwtUtils.parseJwtToMap(token);
+        Integer userId = (Integer)map.get("id");
 
-        return RespBean.ok("添加成功");
+        orderVo.setUserId(userId);
+        //添加订单
+        orderService.insert(orderVo);
+        return RespBean.ok("添加订单成功");
     }
     //删除
     @DeleteMapping("/{id}")

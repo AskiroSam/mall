@@ -37,7 +37,7 @@
   <!--显示总金额和生成订单的按钮-->
   <div class="footer">
     总金额：￥<span class="total">{{total}}</span>元
-    <el-button type="danger" class="createOrder">生成订单</el-button>
+    <el-button type="danger" class="createOrder" @click="createOrder">生成订单</el-button>
   </div>
 
 </template>
@@ -48,6 +48,7 @@ import addrApi from "@/api/addrApi.js";
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import cartApi from "@/api/cartApi.js";
+import orderApi from "@/api/orderApi.js";
 
 const route = useRoute();
 // console.log(route.query.cartIds)
@@ -56,15 +57,39 @@ const route = useRoute();
 const addrList = ref([]);
 //当前用户选中的购物车
 const cartList = ref([]);
-//被选中的地址
+//被选中的地址 - 用来生成订单的地址id
 const addrId = ref(null);
 //总金额
 const total = ref(0);
 //服务器地址
 const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 
+//生成订单
+function createOrder() {
+  //判断有没有选择地址
+  if (!addrId.value) {
+    ElMessage.error("请选择收货地址");
+    return;
+  }
 
-//查询当前用户的所有地址
+  //已选择的购物车的地址
+  let cartIds = route.query.cartIds;
+  let orderVo = {
+    addrId: addrId.value,
+    cartIds: cartIds
+  }
+
+  //发送请求生成订单
+  orderApi.insert(orderVo)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg);
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      });
+}
+
 //获取当前用户的所有的地址
 function getAddrList() {
   addrApi.selectByUser()

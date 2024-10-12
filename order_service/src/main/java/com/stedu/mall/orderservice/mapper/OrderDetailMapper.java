@@ -16,6 +16,8 @@ public interface OrderDetailMapper {
 
     //添加
     int insert(@Param("orderDetailList") List<OrderDetail> orderDetailList);
+    //添加
+    int insert1(OrderDetail orderDetail);
     //根据订单id删除
     int delete(String orderId);
     //修改详情

@@ -7,6 +7,10 @@
             (#{detail.count}, #{detail.price}, #{detail.orderId}, #{detail.goodsId})
         </foreach>
     </insert>
+    <insert id="insert1" parameterType="orderDetail">
+        INSERT INTO `order_detail`(`count`, `price`, `order_id`, `goods_id`)
+        VALUES (#{count}, #{price}, #{orderId}, #{goodsId})
+    </insert>
     <update id="update">
         UPDATE `order_detail`
         <set>

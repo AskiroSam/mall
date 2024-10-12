@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@DubboService
 public class AddrServiceImpl implements AddrService {
     @Autowired
     private AddrMapper addrMapper;

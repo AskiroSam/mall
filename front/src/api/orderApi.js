@@ -2,8 +2,8 @@ import service from "@/api/index.js";
 
 const orderApi = {
     //添加
-    insert(user) {
-        return service.post('/user', user);
+    insert(orderVo) {
+        return service.post('/order', orderVo);
     },
     //删除
     delete(id) {

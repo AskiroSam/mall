@@ -13,9 +13,9 @@
         <!-- 详情 -->
         <collection column="id" property="orderDetailList" ofType="orderDetail" select="com.stedu.mall.orderservice.mapper.OrderDetailMapper.selectByOrderId" />
     </resultMap>
-    <insert id="insert">
-        INSERT INTO `order`(`id`, `user_id`, `create_time`, `express`, `pay_type`, `addr_id`, `addr_detail`, `status`)
-        VALUES (#{id}, #{userId}, #{createTime}, #{express}, #{payType}, #{addrId}, #{addrDetail}, #{status})
+    <insert id="insert" parameterType="order">
+        INSERT INTO `order`(`id`, `user_id`, `express`, `pay_type`, `addr_id`, `addr_detail`, `status`)
+        VALUES (#{id}, #{userId}, #{express}, #{payType}, #{addrId}, #{addrDetail}, #{status})
     </insert>
     <update id="update" parameterType="order">
         UPDATE `order`

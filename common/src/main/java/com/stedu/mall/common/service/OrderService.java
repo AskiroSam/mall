@@ -3,13 +3,14 @@ package com.stedu.mall.common.service;
 import com.github.pagehelper.PageInfo;
 import com.stedu.mall.common.bean.Order;
 import com.stedu.mall.common.bean.OrderDetail;
+import com.stedu.mall.common.bean.OrderVo;
 import com.stedu.mall.common.exception.SteduException;
 
 import java.util.List;
 
 public interface OrderService {
     //添加
-    void insert(Order Order);
+    void insert(OrderVo orderVo) throws SteduException;
     //根据id删除
     void delete(String id) throws SteduException;
     //根据i修改
