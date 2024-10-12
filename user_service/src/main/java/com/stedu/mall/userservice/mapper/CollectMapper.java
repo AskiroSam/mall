@@ -1,5 +1,6 @@
 package com.stedu.mall.userservice.mapper;
 
+import com.stedu.mall.common.bean.Addr;
 import com.stedu.mall.common.bean.Collect;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,6 +15,8 @@ public interface CollectMapper {
     Collect selectById(Integer id);
     //根据商品id和用户id查询
     Collect selectByGoodsIdAndUserId(@Param("goodsId") Integer goodsId, @Param("userId") Integer userId);
-    //查询所有
+    //根据条件查询
+    List<Collect> selectByCondition(Collect condition);
+
     List<Collect> selectByUserId(Integer userId);
 }

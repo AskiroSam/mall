@@ -7,9 +7,7 @@
           <span class="promptText">请谨防钓鱼链接或诈骗电话</span>
         </div>
         <div class="navigation">
-          <span v-for="item in navigationItems" :key="item" :class="{ active: activeItem === item }" @click="setActive(item)">
-            <a>{{ item }}</a>
-          </span>
+          <span v-for="item in navigationItems" :key="item" :class="{ active: activeItem === item }" @click="setActive(item)"><a>{{ item }}</a></span>
         </div>
       </div>
 
@@ -25,7 +23,7 @@
               </el-row>
 
               <!--订单详情-->
-              <el-row style="background-color: #FFFFFF; margin-bottom: 0" v-for="(orderDetail, index) in order.orderDetailList" :key="index">
+              <el-row style="background-color: #FFFFFF; margin-bottom: 0;" v-for="(orderDetail, index) in order.orderDetailList" :key="index">
                 <el-col :span="3">
                   <div class="pic">
                     <el-image
@@ -42,15 +40,23 @@
                 <el-col :span="3" style="margin-top: 60px; margin-left: 10px">￥{{ orderDetail.price}}
                   <div class="carriage">(含运费:￥0.00)</div>
                 </el-col>
-                <el-col :span="4" style="margin-top: 60px; margin-left: 10px; text-align: right;">{{getOrderStatus(order.status)}}</el-col>
               </el-row>
-
+              <el-row>
+                <el-col :span="4" style="margin-top: 20px; margin-left: 700px; text-align: right;">订单状态：{{getOrderStatus(order.status)}}</el-col>
+              </el-row>
             </el-card>
           </el-row>
+
+          <!--分页导航-->
+          <el-row class="row-bg" justify="center" style="margin-top: 20px;">
+            <el-pagination background layout="prev, pager, next"
+                           v-model:current-page="pageInfo.pageNum"
+                           :page-count="pageInfo.pages"
+                           @update:current-page="getOrderList" />
+          </el-row>
+
         </div>
       </div>
-
-
     </div>
   </el-card>
 </template>
@@ -67,9 +73,15 @@ const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 const orderList = ref([]);
 //存放该用户订单中的订单详情
 const orderDetailList = ref([]);
+//分页信息
+const pageInfo = ref({
+  pages: 0,
+  pageSize: 0,
+  pageNum: 0
+});
 //保存用户信息
 const user = ref({
-  userId: null
+  userId: null,
 });
 //存放导航项
 const navigationItems = ["所有订单", "进行中", "待付款", "待发货", "待退换", "已完成"];
@@ -83,12 +95,13 @@ function setActive(item) {
 
 
 //获取当前用户的订单信息
-function getOrderList() {
+function getOrderList(pageNum) {
   const condition = {
-    userId: user.value.id
+    userId: user.value.id,
   }
-  orderApi.selectByPage(condition)
+  orderApi.selectByPage(condition, pageNum, 5)
       .then(resp => {
+        pageInfo.value = resp.data;
         orderList.value = resp.data.list;
         console.log(orderList.value)
         //将订单详情保存
@@ -214,5 +227,9 @@ a {
 }
 a:hover {
   color: var(--theme-color);
+}
+
+.status {
+
 }
 </style>

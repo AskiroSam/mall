@@ -13,6 +13,17 @@ const collectApi = {
     //根据商品id和用户id查询
     selectByGoodsIdAndUserId(goodsId) {
         return service.get(`/collect/${goodsId}`);
+    },
+    //分页搜索
+    selectByPage(collect, pageNum, pageSize) {
+        collect.pageNum = pageNum;
+        collect.pageSize = pageSize;
+        return service.get('/collect', {
+            params: collect
+        });
+    },
+    selectById(id) {
+        return service.get(`/collect/${id}`)
     }
 }
 export default collectApi;

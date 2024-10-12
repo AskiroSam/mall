@@ -2,10 +2,13 @@ package com.stedu.mall.userservice.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.stedu.mall.common.bean.Collect;
+import com.stedu.mall.common.bean.*;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.CollectService;
+import com.stedu.mall.common.service.GoodsService;
 import com.stedu.mall.userservice.mapper.CollectMapper;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,8 @@ import java.util.List;
 public class CollectServiceImpl implements CollectService {
     @Autowired
     private CollectMapper collectMapper;
+    @DubboReference
+    private GoodsService goodsService;
 
     //注意：一个商品只能被一个用户收藏一次
     @Override
@@ -45,6 +50,7 @@ public class CollectServiceImpl implements CollectService {
         return collectMapper.delete(id) == 1;
     }
 
+
     @Override
     public Collect selectByGoodsIdAndUserId(Integer goodsId, Integer userId) {
         return collectMapper.selectByGoodsIdAndUserId(goodsId, userId);
@@ -57,6 +63,28 @@ public class CollectServiceImpl implements CollectService {
         //查询
         List<Collect> collectList = collectMapper.selectByUserId(userId);
         //创建分页信息的对象
+        PageInfo<Collect> pageInfo = new PageInfo<>(collectList);
+        return pageInfo;
+    }
+
+    @Override
+    public List<Collect> selectByUserId(Integer userId) {
+        return null;
+    }
+
+    @Override
+    public PageInfo<Collect> selectByCondition(Collect condition, Integer pageNum, Integer pageSize) {
+        //设置分页信息
+        PageHelper.startPage(pageNum, pageSize);
+        List<Collect> collectList = collectMapper.selectByCondition(condition);
+
+        //设置商品
+        for (Collect collect : collectList) {
+            Goods goods = goodsService.selectById(collect.getGoodsId());
+            collect.setGoods(goods);
+        }
+
+        //创建分页信息
         PageInfo<Collect> pageInfo = new PageInfo<>(collectList);
         return pageInfo;
     }

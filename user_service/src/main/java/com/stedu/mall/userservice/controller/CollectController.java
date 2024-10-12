@@ -1,6 +1,9 @@
 package com.stedu.mall.userservice.controller;
 
+import com.github.pagehelper.PageInfo;
+import com.stedu.mall.common.bean.Addr;
 import com.stedu.mall.common.bean.Collect;
+import com.stedu.mall.common.bean.Order;
 import com.stedu.mall.common.bean.RespBean;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.CollectService;
@@ -8,6 +11,7 @@ import com.stedu.mall.common.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -57,4 +61,16 @@ public class CollectController {
 
         return RespBean.ok("", collect);
     }
+
+    @GetMapping
+    public RespBean selectByPage(Collect condition, Integer pageNum, Integer pageSize) {
+        pageNum = pageNum == null ? 1 : pageNum;
+        pageSize = pageSize == null ? 5 : pageSize;
+
+        PageInfo<Collect> pageInfo = collectService.selectByCondition(condition, pageNum, pageSize);
+
+        return RespBean.ok("查询成功", pageInfo);
+    }
+
+
 }
