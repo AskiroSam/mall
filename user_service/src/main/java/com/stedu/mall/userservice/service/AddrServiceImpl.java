@@ -51,6 +51,26 @@ public class AddrServiceImpl implements AddrService {
             throw new SteduException("该地址属于其它用户，无法删除");
         }
 
+        /*
+        * 设置为默认地址的处理 -- 如果将某个地址设置为默认地址
+        * 1.将之前的默认地址设置为普通的地址
+        * */
+        if (Integer.valueOf(1).equals(addr.getStatus())) {
+            //查出当前的默认地址
+            Addr condition = new Addr();
+            condition.setStatus(1);
+            List<Addr> addrList = addrMapper.selectByCondition(condition);
+
+            //将当前的默认地址设置为普通地址
+            if (addrList.size() > 0) {
+                Addr a1 = new Addr();
+                a1.setId(addrList.get(0).getId());
+                a1.setStatus(0);
+
+                addrMapper.update(a1);
+            }
+        }
+
         return addrMapper.update(addr);
     }
 

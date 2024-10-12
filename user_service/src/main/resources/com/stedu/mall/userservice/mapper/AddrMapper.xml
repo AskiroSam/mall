@@ -78,6 +78,7 @@
                 AND `status`=#{status}
             </if>
         </where>
+        ORDER BY `status` DESC
     </select>
     <select id="selectAll" resultType="addr">
         SELECT * FROM `addr`;

@@ -26,7 +26,9 @@
           </el-row>
         </div>
       </div>
-      <div class="main"></div>
+      <div class="main">
+
+      </div>
     </div>
   </el-card>
 </template>

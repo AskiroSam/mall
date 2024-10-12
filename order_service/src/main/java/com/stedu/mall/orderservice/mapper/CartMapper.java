@@ -23,4 +23,6 @@ public interface CartMapper {
     Cart selectById(Integer id);
     //根据条件进行查询
     List<Cart> selectByCondition(Cart condition);
+
+    List<Cart> selectByIds(@Param("cartIds") Integer[] cartIds);
 }

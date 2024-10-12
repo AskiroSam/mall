@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useTokenStore } from "@/stores/token.js";
+import {useUserStore} from "@/stores/user.js";
 import {ElMessage} from "element-plus";
 import router from "@/router/index.js";
 
@@ -47,8 +48,9 @@ service.interceptors.response.use(resp => {
             message: '令牌错误，请重新登录',
             duration: 1200,
             onClose: () => {
-                //删除sessionStorage的token
-                // sessionStorage.removeItem('token');
+                //将store中的token和user设置为初值
+                const userStore = useUserStore()
+                userStore.$reset();
                 const tokenStore = useTokenStore();
                 tokenStore.$reset();
                 //判断跳转到管理员登录页还是用户登录页

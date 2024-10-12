@@ -6,13 +6,25 @@
           <span class="orderText">我的订单</span>
           <span class="promptText">请谨防钓鱼链接或诈骗电话</span>
         </div>
+        <div class="navigation">
+          <span v-for="item in navigationItems" :key="item" :class="{ active: activeItem === item }" @click="setActive(item)">
+            <a>{{ item }}</a>
+          </span>
+        </div>
+      </div>
+
+      <div class="body">
         <div class="main">
           <el-row v-for="(order, index) in orderList" :key="index" class="orderItem">
             <el-card style="width: 900px; background-color: #EEEEEE;">
+
+              <!--订单头部信息-->
               <el-row style="margin-top: 0">
                 <el-col :span="3" style="font-size: 12px; margin-left: 20px; margin-top: 20px">{{formatDate(order.createTime)}}</el-col>
                 <el-col :span="6" style="font-size: 12px; margin-left: 20px; margin-top: 20px">订单号：{{order.id}}</el-col>
               </el-row>
+
+              <!--订单详情-->
               <el-row style="background-color: #FFFFFF; margin-bottom: 0" v-for="(orderDetail, index) in order.orderDetailList" :key="index">
                 <el-col :span="3">
                   <div class="pic">
@@ -30,12 +42,15 @@
                 <el-col :span="3" style="margin-top: 60px; margin-left: 10px">￥{{ orderDetail.price}}
                   <div class="carriage">(含运费:￥0.00)</div>
                 </el-col>
-                <el-col :span="4" style="margin-top: 60px; margin-left: 80px">{{getOrderStatus(order.status)}}</el-col>
+                <el-col :span="4" style="margin-top: 60px; margin-left: 10px; text-align: right;">{{getOrderStatus(order.status)}}</el-col>
               </el-row>
+
             </el-card>
           </el-row>
         </div>
       </div>
+
+
     </div>
   </el-card>
 </template>
@@ -56,6 +71,16 @@ const orderDetailList = ref([]);
 const user = ref({
   userId: null
 });
+//存放导航项
+const navigationItems = ["所有订单", "进行中", "待付款", "待发货", "待退换", "已完成"];
+// 活动项
+const activeItem = ref(navigationItems[0]); // 默认选中第一个
+
+// 设置活动项
+function setActive(item) {
+  activeItem.value = item;
+}
+
 
 //获取当前用户的订单信息
 function getOrderList() {
@@ -121,6 +146,28 @@ getInfo();
   margin-left: 30px;
 }
 
+.navigation {
+  margin-top: 20px;
+  border-bottom: 1px solid #999999;
+}
+
+.navigation span {
+  padding: 15px;
+  display: inline-block;
+}
+
+.navigation span.active {
+  padding: 15px;
+  color: var(--theme-color);
+  border-bottom: 2px solid var(--theme-color);
+  display: inline-block;
+}
+
+.body {
+  margin-top: 20px;
+  margin-left: 30px;
+}
+
 .orderText {
   margin-top: 50%;
   color: #8c939d;
@@ -157,7 +204,15 @@ getInfo();
 }
 
 .carriage {
+  margin-left: -20px;
   color: #8c939d;
   font-size: 15px;
+}
+
+a {
+  cursor: pointer;
+}
+a:hover {
+  color: var(--theme-color);
 }
 </style>

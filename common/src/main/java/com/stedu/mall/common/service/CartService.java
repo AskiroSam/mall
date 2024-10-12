@@ -20,4 +20,6 @@ public interface CartService {
     List<Cart> search(Cart condition);
 
     Cart selectById(Integer id);
+
+    List<Cart> selectByIds(Integer[] cartIds, Integer userId) throws SteduException;
 }

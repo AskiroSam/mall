@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -102,5 +103,16 @@ public class CartController {
         Cart cart = cartService.selectById(id);
 
         return RespBean.ok("", cart);
+    }
+
+    @GetMapping("/ids")
+    public RespBean selectByIds(Integer[] cartIds, @RequestHeader("token") String token) throws SteduException {
+        //解析token获取用户id
+        Map<String, Object> map = JwtUtils.parseJwtToMap(token);
+        Integer userId = (Integer)map.get("id");
+
+        List<Cart> cartList = cartService.selectByIds(cartIds, userId);
+
+        return RespBean.ok("查询成功",cartList);
     }
 }

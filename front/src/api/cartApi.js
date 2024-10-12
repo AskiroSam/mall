@@ -30,6 +30,17 @@ const cartApi = {
     },
     selectById(id) {
         return service.get(`/cart/${id}`);
+    },
+    selectByIds(cartIds) {
+        //localhost:8080/cart/ids?cartIds=1&cartIds=2...
+        let params = "?cartIds=";
+        for (let i = 0; i < cartIds.length; i++) {
+            params += cartIds[i];
+            if (i != cartIds.length - 1) {
+                params += '&cartIds='
+            }
+        }
+        return service.get(`/cart/ids${params}`);
     }
 }
 export default cartApi;

@@ -5,13 +5,14 @@
   </el-row>
   <div>
     <ul class="addrList">
-      <li v-for="(addr, index) in addrList" :key="index">
+      <li v-for="(addr, index) in addrList" :key="index" :class="{defaultAddr:addr.status === 1}">
         <div class="area">{{addr.province}} - {{addr.city}} - {{addr.district}} - {{addr.street}}</div>
         <div class="address">{{addr.address}}</div>
         <div class="contect">{{addr.contact}}</div>
         <div class="phone">{{addr.phone}}</div>
         <div class="option">
-          <el-button size="small">设为默认</el-button>
+          <span v-if="addr.status === 1" class="defaultInfo">默认地址</span>
+          <el-button size="small" v-else @click="setDefault(addr.id)">设为默认</el-button>
           <el-button size="small" @click="showUpdateDialog(addr.id)">编辑</el-button>
           <el-popconfirm title="你确定要删除该地址吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteAddr(addr.id)">
             <template #reference>
@@ -151,6 +152,25 @@ const province = ref({});
 const city = ref({});
 //选中的区县
 const district = ref({});
+
+
+//设为默认
+function setDefault(id) {
+  let addr = {
+    id,
+    status: 1
+  }
+  addrApi.update(addr)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success("设置默认地址成功");
+          //重新刷新
+          getAddrList();
+        } else {
+          ElMessage.error(resp.msg);
+        }
+      })
+}
 
 //省被选中之后调用
 function selectProvince(value) {
@@ -325,7 +345,7 @@ getAddrList();
     background-color: #FFF;
   }
 
-  a.addrList li:hover {
+  .addrList li:hover {
     box-shadow: 0 0 20px #000;
   }
 
@@ -363,4 +383,20 @@ getAddrList();
   .addrList li .option {
     text-align: right;
   }
+
+  .addrList .defaultInfo {
+    font-weight: bold;
+    color: var(--theme-color);
+    margin-right: 10px;
+  }
+
+  .addrList .defaultAddr {
+    border: 2px solid var(--theme-color);
+    height: 145px;
+  }
+
+  .addrList .defaultAddr:hover {
+    box-shadow: 0 0 20px var(--theme-color);
+  }
+
 </style>

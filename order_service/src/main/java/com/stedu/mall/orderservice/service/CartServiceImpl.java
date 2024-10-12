@@ -118,4 +118,22 @@ public  class CartServiceImpl implements CartService {
     public Cart selectById(Integer id) {
         return cartMapper.selectById(id);
     }
+
+    @Override
+    public List<Cart> selectByIds(Integer[] cartIds, Integer userId) throws SteduException {
+        List<Cart> cartList = cartMapper.selectByIds(cartIds);
+
+        //判断是否属于当前用户
+        for (Cart cart : cartList) {
+            if (!cart.getUserId().equals(userId)) {
+                throw new SteduException("非法的购物车");
+            }
+
+            //查询并设置购物车的商品信息
+            Goods goods = goodsService.selectById(cart.getGoodsId());
+            cart.setGoods(goods);
+        }
+
+        return cartList;
+    }
 }
