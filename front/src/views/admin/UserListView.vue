@@ -133,7 +133,7 @@
 
 
   <!-- 修改用户的对话框开始 -->
-  <el-dialog v-model="updateDialogShow" title="添加用户" width="500">
+  <el-dialog v-model="updateDialogShow" title="修改用户" width="500">
     <el-form>
       <el-form-item label="用户名:" label-width="18%" prop="sno">
         <el-input v-model="userUpdate.username" placeholder="请输入用户名" autocomplete="off" style="width: 300px" />
