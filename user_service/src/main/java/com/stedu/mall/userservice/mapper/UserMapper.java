@@ -23,6 +23,8 @@ public interface UserMapper {
     int updatePwd(User user);
     //修改支付密码
     int updatePay(User user);
+    //修改余额
+    int updateMoney(User user);
     //根据id查询 - 为获取用户的信息服务
     User selectById(Integer id);
     //根据条件查询

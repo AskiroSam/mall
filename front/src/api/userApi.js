@@ -18,9 +18,17 @@ const userApi = {
     updatePwd(user) {
         return service.put('/user/pwd', user)
     },
-    //修改密码
+    //修改支付密码
     updatePay(user) {
         return service.put('/user/pay', user)
+    },
+    //充值金额
+    updateInMoney(user) {
+        return service.put('/user/inm', user)
+    },
+    //提现金额
+    updateOutMoney(user) {
+        return service.put('/user/outm', user)
     },
     //修改可用状态
     setStatus(status) {

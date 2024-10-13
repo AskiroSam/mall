@@ -26,6 +26,10 @@ public interface UserService {
     boolean updatePwd(User user) throws SteduException;
     //修改支付密码
     boolean updatePay(User user) throws SteduException;
+    //充值金额
+    boolean updateInMoney(User user) throws SteduException;
+    //提现金额
+    boolean updateOutMoney(User user) throws SteduException;
     //根据id查询
     User selectById(Integer id);
     //根据条件查询

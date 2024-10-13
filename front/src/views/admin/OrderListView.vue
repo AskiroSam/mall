@@ -23,7 +23,7 @@
           </el-form-item>
         </el-form>
         <el-table :data="pageInfo.list" border style="width: 100%">
-          <el-table-column prop="id" label="ID" width="200px" />
+          <el-table-column prop="id" label="快递单号" width="200px" />
           <el-table-column prop="user" label="用户">
             <template #default="scope">
               {{ scope.row.user.username }}
@@ -34,7 +34,7 @@
               {{ new Date(scope.row.createTime).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) }}
             </template>
           </el-table-column>
-          <el-table-column prop="express" label="快递单号" />
+          <!--<el-table-column prop="express" label="快递单号" />-->
           <el-table-column label="支付方式">
             <template #default="scope">
               <el-tag type="primary" v-if="scope.row.payType == 0">余额支付</el-tag>
@@ -44,8 +44,8 @@
               <el-tag type="danger" v-if="scope.row.payType == 4">其它</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="addr.address" label="地址" />
-          <!--<el-table-column prop="addrDetail" label="当时地址" />-->
+          <!--<el-table-column prop="addr.address" label="地址" />-->
+          <el-table-column prop="addrDetail" label="地址" width="500px" />
           <el-table-column label="状态">
             <template #default="scope">
               <el-tag type="primary" v-if="scope.row.status == 0">未支付</el-tag>

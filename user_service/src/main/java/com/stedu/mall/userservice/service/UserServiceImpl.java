@@ -14,6 +14,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -175,6 +176,57 @@ public class UserServiceImpl implements UserService {
         }
 
         return userMapper.updatePay(user) == 1;
+    }
+
+    @Override
+    public boolean updateInMoney(User user) throws SteduException {
+        User oldUser = userMapper.selectById(user.getId());
+
+        //如果找不到用户，抛出异常
+        if (oldUser == null) {
+            throw new SteduException("用户不存在");
+        }
+
+        //获取金额
+        BigDecimal oldMoney = oldUser.getMoney();
+        BigDecimal newMoney = user.getMoney();
+
+        //验证新金额，确保它不为负数
+        if (newMoney == null || newMoney.compareTo(BigDecimal.ZERO) < 0) {
+            throw new SteduException("新的金额无效，不能为负数");
+        }
+
+        BigDecimal totalMoney = oldMoney.add(newMoney);
+        oldUser.setMoney(totalMoney);
+
+        return userMapper.updateMoney(oldUser) == 1;
+    }
+
+    @Override
+    public boolean updateOutMoney(User user) throws SteduException {
+        User oldUser = userMapper.selectById(user.getId());
+
+        //如果找不到用户，抛出异常
+        if (oldUser == null) {
+            throw new SteduException("用户不存在");
+        }
+
+        //获取金额
+        BigDecimal oldMoney = oldUser.getMoney();
+        BigDecimal newMoney = user.getMoney();
+
+        //验证新金额，确保它不为负数
+        if (newMoney == null || newMoney.compareTo(BigDecimal.ZERO) < 0) {
+            throw new SteduException("新的金额无效，不能为负数");
+        }
+
+        BigDecimal totalMoney = oldMoney.subtract(newMoney);
+        oldUser.setMoney(totalMoney);
+        if (totalMoney.compareTo(BigDecimal.ZERO) < 0) {
+            throw new SteduException("更新后的金额不能为负数");
+        }
+
+        return userMapper.updateMoney(oldUser) == 1;
     }
 
     @Override

@@ -138,13 +138,13 @@ const router = createRouter({
                     path: '/admin/userlist',
                     name: 'admin_userlist',
                     component: UserListView
-                }
+                }, {
+                    path: '/admin/index',
+                    name: 'admin_index',
+                    component: IndexView
+                },
             ]
-        },{
-            path: '/admin/index',
-            name: 'admin_index',
-            component: IndexView
-        },
+        }
     ]
 })
 

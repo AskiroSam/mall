@@ -78,6 +78,15 @@
         </set>
         WHERE `id`=#{id}
     </update>
+    <update id="updateMoney">
+        UPDATE `user`
+        <set>
+            <if test="money!=null">
+                `money`=#{money},
+            </if>
+        </set>
+        WHERE `id`=#{id}
+    </update>
     <delete id="delete">
         DELETE FROM `user` WHERE `id`=#{id}
     </delete>

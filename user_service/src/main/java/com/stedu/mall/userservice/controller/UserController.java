@@ -66,6 +66,20 @@ public class UserController {
         return RespBean.ok("修改成功");
     }
 
+    //余额充值
+    @PutMapping("/inm")
+    public RespBean updateInMoney(@RequestBody User user) throws SteduException {
+        userService.updateInMoney(user);
+        return RespBean.ok("充值成功");
+    }
+
+    //余额提现
+    @PutMapping("/outm")
+    public RespBean updateOutMoney(@RequestBody User user) throws SteduException {
+        userService.updateOutMoney(user);
+        return RespBean.ok("充值成功");
+    }
+
     //根据id查询
     @GetMapping("/{id}")
     public RespBean selectById(@PathVariable("id") Integer id) {

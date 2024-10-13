@@ -8,15 +8,7 @@
           <el-col :span="4">
 
           </el-col>
-          <el-col :span="16">
-            <ul>
-              <li><RouterLink to="/admin/adminlist">管理员管理</RouterLink></li>
-              <li><RouterLink to="/admin/categorylist">商品分类管理</RouterLink></li>
-              <li><RouterLink to="/admin/goodslist">商品管理</RouterLink></li>
-              <li><RouterLink to="/admin/orderlist">用户管理</RouterLink></li>
-              <li><RouterLink to="/admin/userlist">订单管理</RouterLink></li>
-            </ul>
-          </el-col>
+          <el-col :span="16"></el-col>
           <el-col :span="4"></el-col>
         </el-row>
       </div>
@@ -31,7 +23,16 @@
 <script setup>
 import * as echarts from "echarts";
 import { onMounted, ref } from "vue";
-import {ShoppingCart} from "@element-plus/icons-vue";
+import goodsApi from "@/api/goodsApi.js";
+
+
+//获取商品信息
+function selectGoods(pageNum) {
+  goodsApi.selectByPage(condition.value, pageNum, 10)
+      .then(resp => {
+        pageInfo.value = resp.data;
+      });
+}
 
 //显示图表
 //初始化函数
@@ -56,16 +57,15 @@ function init() {
       },
     ],
   };
-
   // 渲染图表
   Chart.setOption(options);
 }
-
-
 //等待页面渲染完再掉用方法
 onMounted(() => {
   init();
 })
+
+selectGoods();
 </script>
 
 <style scoped>
