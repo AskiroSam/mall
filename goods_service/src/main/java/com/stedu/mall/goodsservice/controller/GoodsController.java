@@ -9,6 +9,8 @@ import com.stedu.mall.common.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/goods")
@@ -84,5 +86,13 @@ public class GoodsController {
         Goods goods = goodsService.selectById(id);
 
         return RespBean.ok("查询成功", goods);
+    }
+
+    //查询所有
+    @GetMapping("/all")
+    public RespBean selectAll() {
+        List<Goods> goods = goodsService.selectAll();
+
+        return RespBean.ok("", goods);
     }
 }

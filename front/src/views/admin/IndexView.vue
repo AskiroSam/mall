@@ -1,71 +1,234 @@
 <template>
-  <el-header class="hd_bat">
-    <!--头部导航-->
-    <div class="hd_style">
-      <el-image src="/src/images/MyLogo2.png" style="float: left; width: 290px; height: 40px; margin-top: 4px; margin-left: 10px"></el-image>
-      <div class="center">
-        <el-row>
-          <el-col :span="4">
-
-          </el-col>
-          <el-col :span="16"></el-col>
-          <el-col :span="4"></el-col>
-        </el-row>
+  <div class="index">
+    <el-card style="opacity: 0.9; float: left; width: 300px; height: 250px; margin-top: 10px; margin-right: 20px">
+      <div id="introduce" style="width: 500px; height: 200px;">
+        <el-image src="/src/images/mi.png" style="width: 250px; height: 200px"></el-image>
       </div>
-    </div>
-  </el-header>
-  <el-main>
-    <div id="main" style="width: 600px;height:400px;"></div>
-  </el-main>
-  <el-footer></el-footer>
+    </el-card>
+    <el-card style="opacity: 0.9; float: left; width: 550px; height: 250px; margin-top: 10px;">
+      <div id="chart01" style="width: 500px; height: 200px;"></div>
+    </el-card>
+    <el-card style="opacity: 0.9; float: left; margin-left: 20px; width: 550px; height: 250px; margin-top: 10px;">
+      <div id="chart02" style="width: 500px; height: 200px;"></div>
+    </el-card>
+    <el-card style="opacity: 0.9; float: left; margin-left: 0; width: 1445px; height: 400px; margin-top: 10px;">
+      <div id="chart03" style="width: 1300px; height: 400px;"></div>
+    </el-card>
+  </div>
 </template>
 
 <script setup>
 import * as echarts from "echarts";
 import { onMounted, ref } from "vue";
 import goodsApi from "@/api/goodsApi.js";
+import userApi from "@/api/userApi.js";
+import orderApi from "@/api/orderApi.js";
+
+//存放商品信息
+const goods = ref([]);
+//存放上架的商品
+const upGoods = ref([]);
+//存放用户信息
+const user = ref([]);
+//存放订单信息
+const order = ref([]);
+//存放订单详情
+const orderDetail = ref([]);
 
 
 //获取商品信息
-function selectGoods(pageNum) {
-  goodsApi.selectByPage(condition.value, pageNum, 10)
+function selectGoods() {
+  goodsApi.selectAll()
       .then(resp => {
-        pageInfo.value = resp.data;
+        goods.value = resp.data;
+        //将上架的物品保存
+        goods.value.forEach(g => {
+          if (g.status === 0) {
+            upGoods.value.push(g);
+          }
+        })
+        chart01();
       });
+
 }
 
-//显示图表
-//初始化函数
-function init() {
+//获取用户信息
+function selectUser() {
+  userApi.selectALL()
+      .then(resp => {
+        user.value = resp.data;
+        chart02();
+      })
+}
+
+//获取订单信息
+function selectOrder() {
+  orderApi.selectAll()
+      .then(resp => {
+        order.value = resp.data;
+
+        order.value.forEach(orderItem  => {
+          // 初始化总数量和总价格
+          let totalCount = 0;
+          let totalPrice = 0;
+
+          orderItem.orderDetailList.forEach(detail => {
+            // 提取 count 和 price
+            totalCount += detail.count;
+            totalPrice += detail.price * detail.count;
+
+            // 将总数量和总价格添加到 orderItem
+            orderItem.totalCount = totalCount;
+            orderItem.totalPrice = totalPrice;
+          })
+        });
+        chart03();
+        // 打印处理后的订单数据
+        console.log(order.value);
+
+      })
+}
+
+//上架商品个数图表
+function chart01() {
+  // 获取上架物品的数量
+  const itemCount = upGoods.value.length;
   // 基于准备好的dom，初始化echarts实例
-  let Chart = echarts.init(document.getElementById("main"));
+  let myChart = echarts.init(document.getElementById('chart01'));
   // 绘制图表
-  let options = {
+  let option = {
     title: {
-      text: "ECharts 入门示例",
+      text: `上架商品的个数：${itemCount}`, // 在顶部显示物品的个数
+      left: 'center', // 标题位置居中
+      top: '5%', // 距离顶部的百分比
+      textStyle: {
+        fontSize: 18, // 标题字体大小
+        fontWeight: 'bold',
+      }
     },
-    tooltip: {},
     xAxis: {
-      data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
+      type: 'value' // 将 x 轴设置为数值型
     },
-    yAxis: {},
+    yAxis: {
+      type: 'category', // 将 y 轴设置为分类型
+      axisLabel: {
+        show: false // 隐藏 Y 轴的标签
+      }
+    },
     series: [
       {
-        name: "销量",
-        type: "bar",
-        data: [5, 20, 36, 10, 10, 20],
-      },
+        data: [itemCount],
+        type: 'bar', // 仍然是柱状图
+        itemStyle: {
+          color: '#4CAF50', // 设置柱子的颜色
+        }
+      }
     ],
   };
   // 渲染图表
-  Chart.setOption(options);
+  myChart.setOption(option);
 }
-//等待页面渲染完再掉用方法
-onMounted(() => {
-  init();
-})
+
+//显示用户个数的图表
+function chart02() {
+  // 获取上架物品的数量
+  const userCount = user.value.length;
+  // 基于准备好的dom，初始化echarts实例
+  let myChart = echarts.init(document.getElementById('chart02'));
+  // 绘制图表
+  let option = {
+    title: {
+      text: `注册用户的个数：${userCount}`, // 在顶部显示物品的个数
+      left: 'center', // 标题位置居中
+      top: '5%', // 距离顶部的百分比
+      textStyle: {
+        fontSize: 18, // 标题字体大小
+        fontWeight: 'bold',
+      }
+    },
+    xAxis: {
+      type: 'value' // 将 x 轴设置为数值型
+    },
+    yAxis: {
+      type: 'category', // 将 y 轴设置为分类型
+      axisLabel: {
+        show: false // 隐藏 Y 轴的标签
+      }
+    },
+    series: [
+      {
+        data: [userCount],
+        type: 'bar', // 仍然是柱状图
+        itemStyle: {
+          color: '#F596AA', // 设置柱子的颜色
+        }
+      }
+    ],
+  };
+  // 渲染图表
+  myChart.setOption(option);
+}
+
+//订单交易额
+function chart03() {
+  // 从订单中提取日期数据和交易额（假设订单对象有amount和date属性）
+  const dates = order.value.map(item => {
+    const date = new Date(item.createTime); // 解析日期
+    return date.toLocaleDateString(undefined, { month: '2-digit', day: '2-digit' }); // 格式化为月-日
+  });
+
+  // 提取交易额
+  const money = order.value.map(item => {
+    return item.totalPrice;
+  })
+
+  // 基于准备好的dom，初始化echarts实例
+  let myChart = echarts.init(document.getElementById('chart03'));
+  // 绘制图表
+  let option = {
+    title: {
+      text: `商城订单交易额`, // 在顶部显示物品的个数
+      left: '5%', // 标题位置居中
+      top: '2%', // 距离顶部的百分比
+      textStyle: {
+        fontSize: 15, // 标题字体大小
+        fontWeight: 'bold',
+      }
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: dates
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        data: money,
+        type: 'line',
+        areaStyle: {},
+        label: { // 显示节点上的数据
+          show: true, // 显示标签
+          position: 'top', // 标签位置在上方
+          formatter: '{c}', // 标签格式为数据值
+          fontSize: 12, // 字体大小
+          color: '#333', // 字体颜色
+        },
+      }
+    ]
+  };
+  // 渲染图表
+  myChart.setOption(option);
+}
 
 selectGoods();
+selectUser();
+selectOrder();
+//等待页面渲染完再掉用方法
+// onMounted(() => {
+//   chart01();
+// })
 </script>
 
 <style scoped>
@@ -87,4 +250,5 @@ selectGoods();
 a {
   color: #999;
 }
+
 </style>

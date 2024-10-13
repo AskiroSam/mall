@@ -46,6 +46,10 @@ const userApi = {
             params: user
         });
     },
+    //查询所有
+    selectALL() {
+        return service.get('/user/all');
+    },
     //验证码
     captcha() {
         return service.get("/user/captcha");

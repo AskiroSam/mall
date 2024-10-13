@@ -119,7 +119,7 @@ function getCaptcha() {
 getCaptcha();
 </script>
 
-<style>
+<style scoped>
 .container {
     width: 500px;
     height: 200px;
@@ -178,7 +178,11 @@ getCaptcha();
     /* 清除默认内边距 */
 }
 
-.login {
-  //background-image: url('../../images/2.jpg');
+.el-main {
+  padding: 0; /* 移除内边距 */
+  margin: 0; /* 移除外边距 */
+  height: 100%; /* 确保占满父容器 */
+  overflow: hidden; /* 防止滚动条显示 */
 }
+
 </style>

@@ -80,4 +80,7 @@
     <select id="selectById" resultMap="orderMapper">
         SELECT * FROM `order` WHERE `id`=#{id}
     </select>
+    <select id="selectAll" resultMap="orderMapper">
+        SELECT * FROM `order`
+    </select>
 </mapper>

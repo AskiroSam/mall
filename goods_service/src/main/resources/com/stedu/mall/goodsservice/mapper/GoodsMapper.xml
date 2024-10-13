@@ -170,4 +170,7 @@
             </if>
         </where>
     </select>
+    <select id="selectAll" resultType="goods">
+        SELECT * FROM `goods`
+    </select>
 </mapper>

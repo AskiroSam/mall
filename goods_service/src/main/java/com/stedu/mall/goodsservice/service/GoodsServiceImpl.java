@@ -196,4 +196,9 @@ public class GoodsServiceImpl implements GoodsService {
         return pageInfo;
 
     }
+
+    @Override
+    public List<Goods> selectAll() {
+        return goodsMapper.selectAll();
+    }
 }

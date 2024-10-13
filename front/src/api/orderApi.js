@@ -28,6 +28,10 @@ const orderApi = {
         return service.get('/order', {
             params: order
         });
+    },
+    //查询所有
+    selectAll() {
+        return service.get('/order/all');
     }
 }
 export default orderApi;

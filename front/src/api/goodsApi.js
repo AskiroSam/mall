@@ -40,6 +40,10 @@ const goodsApi = {
         return service.get('/goods/search', {
             params: condition
         });
+    },
+    //查询所有
+    selectAll() {
+        return service.get('/goods/all');
     }
 }
 export default goodsApi;

@@ -15,6 +15,7 @@ import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -72,6 +73,13 @@ public class OrderController {
     public RespBean selectById(@PathVariable("id") String id) {
         Order order = orderService.selectById(id);
         return RespBean.ok("查询成功", order);
+    }
+
+    //查询所有
+    @GetMapping("/all")
+    public  RespBean selectAll() {
+        List<Order> orders = orderService.selectAll();
+        return RespBean.ok("", orders);
     }
 
 

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -94,6 +95,13 @@ public class UserController {
 
         Object data = userService.selectByCondition(user, pageNum, pageSize);
         return RespBean.ok("", data);
+    }
+
+    //查询所有
+    @GetMapping("/all")
+    public RespBean selectAll() {
+        List<User> users = userService.selectAll();
+        return RespBean.ok("", users);
     }
 
     //生成验证码

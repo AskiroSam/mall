@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.stedu.mall.common.bean.Goods;
 import com.stedu.mall.common.exception.SteduException;
 
+import java.util.List;
+
 public interface GoodsService {
     //添加
     void insert(Goods goods) throws SteduException;
@@ -22,4 +24,7 @@ public interface GoodsService {
     PageInfo<Goods> selectByCondition(Goods condition, Integer pageNum, Integer pageSize);
 
     PageInfo<Goods> selectByCondition1(Goods condition, Integer pageNum, Integer pageSize);
+
+    //获取所有商品信息
+    List<Goods> selectAll();
 }

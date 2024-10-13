@@ -20,5 +20,8 @@ public interface OrderService {
     //根据id查询
     Order selectById(String id);
 
+    //查询所有
+    List<Order> selectAll();
+
 
 }
