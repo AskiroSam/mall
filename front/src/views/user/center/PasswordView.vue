@@ -33,19 +33,22 @@
   </el-card>
 
   <!-- 修改用户登录密码对话框开始 -->
-  <el-dialog v-model="updatePwdDialogShow" title="登陆密码" width="500">
+  <el-dialog v-model="updatePwdDialogShow" title="登陆密码" width="550">
     <el-form>
-      <el-form-item label="原密码:" label-width="18%" prop="sno">
+      <el-form-item label="原密码:" label-width="18%">
         <el-input v-model="oldPwd" placeholder="请输入原密码" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="新密码:" label-width="18%" prop="sno">
+      <el-form-item label="新密码:" label-width="18%">
         <el-input v-model="newPwd" placeholder="请输入新密码" autocomplete="off" style="width: 300px" />
+      </el-form-item>
+      <el-form-item label="确认新密码:" label-width="18%">
+        <el-input v-model="testNewPwd" placeholder="请输入新密码" autocomplete="off" style="width: 300px" @blur="checkLogin" />
       </el-form-item>
     </el-form>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="updatePwdDialogShow = false">取消</el-button>
-        <el-button type="primary" @click="updatePwd">确认</el-button>
+        <el-button type="primary" @click="updatePwd" :disabled="!isPasswordMatching">确认</el-button>
       </div>
     </template>
   </el-dialog>
@@ -77,7 +80,7 @@
 
 
 //保存用户信息
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import userApi from "@/api/userApi.js";
 import { ElMessage } from 'element-plus';
 import {ArrowRight, Lock} from "@element-plus/icons-vue";
@@ -90,12 +93,16 @@ const oldPwd = ref();
 const oldPay = ref();
 //存放用户输入的新登录密码
 const newPwd = ref();
+//存放确认的新登录密码
+const testNewPwd = ref();
 //存放用户输入的新支付密码
 const newPay = ref();
 //修改密码对话框是否显示
 const updatePwdDialogShow = ref(false);
 //修改支付密码对话框是否显示
 const updatePayDialogShow = ref(false);
+
+const isPasswordMatching = ref(false);
 
 //被修改的用户信息
 const userUpdate = ref({
@@ -124,6 +131,17 @@ const userUpdatePay = ref({
   payPassword: ''
 });
 
+//检查两次登录密码
+function checkLogin() {
+  if (testNewPwd.value != newPwd.value) {
+    isPasswordMatching.value = false;
+    ElMessage.error("两次输入的密码不一致，请重新输入")
+    testNewPwd.value = null;
+  } else {
+    isPasswordMatching.value = true;
+  }
+}
+
 //获取用户信息
 function getInfo() {
   userApi.getInfo()
@@ -137,6 +155,9 @@ function selectById(id) {
   userApi.selectById(id)
       .then(resp => {
         userUpdate.value = resp.data;
+        oldPwd.value = null;
+        newPwd.value = null;
+        testNewPwd.value = null;
         updatePwdDialogShow.value = true;
       });
 }
