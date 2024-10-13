@@ -54,6 +54,30 @@
     <update id="setStatus">
         UPDATE `user` SET `status`=#{status} WHERE `id`=#{id}
     </update>
+    <update id="updatePwd">
+        UPDATE `user`
+        <set>
+            <if test="password!=null and password.length>0">
+                `password`=#{password},
+            </if>
+            <if test="isOldPwdVerified!=null">
+                `isOldPwdVerified`=#{isOldPwdVerified},
+            </if>
+        </set>
+        WHERE `id`=#{id}
+    </update>
+    <update id="updatePay">
+        UPDATE `user`
+        <set>
+            <if test="payPassword!=null and payPassword.length>0">
+                `pay_password`=#{payPassword},
+            </if>
+            <if test="isOldPwdVerified!=null">
+                `isOldPwdVerified`=#{isOldPwdVerified},
+            </if>
+        </set>
+        WHERE `id`=#{id}
+    </update>
     <delete id="delete">
         DELETE FROM `user` WHERE `id`=#{id}
     </delete>

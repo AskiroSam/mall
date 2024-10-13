@@ -41,12 +41,6 @@
       <el-form-item label="用户名:" label-width="18%" prop="sno">
         <el-input v-model="userUpdate.username" placeholder="请输入用户名" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="密码:" label-width="18%" prop="sno">
-        <el-input v-model="userUpdate.password" type="password"  placeholder="请输入密码" autocomplete="off" style="width: 300px" />
-      </el-form-item>
-      <el-form-item label="支付密码:" label-width="18%" prop="sno">
-        <el-input v-model="userUpdate.payPassword" type="password"  placeholder="请输入支付密码" autocomplete="off" style="width: 300px" />
-      </el-form-item>
       <el-form-item label="真实姓名:" label-width="18%" prop="sno">
         <el-input v-model="userUpdate.realname" placeholder="请输入真实姓名" autocomplete="off" style="width: 300px" />
       </el-form-item>
@@ -110,7 +104,7 @@ const updateDialogShow = ref(false);
 //被修改的用户信息
 const userUpdate = ref({
   username: null,
-  password: '',
+  password: 123,
   payPassword: null,
   realname: null,
   sex: '',

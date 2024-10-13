@@ -22,6 +22,10 @@ public interface UserService {
     boolean setStatus(Integer status);
     //修改
     boolean update(User user) throws SteduException;
+    //修改密码
+    boolean updatePwd(User user) throws SteduException;
+    //修改支付密码
+    boolean updatePay(User user) throws SteduException;
     //根据id查询
     User selectById(Integer id);
     //根据条件查询

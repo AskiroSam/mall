@@ -7,7 +7,7 @@
           <span class="promptText">请谨防钓鱼链接或诈骗电话</span>
         </div>
         <div class="navigation">
-          <span v-for="item in navigationItems" :key="item" :class="{ active: activeItem === item }" @click="setActive(item)"><a>{{ item }}</a></span>
+          <span v-for="item in navigationItems" :key="item.label" :class="{ active: activeItem === item.status }" @click="setActive(item)"><a>{{ item.label }}</a></span>
         </div>
       </div>
 
@@ -84,33 +84,38 @@ const user = ref({
   userId: null,
 });
 //存放导航项
-const navigationItems = ["所有订单", "进行中", "待付款", "待发货", "待退换", "已完成"];
+const navigationItems = [
+  { label: "所有订单", status: null },
+  { label: "已支付", status: 1 },
+  { label: "未支付", status: 0 },
+  { label: "已完成", status: 3 }
+];
 // 活动项
-const activeItem = ref(navigationItems[0]); // 默认选中第一个
+const activeItem = ref(null); // 默认选中第一个
 
 // 设置活动项
 function setActive(item) {
-  activeItem.value = item;
+  activeItem.value = item.status;
+  getOrderList(1, item.status);
 }
 
 
 //获取当前用户的订单信息
-function getOrderList(pageNum) {
+function getOrderList(pageNum, status = null) {
   const condition = {
     userId: user.value.id,
+    status: status
   }
   orderApi.selectByPage(condition, pageNum, 5)
       .then(resp => {
         pageInfo.value = resp.data;
         orderList.value = resp.data.list;
-        console.log(orderList.value)
         //将订单详情保存
         resp.data.list.forEach(o => {
           o.orderDetailList.forEach(d => {
             orderDetailList.value.push(d);
           })
         })
-        console.log(orderDetailList.value);
 
       })
 }
@@ -194,11 +199,11 @@ getInfo();
 }
 
 .main {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .main ul li {
-  margin-top: 30px;
+  margin-top: 50px;
   float: left;
   margin-left: 0;
   margin-right: 40px;

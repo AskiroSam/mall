@@ -119,9 +119,62 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        String newPwd = SecureUtil.md5(SecureUtil.md5(user.getPassword() + oldUser.getSalt()));
-        user.setPassword(newPwd);
+        String oldPswd = oldUser.getPassword();
+        if (user.getPassword().equals(oldPswd)) {
+            user.setPassword(oldPswd);
+        } else {
+            String newPswd = SecureUtil.md5(SecureUtil.md5(user.getPassword() + oldUser.getSalt()));
+            user.setPassword(newPswd);
+        }
         return userMapper.update(user) == 1;
+    }
+
+    @Override
+    public boolean updatePwd(User user) throws SteduException {
+
+        User oldUser = userMapper.selectById(user.getId());
+        String oldPswd = oldUser.getPassword();
+        String newPswd = SecureUtil.md5(SecureUtil.md5(user.getPassword() + oldUser.getSalt()));
+
+
+        if (newPswd != null && oldUser.getIsOldPwdVerified() == 0) {
+            if (!newPswd.equals(oldPswd)) {
+                user.setPassword(oldPswd);
+                throw new SteduException("原密码错误，请重新输入");
+            } else {
+                user.setPassword(oldPswd);
+                user.setIsOldPwdVerified(1);
+            }
+        } else if (oldUser.getIsOldPwdVerified() == 1) {
+            user.setPassword(newPswd);
+            user.setIsOldPwdVerified(0);
+        }
+
+        return userMapper.updatePwd(user) == 1;
+    }
+
+    @Override
+    public boolean updatePay(User user) throws SteduException {
+
+        User oldUser = userMapper.selectById(user.getId());
+        String oldPsay = oldUser.getPayPassword();
+        String newPsay = user.getPayPassword();
+
+
+        if (newPsay != null && oldUser.getIsOldPwdVerified() == 0) {
+            if (!newPsay.equals(oldPsay)) {
+                user.setPassword(oldPsay);
+                throw new SteduException("原密码错误，请重新输入");
+            } else {
+                user.setPassword(oldPsay);
+                user.setIsOldPwdVerified(1);
+            }
+        } else if (oldUser.getIsOldPwdVerified() == 1) {
+            user.setPassword(newPsay);
+            user.setIsOldPwdVerified(0);
+        }
+
+        return userMapper.updatePay(user) == 1;
     }
 
     @Override

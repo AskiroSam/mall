@@ -14,6 +14,14 @@ const userApi = {
     update(user) {
         return service.put('/user', user);
     },
+    //修改密码
+    updatePwd(user) {
+        return service.put('/user/pwd', user)
+    },
+    //修改密码
+    updatePay(user) {
+        return service.put('/user/pay', user)
+    },
     //修改可用状态
     setStatus(status) {
         return service.put(`/user/${status}`);

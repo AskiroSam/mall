@@ -52,6 +52,20 @@ public class UserController {
         return RespBean.ok("修改成功");
     }
 
+    //修改密码
+    @PutMapping("/pwd")
+    public RespBean updatePwd(@RequestBody User user) throws SteduException {
+        userService.updatePwd(user);
+        return RespBean.ok("修改成功");
+    }
+
+    //修改支付密码
+    @PutMapping("/pay")
+    public RespBean updatePay(@RequestBody User user) throws SteduException {
+        userService.updatePay(user);
+        return RespBean.ok("修改成功");
+    }
+
     //根据id查询
     @GetMapping("/{id}")
     public RespBean selectById(@PathVariable("id") Integer id) {

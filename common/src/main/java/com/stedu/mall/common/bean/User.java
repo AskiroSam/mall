@@ -29,4 +29,5 @@ public class User implements Serializable {
     private Date regTime;
     private BigDecimal money;
     private Integer status;
+    private Integer isOldPwdVerified;
 }
