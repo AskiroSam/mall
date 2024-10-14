@@ -20,7 +20,7 @@
               <el-row style="margin-top: 0">
                 <el-col :span="3" style="font-size: 12px; margin-left: 20px; margin-top: 20px">{{formatDate(order.createTime)}}</el-col>
                 <el-col :span="6" style="font-size: 12px; margin-left: 20px; margin-top: 20px">订单号：{{order.id}}</el-col>
-                <el-button type="warning" size="small" style="margin-left: 400px; margin-top: 15px" >订单详情</el-button>
+                <el-button type="warning" size="small" style="margin-left: 400px; margin-top: 15px" @click="toOrderDetail(order.id)">查看订单</el-button>
               </el-row>
 
               <!--订单详情-->
@@ -69,13 +69,31 @@ import orderApi from "@/api/orderApi.js";
 import {ref} from "vue";
 import userApi from "@/api/userApi.js";
 import {Delete} from "@element-plus/icons-vue";
+import {useRouter} from "vue-router";
 
+const router = useRouter();
 //服务器地址
 const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 //存放该用户的所有订单
 const orderList = ref([]);
 //存放该用户订单中的订单详情
 const orderDetailList = ref([]);
+
+
+//跳转到订单详情页面
+function toOrderDetail(id) {
+  //获取已选中的购物车的id
+  let orderId = id;
+
+  router.push({
+    path: "/user/orderDetail",
+    query: {
+      orderId
+    }
+  });
+}
+
+
 //分页信息
 const pageInfo = ref({
   pages: 0,

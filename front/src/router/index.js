@@ -25,6 +25,7 @@ import PasswordView from "@/views/user/center/PasswordView.vue";
 import RechargeView from "@/views/user/center/RechargeView.vue";
 import InfoView from "@/views/user/center/InfoView.vue";
 import PayView from "@/views/user/PayView.vue";
+import OrderView from "@/views/user/OrderView.vue";
 
 
 const router = createRouter({
@@ -107,6 +108,10 @@ const router = createRouter({
                           path: '/user/recharge',
                           name: 'user_recharge',
                           component: RechargeView
+                      }, {
+                          path: '/user/orderDetail',
+                          name: 'user_orderDetail',
+                          component: OrderView
                       }
 
                   ]
