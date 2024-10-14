@@ -1,6 +1,7 @@
 package com.stedu.mall.common.service;
 
 import com.github.pagehelper.PageInfo;
+import com.stedu.mall.common.bean.Category;
 import com.stedu.mall.common.bean.Order;
 import com.stedu.mall.common.bean.OrderDetail;
 import com.stedu.mall.common.bean.OrderVo;

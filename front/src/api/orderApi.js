@@ -10,8 +10,8 @@ const orderApi = {
         return service.delete(`/user/${id}`);
     },
     //修改
-    update(user) {
-        return service.put('/user', user);
+    update(order) {
+        return service.put('/order', order);
     },
     //修改可用状态
     setStatus(status) {

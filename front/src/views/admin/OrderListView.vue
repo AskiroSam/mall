@@ -20,6 +20,12 @@
               <el-option label="售后" value="7" />
               <el-option label="其它" value="8" />
             </el-select>
+            <el-input
+                v-model="condition.id"
+                clearable placeholder="查询的单号"
+                style="width: 200px;"
+                @input="selectByPage(1)">
+            </el-input>
           </el-form-item>
         </el-form>
         <el-table :data="pageInfo.list" border style="width: 100%">
@@ -62,6 +68,7 @@
 
           <el-table-column label="操作" width="250px">
             <template #default="scope">
+              <el-button size="small" type="warning" @click="updateOrder(scope.row.id)">更新订单状态</el-button>
               <el-button size="small" type="success" @click="getOrderDetailList(scope.row.id)">订单详情</el-button>
               <!--<el-popconfirm title="你确定要删除该订单吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteOrder(scope.row.id)">-->
               <!--  <template #reference>-->
@@ -95,10 +102,30 @@
         </el-table-column>
         <el-table-column prop="count" label="数量" width="180" />
         <el-table-column prop="price" label="价格" width="180" />
-
       </el-table>
   </el-dialog>
   <!--订单列表结束-->
+
+  <!-- 修改订单状态对话框开始 -->
+  <el-dialog v-model="updateOrderDialog" title="订单状态" width="500">
+    <el-form>
+      <el-form-item label="状态：" label-width="18%" prop="did">
+        <el-select v-model="orderUpdate.status" style="width: 240px">
+          <el-option label="未支付" :value="0"></el-option>
+          <el-option label="已支付" :value="1"></el-option>
+          <el-option label="已发货" :value="2"></el-option>
+          <el-option label="已收货" :value="3"></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="updateOrderDialog = false">取消</el-button>
+        <el-button type="primary" @click="update">确认</el-button>
+      </div>
+    </template>
+  </el-dialog>
+  <!-- 修改订单状态对话框结束 -->
 
 
 </template>
@@ -117,11 +144,14 @@ const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 const orderDetailListShow = ref(false);
 //订单列表
 const orderDetailList = ref([]);
-//是否显示订单修改对话框
-// const updateOrderDialog = ref(false);
+// 是否显示订单修改对话框
+const updateOrderDialog = ref(false);
+//所有状态
+const allStatus = ref();
 
 //搜索条件
 const condition = ref({
+  id: null,
   name: null,
   addrDetail: null,
   status: null,
@@ -134,19 +164,17 @@ const pageInfo = ref({
   pageNum: 0
 });
 
-//被修改的商品信息
-// const orderUpdate = ref({
-//   id: '',
-//   userId: '',
-//   express: '',
-//   payType: 0,
-//   addrId: 0,
-//   addrDetail: null,
-//   status: null,
-//   orderDetailList: []
-// });
-
-
+// 被修改的商品信息
+const orderUpdate = ref({
+  id: '',
+  userId: '',
+  express: '',
+  payType: 0,
+  addrId: 0,
+  addrDetail: null,
+  status: null,
+  orderDetailList: []
+});
 
 
 /*----------------------详情开始----------------------*/
@@ -178,6 +206,16 @@ const handleCreated = (editor) => {
 // }
 
 
+//显示修改对话框并查询数据
+function updateOrder(id) {
+  orderApi.selectById(id)
+      .then(resp => {
+        orderUpdate.value = resp.data;
+        updateOrderDialog.value = true;
+        console.log(orderUpdate.value)
+      })
+}
+
 //获取订单详情列表
 function getOrderDetailList(id) {
   orderApi.selectById(id)
@@ -190,13 +228,27 @@ function getOrderDetailList(id) {
       })
 }
 
+//修改订单状态
+function update() {
+  orderApi.update(orderUpdate.value)
+      .then(resp => {
+        if (resp.code == 10000) {
+          ElMessage.success(resp.msg)
+          //隐藏对话框
+          updateOrderDialog.value = false;
+          //查询第一页
+          selectByPage(pageInfo.value.pageNum);
+        } else {
+          ElMessage.error(resp.msg)
+        }
+      })
+}
 
 //分页查询
 function selectByPage(pageNum) {
   orderApi.selectByPage(condition.value, pageNum, 5)
       .then(resp => {
         pageInfo.value = resp.data;
-        console.log(pageInfo.value)
       });
 }
 selectByPage(1);

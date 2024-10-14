@@ -47,8 +47,20 @@
                   订单状态：<div style="display: inline-block; color: var(--theme-color)" >{{getOrderStatus(order.status)}}</div>
                 </el-col>
               </el-row>
+
             </el-card>
           </el-row>
+
+          <!--若无商品则需要显示的信息-->
+          <el-row v-if="pageInfo.pages === 0">
+            <el-col :span="4" style="margin-top: 20px; margin-left: 230px; text-align: right;">
+              <el-image src="/src/images/shopping.png" style="width: 100px; height: 100px;" />
+            </el-col>
+            <el-col :span="6" style="margin-top: 60px; margin-left: 10px; text-align: right;">
+              <div style="color: #AAAAAA">暂无此类订单，请先去购物吧~</div>
+            </el-col>
+          </el-row>
+          <!--结束-->
 
           <!--分页导航-->
           <el-row class="row-bg" justify="center" style="margin-top: 20px;">
@@ -107,8 +119,9 @@ const user = ref({
 //存放导航项
 const navigationItems = [
   { label: "所有订单", status: null },
-  { label: "已支付", status: 1 },
   { label: "未支付", status: 0 },
+  { label: "已支付", status: 1 },
+  { label: "已发货", status: 2 },
   { label: "已完成", status: 3 }
 ];
 // 活动项
@@ -127,17 +140,28 @@ function getOrderList(pageNum, status = null) {
     userId: user.value.id,
     status: status
   }
+  console.log(11)
   orderApi.selectByPage(condition, pageNum, 5)
       .then(resp => {
-        pageInfo.value = resp.data;
-        orderList.value = resp.data.list;
-        //将订单详情保存
-        resp.data.list.forEach(o => {
-          o.orderDetailList.forEach(d => {
-            orderDetailList.value.push(d);
+        //查到信息时 -- 不为空
+        if (resp.data.size !== 0) {
+          pageInfo.value = resp.data;
+          orderList.value = resp.data.list;
+          //将订单详情保存
+          resp.data.list.forEach(o => {
+            o.orderDetailList.forEach(d => {
+              orderDetailList.value.push(d);
+            })
           })
-        })
-
+        } else {
+          //查不到数据 -- 为空时，不再走pageInfo.value = resp.data,并清空分页信息
+          orderList.value = resp.data.list;
+          pageInfo.value = {
+            pages: 0,
+            pageSize: 0,
+            pageNum: 0
+          };
+        }
       })
 }
 

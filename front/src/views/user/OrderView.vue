@@ -7,11 +7,20 @@
       <el-col>
         <div v-if="order.status === 0">未支付</div>
         <div v-if="order.status === 1">已支付</div>
-        <div v-if="order.status === 3">已收获</div>
+        <div v-if="order.status === 2">已发货</div>
+        <div v-if="order.status === 3">已收货</div>
       </el-col>
     </el-row>
-    <el-row v-if="order.status === 1 || order.status === 3" class="header" justify="center">
+    <el-row v-if="order.status === 3" class="header" justify="center">
       <div style="margin-left: 10px; margin-top: 10px">谢谢惠顾~</div>
+    </el-row>
+    <el-row v-else-if="order.status === 1" class="header" justify="center">
+      <div style="margin-left: 10px; margin-top: 10px">等待发货~</div>
+    </el-row>
+    <el-row v-else-if="order.status === 2" class="header" justify="center">
+      <div style="margin-left: 10px; margin-top: 10px">
+        请确认<div style="display: inline-block; color: var(--theme-color); cursor: pointer" @click="confirm(order.id)">收货</div>
+      </div>
     </el-row>
     <el-row v-else class="header" justify="center">
       <div style="margin-left: 10px; margin-top: 10px">
@@ -59,6 +68,8 @@ const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 const order = ref();
 //总金额
 const total = ref(0);
+//存放修改订单信息
+const orderUpdate = ref();
 
 //获取订单信息
 function getOrder() {
@@ -89,6 +100,25 @@ function toCreateOrderPage(id) {
       orderId
     }
   });
+}
+
+//确认收获
+function confirm(id) {
+  orderApi.selectById(id)
+      .then(resp => {
+        orderUpdate.value = resp.data;
+        orderUpdate.value.status = 3;
+        console.log(orderUpdate.value)
+        orderApi.update(orderUpdate.value)
+            .then(resp => {
+              if (resp.code == 10000) {
+                ElMessage.success("收货成功");
+                getOrder();
+              } else {
+                ElMessage.error(resp.msg);
+              }
+            })
+      })
 }
 
 getOrder();

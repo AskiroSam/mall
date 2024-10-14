@@ -23,6 +23,24 @@ spring:
     username: root
     password: 2669019760
 
+#seata
+seata:
+  registry:
+    type: zk
+    zk:
+      server-addr: 127.0.0.1:2181
+      session-timeout: 6000
+      connect-timeout: 2000
+      username:
+      password:
+  tx-service-group: mall
+  service:
+    # 事务分组与集群映射关系
+    vgroup-mapping:
+      mall: seata
+
+
+
 #MyBatis
 mybatis:
   configuration:

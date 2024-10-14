@@ -48,7 +48,7 @@
         SELECT * FROM `order`
         <where>
             <if test="id!=null and id.length>0">
-                AND `id`=#{id}
+                AND `id` LIKE CONCAT('%', #{id}, '%')
             </if>
             <if test="userId!=null">
                 AND `user_id`=#{userId}

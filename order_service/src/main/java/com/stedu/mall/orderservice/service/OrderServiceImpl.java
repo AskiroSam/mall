@@ -13,6 +13,7 @@ import com.stedu.mall.common.service.UserService;
 import com.stedu.mall.orderservice.mapper.CartMapper;
 import com.stedu.mall.orderservice.mapper.OrderDetailMapper;
 import com.stedu.mall.orderservice.mapper.OrderMapper;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
     @DubboReference
     private GoodsService goodsService;
 
+    @GlobalTransactional(rollbackFor = Exception.class)
     @Override
     public void insert(OrderVo orderVo) throws SteduException {
         /*
@@ -220,6 +222,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     //TODO 事务处理
+    @GlobalTransactional(rollbackFor = Exception.class)
     @Override
     public void pay(OrderVo orderVo) throws SteduException {
         Order order = orderMapper.selectById(orderVo.getOrderId());
