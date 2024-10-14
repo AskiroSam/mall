@@ -38,4 +38,7 @@ public interface UserService {
     List<User> selectAll();
     //查询地址
     Addr selectByAddrId(Integer id);
+    //支付
+    boolean payUpdate(User user);
+
 }

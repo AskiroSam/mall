@@ -25,6 +25,8 @@ public interface UserMapper {
     int updatePay(User user);
     //修改余额
     int updateMoney(User user);
+    //支付
+    int payUpdate(User user);
     //根据id查询 - 为获取用户的信息服务
     User selectById(Integer id);
     //根据条件查询
@@ -32,5 +34,5 @@ public interface UserMapper {
     //查询所有
     List<User> selectAll();
 
-    //
+
 }

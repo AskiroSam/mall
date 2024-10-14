@@ -23,4 +23,5 @@ public class Order implements Serializable {
     private Integer status;
     private User user;
     private List<OrderDetail> orderDetailList;
+
 }

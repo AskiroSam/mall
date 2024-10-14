@@ -58,7 +58,7 @@
   <el-dialog v-model="updatePayDialogShow" title="支付密码" width="500">
     <el-form>
       <el-form-item label="原密码:" label-width="18%" prop="sno">
-        <el-input v-model="oldPay" placeholder="请输入原密码" autocomplete="off" style="width: 300px" />
+        <el-input v-model="oldPay" placeholder="默认原密码为123456" autocomplete="off" style="width: 300px" />
       </el-form-item>
       <el-form-item label="新密码:" label-width="18%" prop="sno">
         <el-input v-model="newPay" placeholder="请输入新密码" autocomplete="off" style="width: 300px" />

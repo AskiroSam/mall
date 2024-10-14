@@ -41,12 +41,12 @@
       <el-col :span="8">
         <div class="search">
           <!--搜索按钮-->
-          <el-button class="search_btn">
+          <el-button class="search_btn" @click="performSearch">
             <el-icon><Search /></el-icon>
           </el-button>
           <!--搜索框-->
           <div>
-            <el-input class="search_input" type="text" />
+            <el-input v-model="conditions.name" placeholder="请输入要搜索的名称" class="search_input" type="text" />
           </div>
         </div>
       </el-col>
@@ -69,6 +69,7 @@ import {ref} from "vue";
 import {useUserStore} from "@/stores/user.js";
 import {useTokenStore} from "@/stores/token.js";
 import {useRouter} from "vue-router";
+import goodsApi from "@/api/goodsApi.js";
 
 
 //user
@@ -79,6 +80,25 @@ const tokenStore = useTokenStore();
 const router = useRouter();
 
 const parentList = ref([]);
+
+
+/*---------------需要修改-------------------------*/
+//搜索的条件
+const conditions = ref({
+  name: '',
+  id: null,
+});
+
+// 执行搜索
+function performSearch() {
+  if (conditions.value.name === "手机") {
+    conditions.value.id = 1;
+  }
+  router.push(`/user/search/${conditions.value.id}`);
+}
+/*---------------需要修改---------------------------*/
+
+
 //1.获取夫分类 2.上架
 function getParent() {
   const condition = {

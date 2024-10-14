@@ -32,6 +32,9 @@ const orderApi = {
     //查询所有
     selectAll() {
         return service.get('/order/all');
+    },
+    pay(orderVo) {
+        return service.post('/order/pay', orderVo);
     }
 }
 export default orderApi;

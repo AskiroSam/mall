@@ -49,7 +49,9 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import cartApi from "@/api/cartApi.js";
 import orderApi from "@/api/orderApi.js";
+import {useRouter} from "vue-router";
 
+const router =useRouter();
 const route = useRoute();
 // console.log(route.query.cartIds)
 
@@ -84,6 +86,14 @@ function createOrder() {
       .then(resp => {
         if (resp.code == 10000) {
           ElMessage.success(resp.msg);
+
+          //去支付页面
+          router.push( {
+            path: '/user/pay',
+            query : {
+              orderId: resp.data.orderId
+            }
+          });
         } else {
           ElMessage.error(resp.msg);
         }

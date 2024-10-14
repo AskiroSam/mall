@@ -1,6 +1,7 @@
 package com.stedu.mall.orderservice.service;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.crypto.SecureUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.stedu.mall.common.bean.*;
@@ -16,7 +17,7 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -119,6 +120,8 @@ public class OrderServiceImpl implements OrderService {
         //5)删除购物车
         cartMapper.deleteIdList(Arrays.asList(orderVo.getCartIds()));
 
+        orderVo.setOrderId(orderId);
+
         ////生成唯一id
         //String id = IdUtil.getSnowflakeNextIdStr();
         //order.setId(id);
@@ -193,8 +196,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order selectById(String id) {
+    public Order selectById(String id, Integer userId) throws SteduException {
+        //根据订单id查询
         Order order = orderMapper.selectById(id);
+        //判断是否属于当前用户
+        if (!order.getUserId().equals(userId)) {
+            throw new SteduException("订单不属于当前用户，无法支付");
+        }
+        //查询订单详情里面的商品信息
         List<OrderDetail> orderDetails = orderDetailMapper.selectByOrderId(id);
         for (OrderDetail orderDetail : orderDetails) {
             Goods goods = goodsService.selectById(orderDetail.getGoodsId());
@@ -210,5 +219,55 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.selectAll();
     }
 
+    //TODO 事务处理
+    @Override
+    public void pay(OrderVo orderVo) throws SteduException {
+        Order order = orderMapper.selectById(orderVo.getOrderId());
+
+        if (order == null) {
+            throw new SteduException("订单不存在，无法支付");
+        }
+
+        if (!order.getUserId().equals(orderVo.getUserId())) {
+            throw new SteduException("订单不属于当前用户，无法支付");
+        }
+
+        if (!order.getStatus().equals(0)) {
+            throw new SteduException("订单状态错误，无法支付");
+        }
+
+        order.setStatus(1);
+        order.setPayType(0);
+        orderMapper.update(order);
+
+        User user = userService.selectById(orderVo.getUserId());
+        //判断支付密码是否正确
+        String payPwdMySQL = user.getPayPassword();
+        if (payPwdMySQL == null) {
+            throw new SteduException("用户没有设置支付密码，请设置之后再下单");
+        }
+        //对用户输入的支付密码进行加密
+        String md5Pwd = SecureUtil.md5(SecureUtil.md5(orderVo.getPayPwd() + user.getSalt()));
+        if (!md5Pwd.equals(payPwdMySQL)) {
+            throw new SteduException("支付密码错误，无法支付");
+        }
+        //计算当前订单的总金额
+        BigDecimal sum = new BigDecimal("0");
+        for (OrderDetail orderDetail : order.getOrderDetailList()) {
+            BigDecimal count = new BigDecimal(orderDetail.getCount());
+            BigDecimal price = orderDetail.getPrice();
+            sum = sum.add(price.multiply(count));
+        }
+        //判断余额是否充足 BigDecimal比较大小 - java比较器(BigDecimal实现了自然排序)
+        if (user.getMoney().compareTo(sum) < 0) {
+            throw new SteduException("余额不足，无法支付");
+        }
+        //扣除余额
+        User u = new User();
+        u.setId(user.getId());
+        u.setMoney(user.getMoney().subtract(sum));
+        userService.payUpdate(u);
+
+    }
 
 }

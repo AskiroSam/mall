@@ -18,10 +18,11 @@ public interface OrderService {
     //根据条件查询
     PageInfo<Order> selectByCondition(Order condition, Integer pageNum, Integer pageSize);
     //根据id查询
-    Order selectById(String id);
+    Order selectById(String id, Integer userId) throws SteduException;
 
     //查询所有
     List<Order> selectAll();
 
 
+    void pay(OrderVo orderVo) throws SteduException;
 }

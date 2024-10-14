@@ -20,6 +20,7 @@
               <el-row style="margin-top: 0">
                 <el-col :span="3" style="font-size: 12px; margin-left: 20px; margin-top: 20px">{{formatDate(order.createTime)}}</el-col>
                 <el-col :span="6" style="font-size: 12px; margin-left: 20px; margin-top: 20px">订单号：{{order.id}}</el-col>
+                <el-button type="warning" size="small" style="margin-left: 400px; margin-top: 15px" >订单详情</el-button>
               </el-row>
 
               <!--订单详情-->
@@ -42,7 +43,9 @@
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="4" style="margin-top: 20px; margin-left: 700px; text-align: right;">订单状态：{{getOrderStatus(order.status)}}</el-col>
+                <el-col :span="4" style="margin-top: 20px; margin-left: 700px; text-align: right;">
+                  订单状态：<div style="display: inline-block; color: var(--theme-color)" >{{getOrderStatus(order.status)}}</div>
+                </el-col>
               </el-row>
             </el-card>
           </el-row>

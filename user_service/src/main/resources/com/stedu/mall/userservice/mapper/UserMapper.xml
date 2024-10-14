@@ -6,8 +6,8 @@
         VALUES (#{username}, #{password}, #{payPassword}, #{salt}, #{realname}, #{sex}, #{idCard}, #{phone}, #{email}, #{regTime}, #{money}, #{status})
     </insert>
     <insert id="insert1">
-        INSERT INTO `user`(`username`, `password`, `salt`)
-        VALUES (#{username}, #{password}, #{salt})
+        INSERT INTO `user`(`username`, `password`, `pay_password`, `salt`, `isOldPwdVerified`)
+        VALUES (#{username}, #{password}, #{payPassword}, #{salt}, #{isOldPwdVerified})
     </insert>
     <update id="update">
         UPDATE `user`
@@ -79,6 +79,15 @@
         WHERE `id`=#{id}
     </update>
     <update id="updateMoney">
+        UPDATE `user`
+        <set>
+            <if test="money!=null">
+                `money`=#{money},
+            </if>
+        </set>
+        WHERE `id`=#{id}
+    </update>
+    <update id="payUpdate">
         UPDATE `user`
         <set>
             <if test="money!=null">

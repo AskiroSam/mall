@@ -20,11 +20,11 @@
       </el-col>
       <el-col :span="5">{{cart.goods.name}}</el-col>
       <el-col :span="4">{{cart.goods.color}} - {{cart.goods.version}}</el-col>
-      <el-col :span="2">{{cart.goods.price}}</el-col>
+      <el-col :span="2">{{cart.goods.price.toFixed(2)}}</el-col>
       <el-col :span="6">
         <el-input-number v-model="cart.count" :min="1" size="small" @change="updateCount(cart)" />
       </el-col>
-      <el-col :span="2">{{cart.goods.price * cart.count}}</el-col>
+      <el-col :span="2">{{(cart.goods.price * cart.count).toFixed(2)}}</el-col>
       <el-col :span="1">
         <el-button type="danger" :icon="Delete" circle @click="deleteById(cart.id)" />
       </el-col>
@@ -39,7 +39,7 @@
         已选择{{ checkedCount }}件商品
       </el-col>
       <el-col :span="3">
-        总价：￥{{ total }}
+        总价：￥{{ total.toFixed(2) }}
       </el-col>
       <el-col :span="2">
         <el-button type="danger" @click="toCreateOrderPage">结算</el-button>
@@ -69,11 +69,12 @@ const checkAllState = ref(false);
 //没有全选的状态
 const halfState = ref(false);
 //选中商品的数量
-const checkedCount = ref(0);
+const checkedCount = ref();
 //选中商品的总金额
 const total = ref(0);
 //选中的商品
 const deleteIdList = ref([]);
+
 
 //跳转到生成订单的页面
 function toCreateOrderPage() {

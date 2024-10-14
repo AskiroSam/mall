@@ -23,9 +23,6 @@
             <if test="userId!=null">
                 `user_id`=#{userId},
             </if>
-            <if test="createTime!=null">
-                `create_time`=#{createTime},
-            </if>
             <if test="express!=null and express.length>0">
                 `express`=#{express},
             </if>
@@ -35,7 +32,7 @@
             <if test="addrId!=null">
                 `addr_id`=#{addrId},
             </if>
-            <if test="addrDetail!=null">
+            <if test="addrDetail!=null and addrDetail.length>0">
                 `addr_detail`=#{addrDetail},
             </if>
             <if test="status!=null">

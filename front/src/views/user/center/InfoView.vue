@@ -62,17 +62,6 @@
       <el-form-item label="注册时间:" label-width="18%">
         <el-date-picker v-model="userUpdate.regTime" type="date" placeholder="请选择日期"  style="width: 300px" />
       </el-form-item>
-      <el-form-item label="余额:" label-width="18%" prop="sno">
-        <el-input v-model="userUpdate.money" placeholder="请输入余额" autocomplete="off" style="width: 300px" />
-      </el-form-item>
-      <el-form-item label="状态:" label-width="18%" prop="sgender">
-        <el-select v-model="userUpdate.status" placeholder="请选择状态" style="width: 300px" disabled>
-          <el-option label="未认证" :value="0" />
-          <el-option label="已认证" :value="1" />
-          <el-option label="禁用" :value="2" />
-          <el-option label="注销" :value="3" />
-        </el-select>
-      </el-form-item>
     </el-form>
     <template #footer>
       <div class="dialog-footer">

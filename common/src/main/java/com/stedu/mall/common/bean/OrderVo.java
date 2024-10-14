@@ -11,4 +11,6 @@ public class OrderVo {
     private Integer addrId;
     private Integer[] cartIds;
     private Integer userId;
+    private String orderId;
+    private String payPwd;
 }

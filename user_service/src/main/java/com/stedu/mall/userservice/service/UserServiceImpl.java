@@ -86,6 +86,13 @@ public class UserServiceImpl implements UserService {
         //对密码进行加密
         String md5Pwd = SecureUtil.md5(SecureUtil.md5(user.getPassword() + salt));
         user.setPassword(md5Pwd);
+        //同时设置支付密码 默认是 “123456”
+        String md5Pay = SecureUtil.md5(SecureUtil.md5("123456" + salt));
+        user.setPayPassword(md5Pay);
+
+        user.setStatus(0);
+        user.setIsOldPwdVerified(0);
+
 
 
         //添加用户
@@ -159,19 +166,20 @@ public class UserServiceImpl implements UserService {
 
         User oldUser = userMapper.selectById(user.getId());
         String oldPsay = oldUser.getPayPassword();
-        String newPsay = user.getPayPassword();
+        String newPsay = SecureUtil.md5(SecureUtil.md5(user.getPayPassword() + oldUser.getSalt()));
+
 
 
         if (newPsay != null && oldUser.getIsOldPwdVerified() == 0) {
             if (!newPsay.equals(oldPsay)) {
-                user.setPassword(oldPsay);
+                user.setPayPassword(oldPsay);
                 throw new SteduException("原密码错误，请重新输入");
             } else {
-                user.setPassword(oldPsay);
+                user.setPayPassword(oldPsay);
                 user.setIsOldPwdVerified(1);
             }
         } else if (oldUser.getIsOldPwdVerified() == 1) {
-            user.setPassword(newPsay);
+            user.setPayPassword(newPsay);
             user.setIsOldPwdVerified(0);
         }
 
@@ -259,5 +267,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Addr selectByAddrId(Integer id) {
         return addrMapper.selectById(id);
+    }
+
+    @Override
+    public boolean payUpdate(User user) {
+        return userMapper.payUpdate(user) == 1;
     }
 }
