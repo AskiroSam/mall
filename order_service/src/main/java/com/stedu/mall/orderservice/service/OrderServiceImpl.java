@@ -221,7 +221,6 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.selectAll();
     }
 
-    //TODO 事务处理
     @GlobalTransactional(rollbackFor = Exception.class)
     @Override
     public void pay(OrderVo orderVo) throws SteduException {
