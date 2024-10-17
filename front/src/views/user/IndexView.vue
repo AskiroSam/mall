@@ -1,20 +1,22 @@
 <template>
 
-  <!--轮播图-->
-  <el-carousel height="450px">
-    <el-carousel-item v-for="(banner, index) in banners" :key="index">
-      <el-image :src="banner"></el-image>
-    </el-carousel-item>
-  </el-carousel>
+  <el-card style="margin-top: 10px">
+    <!--轮播图-->
+    <el-carousel height="450px">
+      <el-carousel-item v-for="(banner, index) in banners" :key="index">
+        <el-image :src="banner"></el-image>
+      </el-carousel-item>
+    </el-carousel>
+  </el-card>
+
 
   <!--广告位-->
   <div class="ad">
-    <ul>
-      <li><el-image src="/src/assets/ad.png" /></li>
-      <li><el-image src="/src/assets/ad.png" /></li>
-      <li><el-image src="/src/assets/ad.png" /></li>
-      <li><el-image src="/src/assets/ad.png" /></li>
-    </ul>
+    <el-carousel :interval="4000" type="card" height="200px">
+      <el-carousel-item v-for="item in banners2" :key="item">
+        <el-image :src="item"></el-image>
+      </el-carousel-item>
+    </el-carousel>
   </div>
 
   <!--推荐的商品-->
@@ -51,9 +53,14 @@ const categoryName = ref();
 //服务器地址
 const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 const banners = ref([
-  "/src/assets/banner/banner1.png",
-  "/src/assets/banner/banner2.png",
-  "/src/assets/banner/banner3.png"
+  "/src/assets/banner/lb1.jpeg",
+  "/src/assets/banner/lb2.jpg"
+])
+const banners2 = ref([
+  "/src/assets/lb3.jpg",
+  "/src/assets/lb4.jpeg",
+  "/src/assets/lb5.jpg",
+  "/src/assets/lb6.jpeg"
 ])
 
 //已上架的夫分类

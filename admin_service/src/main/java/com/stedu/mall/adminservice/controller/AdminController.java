@@ -10,6 +10,7 @@ import com.stedu.mall.common.service.AdminService;
 import com.stedu.mall.common.utils.JwtUtils;
 import com.stedu.mall.common.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class AdminController {
 
     //添加
     @PostMapping
-    public RespBean insert(@RequestBody Admin admin) throws SteduException {
+    public RespBean insert(@Validated @RequestBody Admin admin) throws SteduException {
         adminService.insert(admin);
         return RespBean.ok("添加成功");
     }

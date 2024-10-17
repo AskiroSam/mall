@@ -63,17 +63,17 @@
 
   <!-- 添加管理员对话框开始 -->
   <el-dialog v-model="adminAddDiaLogShow" title="添加管理员" width="500">
-    <el-form>
-      <el-form-item label="用户名:" label-width="18%" prop="sno">
+    <el-form ref="insertForm" :model="adminAdd" :rules="rules">
+      <el-form-item label="用户名:" label-width="18%" prop="username">
         <el-input v-model="adminAdd.username" placeholder="请输入用户名" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="手机号:" label-width="18%" prop="sname">
+      <el-form-item label="手机号:" label-width="18%" prop="phone">
         <el-input v-model="adminAdd.phone" placeholder="请输入手机号" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="邮箱:" label-width="18%" prop="sname">
+      <el-form-item label="邮箱:" label-width="18%" prop="email">
         <el-input v-model="adminAdd.email" placeholder="请输入邮箱" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="真实姓名:" label-width="18%" prop="sname">
+      <el-form-item label="真实姓名:" label-width="18%" prop="realname">
         <el-input type="password" v-model="adminAdd.realname" placeholder="请输入真实姓名" autocomplete="off" style="width: 300px" />
       </el-form-item>
       <el-form-item label="注册时间:" label-width="18%" v-show="false">
@@ -130,6 +130,25 @@ const adminAdd = ref({
 //添加管理员对话框是否显示
 const adminAddDiaLogShow = ref(false);
 
+//非空验证规则
+// 验证规则
+const rules = {
+  username: [
+    { required: true, message: '用户名不能为空', trigger: 'blur' }
+  ],
+  phone: [
+    { required: true, message: '手机号不能为空', trigger: 'blur' }
+  ],
+  email: [
+    { required: true, message: '邮箱不能为空', trigger: 'blur' }
+  ],
+  realname: [
+    { required: true, message: '真实姓名不能为空', trigger: 'blur' }
+  ]
+};
+//验证
+const insertForm = ref();
+
 
 // 打开添加管理员对话框并设置默认创建时间
 function openAdminAddDialog() {
@@ -138,28 +157,34 @@ function openAdminAddDialog() {
 }
 //添加管理员
 function insert() {
-  adminApi.insert(adminAdd.value)
-      .then(resp => {
-        if (resp.code == 10000) {
-          ElMessage.success(resp.msg);
-          //隐藏对话框
-          adminAddDiaLogShow.value = false;
-          //清空对话框
-          adminAdd.value = {
-            id: 0,
-            username: null,
-            password: null,
-            phone: null,
-            email: null,
-            realname: null,
-            status: 0,
-          };
-          //查询第一页
-          selectByPage(1);
-        } else {
-          ElMessage.error(resp.msg);
-        }
-      })
+  //validate根据规则进行表单验证，全部通过valid为true，否则为false
+  insertForm.value.validate(valid => {
+    if (valid) {
+      adminApi.insert(adminAdd.value)
+          .then(resp => {
+            if (resp.code == 10000) {
+              ElMessage.success(resp.msg);
+              //隐藏对话框
+              adminAddDiaLogShow.value = false;
+              //清空对话框
+              adminAdd.value = {
+                id: 0,
+                username: null,
+                password: null,
+                phone: null,
+                email: null,
+                realname: null,
+                status: 0,
+              };
+              //查询第一页
+              selectByPage(1);
+            } else {
+              ElMessage.error(resp.msg);
+            }
+          })
+    }
+  })
+
 }
 //停用管理员
 function chgStatus(id, status) {
