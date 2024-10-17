@@ -104,7 +104,7 @@
       <el-form-item label="描述:" label-width="18%" prop="dscp">
         <el-input v-model="categoryAdd.dscp" placeholder="请输入描述" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="夫分类" label-width="18%" prop="parentId">
+      <el-form-item label="夫分类" label-width="18%">
         <el-select v-model="categoryAdd.parentId" placeholder="请选择夫分类" clearable :empty-values="[0]" :value-on-clear="0" size="large" style="width: 300px">
           <el-option v-for="(category, index) in allParent" :key="index" :label="category.name"
                      :value="category.id" />
@@ -147,14 +147,14 @@
 
   <!-- 修改分类的对话框开始 -->
   <el-dialog v-model="updateDialogShow" title="修改分类" width="500">
-    <el-form>
-      <el-form-item label="名称:" label-width="18%" prop="sno">
+    <el-form ref="updateForm" :model="categoryUpdate" :rules="rules">
+      <el-form-item label="名称:" label-width="18%" prop="name">
         <el-input v-model="categoryUpdate.name" placeholder="请输入名称" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="描述:" label-width="18%" prop="sname">
+      <el-form-item label="描述:" label-width="18%" prop="dscp">
         <el-input v-model="categoryUpdate.dscp" placeholder="请输入描述" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="夫分类" label-width="18%" prop="did">
+      <el-form-item label="夫分类" label-width="18%">
         <el-select v-model="categoryUpdate.parentId" placeholder="请选择夫分类" clearable :empty-values="[0]" :value-on-clear="0" size="large" style="width: 300px">
           <el-option v-for="(category, index) in allParent" :key="index" :label="category.name"
                      :value="category.id" />
@@ -172,7 +172,7 @@
           <el-radio label="上架" :value="1" size="large" />
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="图片:" label-width="20%">
+      <el-form-item label="图片:" label-width="20%" prop="=pic">
         <el-upload class="avatar-uploader" :action="SERVER_ADDR + '/category/upload'"
                    name="pic"
                    :headers="headers"
@@ -243,11 +243,9 @@ const rules = {
   pic: [
     { required: true, message: '图片不能为空', trigger: 'blur' }
   ],
-  parentId: [
-    { required: true, message: '夫分类不能为空', trigger: 'blur' }
-  ]
 };
 const insertForm = ref()
+const updateForm = ref()
 
 
 //被添加的分类信息
@@ -366,18 +364,22 @@ function picUpdateUploadSuccess(resp) {
 }
 //修改
 function update() {
-  categoryApi.update(categoryUpdate.value)
-      .then(resp => {
-        if (resp.code == 10000) {
-          ElMessage.success(resp.msg);
-          //隐藏对话框
-          updateDialogShow.value = false;
-          //查询第一页
-          selectByPage(pageInfo.value.pageNum);
-        } else {
-          ElMessage.error(resp.msg);
-        }
-      })
+  updateForm.value.validate(valid => {
+    if (valid) {
+      categoryApi.update(categoryUpdate.value)
+          .then(resp => {
+            if (resp.code == 10000) {
+              ElMessage.success(resp.msg);
+              //隐藏对话框
+              updateDialogShow.value = false;
+              //查询第一页
+              selectByPage(pageInfo.value.pageNum);
+            } else {
+              ElMessage.error(resp.msg);
+            }
+          })
+    }
+  })
 }
 
 //是否推荐

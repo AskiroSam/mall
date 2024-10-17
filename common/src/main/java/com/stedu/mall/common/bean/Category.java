@@ -24,8 +24,6 @@ public class Category implements Serializable {
     private String dscp; //描述
     @NotBlank(message = "图片不能为空")
     private String pic; //图片
-    @NotNull(message = "夫分类不能为空")
-    @Min(value = 1, message = "夫分类不能为空")
     private Integer parentId; //夫分类的ID
     private Integer recom; //是否推荐 0:不推荐 1:推荐
     private Integer status; //是否上架 0:下架 1:上架
