@@ -23,14 +23,14 @@
             <el-input
                 v-model="condition.id"
                 clearable placeholder="查询的单号"
-                style="width: 200px;"
+                style="width: 200px; margin-left: 20px"
                 @input="selectByPage(1)">
             </el-input>
           </el-form-item>
         </el-form>
         <el-table :data="pageInfo.list" border style="width: 100%">
           <el-table-column prop="id" label="快递单号" width="200px" />
-          <el-table-column prop="user" label="用户">
+          <el-table-column prop="user" label="用户" width="100px">
             <template #default="scope">
               {{ scope.row.user.username }}
             </template>
@@ -51,7 +51,7 @@
             </template>
           </el-table-column>
           <!--<el-table-column prop="addr.address" label="地址" />-->
-          <el-table-column prop="addrDetail" label="地址" width="500px" />
+          <el-table-column prop="addrDetail" label="地址" width="400px" />
           <el-table-column label="状态">
             <template #default="scope">
               <el-tag type="primary" v-if="scope.row.status == 0">未支付</el-tag>

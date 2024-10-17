@@ -41,12 +41,12 @@
       <el-col :span="8">
         <div class="search">
           <!--搜索按钮-->
-          <el-button class="search_btn" @click="performSearch">
+          <el-button class="search_btn" @click="check">
             <el-icon><Search /></el-icon>
           </el-button>
           <!--搜索框-->
           <div>
-            <el-input v-model="conditions.name" placeholder="请输入要搜索的名称" class="search_input" type="text" />
+            <el-input v-model="name" placeholder="请输入要搜索的名称" class="search_input" type="text" />
           </div>
         </div>
       </el-col>
@@ -69,9 +69,11 @@ import {ref} from "vue";
 import {useUserStore} from "@/stores/user.js";
 import {useTokenStore} from "@/stores/token.js";
 import {useRouter} from "vue-router";
+import {useGoodsStore} from "@/stores/goods.js";
 import goodsApi from "@/api/goodsApi.js";
 
 
+const goodsStore = useGoodsStore();
 //user
 const userStore = useUserStore();
 //token
@@ -83,18 +85,13 @@ const parentList = ref([]);
 
 
 /*---------------需要修改-------------------------*/
-//搜索的条件
-const conditions = ref({
-  name: '',
-  id: null,
-});
+//根据姓名搜索
+const name = ref();
 
 // 执行搜索
-function performSearch() {
-  if (conditions.value.name === "手机") {
-    conditions.value.id = 1;
-  }
-  router.push(`/user/search/${conditions.value.id}`);
+function check() {
+  goodsStore.updateGoods(name.value);
+  router.push('/user/index');
 }
 /*---------------需要修改---------------------------*/
 
@@ -110,6 +107,7 @@ function getParent() {
   categoryApi.selectByPage(condition)
       .then(resp => {
         parentList.value = resp.data;
+        name.value = goodsStore.goodsInfo;
       })
 }
 

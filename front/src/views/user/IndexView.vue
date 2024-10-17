@@ -36,46 +36,62 @@
 </template>
 
 <script setup>
-  import {ref} from "vue";
-  import categoryApi from "@/api/categoryApi.js";
-  import {useRouter} from "vue-router";
+import {ref, watch} from "vue";
+import categoryApi from "@/api/categoryApi.js";
+import {useRouter} from "vue-router";
+import {useGoodsStore} from "@/stores/goods.js";
+import {useRoute} from "vue-router";
 
-  const router = useRouter();
+const router = useRouter();
+const route = useRoute();
 
-  //服务器地址
-  const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
-  const banners = ref([
-    "/src/assets/banner/banner1.png",
-    "/src/assets/banner/banner2.png",
-    "/src/assets/banner/banner3.png"
-  ])
+const goodsStore = useGoodsStore();
+//查询条件
+const categoryName = ref();
+//服务器地址
+const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
+const banners = ref([
+  "/src/assets/banner/banner1.png",
+  "/src/assets/banner/banner2.png",
+  "/src/assets/banner/banner3.png"
+])
 
-  //已上架的夫分类
-  const parentList = ref([]);
-  //1.获取夫分类 2.上架
-  function getParent() {
-    const condition = {
-      parentId: 0,
-      status: 1,
+//已上架的夫分类
+const parentList = ref([]);
+//1.获取夫分类 2.上架
+function getParent() {
+  categoryName.value = goodsStore.goodsInfo;
+  const condition = {
+    parentId: 0,
+    status: 1,
+    name: categoryName.value
+  }
+
+  categoryApi.selectByPage(condition)
+      .then(resp => {
+        parentList.value = resp.data;
+      })
+}
+
+//跳转到商品详情页面
+function toGoodsView(id) {
+  router.push({
+    path: '/user/goods',//跳转到的位置，值和页面路径中配置的路径相同
+    query: {
+      id
     }
+  });
+}
 
-    categoryApi.selectByPage(condition)
-        .then(resp => {
-          parentList.value = resp.data;
-        })
-  }
+// 监听路由变化
+watch(
+    () => goodsStore.goodsInfo,
+    () => {
+      getParent(); // 重新获取数据
+    }
+);
 
-  //跳转到商品详情页面
-  function toGoodsView(id) {
-    router.push({
-      path: '/user/goods',//跳转到的位置，值和页面路径中配置的路径相同
-      query: {
-        id
-      }
-    });
-  }
-
-  getParent();
+getParent();
 </script>
 
 <style scoped>
