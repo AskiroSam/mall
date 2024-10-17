@@ -97,14 +97,14 @@
 
   <!-- 添加分类的对话框开始 -->
   <el-dialog v-model="addDialogShow" title="添加分类" width="500">
-    <el-form>
-      <el-form-item label="名称:" label-width="18%" prop="sno">
+    <el-form ref="insertForm" :model="categoryAdd" :rules="rules">
+      <el-form-item label="名称:" label-width="18%" prop="name">
         <el-input v-model="categoryAdd.name" placeholder="请输入名称" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="描述:" label-width="18%" prop="sname">
+      <el-form-item label="描述:" label-width="18%" prop="dscp">
         <el-input v-model="categoryAdd.dscp" placeholder="请输入描述" autocomplete="off" style="width: 300px" />
       </el-form-item>
-      <el-form-item label="夫分类" label-width="18%" prop="did">
+      <el-form-item label="夫分类" label-width="18%" prop="parentId">
         <el-select v-model="categoryAdd.parentId" placeholder="请选择夫分类" clearable :empty-values="[0]" :value-on-clear="0" size="large" style="width: 300px">
           <el-option v-for="(category, index) in allParent" :key="index" :label="category.name"
                      :value="category.id" />
@@ -122,7 +122,7 @@
           <el-radio label="上架" :value="1" size="large" />
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="图片:" label-width="20%">
+      <el-form-item label="图片:" label-width="20%" prop="pic">
         <el-upload class="avatar-uploader" :action="SERVER_ADDR + '/category/upload'"
                    name="pic"
                    :headers="headers"
@@ -232,6 +232,23 @@ const pageInfo = ref({
   pageNum: 0
 });
 
+// 验证规则
+const rules = {
+  name: [
+    { required: true, message: '名称不能为空', trigger: 'blur' }
+  ],
+  dscp: [
+    { required: true, message: '描述不能为空', trigger: 'blur' }
+  ],
+  pic: [
+    { required: true, message: '图片不能为空', trigger: 'blur' }
+  ],
+  parentId: [
+    { required: true, message: '夫分类不能为空', trigger: 'blur' }
+  ]
+};
+const insertForm = ref()
+
 
 //被添加的分类信息
 const categoryAdd = ref({
@@ -268,27 +285,31 @@ function selectById(id) {
 }
 //添加分类
 function insert() {
-  categoryApi.insert(categoryAdd.value)
-      .then(resp => {
-        if (resp.code == 10000) {
-         ElMessage.success(resp.msg);
-         //隐藏对话框
-         addDialogShow.value = false;
-         //清空对话框
-         categoryAdd.value = {
-           name: null,
-           dscp: null,
-           pic: null,
-           parentId: 0,
-           recom: 1,
-           status: 1
-         };
-         //查询第一页
-         selectByPage(1);
-        } else {
-          ElMessage.error(resp.msg);
-        }
-      });
+  insertForm.value.validate(valid => {
+    if (valid) {
+      categoryApi.insert(categoryAdd.value)
+          .then(resp => {
+            if (resp.code == 10000) {
+              ElMessage.success(resp.msg);
+              //隐藏对话框
+              addDialogShow.value = false;
+              //清空对话框
+              categoryAdd.value = {
+                name: null,
+                dscp: null,
+                pic: null,
+                parentId: 0,
+                recom: 1,
+                status: 1
+              };
+              //查询第一页
+              selectByPage(1);
+            } else {
+              ElMessage.error(resp.msg);
+            }
+          });
+    }
+  })
 }
 
 //删除分类

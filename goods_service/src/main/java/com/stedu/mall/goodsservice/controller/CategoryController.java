@@ -6,6 +6,7 @@ import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -19,7 +20,7 @@ public class CategoryController {
 
     //添加
     @PostMapping
-    public RespBean insert(@RequestBody Category category) throws SteduException {
+    public RespBean insert(@Validated @RequestBody Category category) throws SteduException {
         categoryService.insert(category);
         return RespBean.ok("添加成功");
     }
