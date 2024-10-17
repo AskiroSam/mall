@@ -100,5 +100,13 @@ public class OrderController {
         return RespBean.ok("支付成功");
     }
 
+    //订单超时
+    @GetMapping("/checkTime/{id}")
+    public RespBean checkOrderTime(@PathVariable String id) throws SteduException {
+        Integer passDateSeconds = orderService.checkOrderTime(id);
+
+        return RespBean.ok("", passDateSeconds);
+    }
+
 
 }

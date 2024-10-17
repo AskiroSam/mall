@@ -33,8 +33,13 @@ const orderApi = {
     selectAll() {
         return service.get('/order/all');
     },
+    //支付
     pay(orderVo) {
         return service.post('/order/pay', orderVo);
+    },
+    //订单超时
+    checkTime(id) {
+        return service.get(`/order/checkTime/${id}`);
     }
 }
 export default orderApi;

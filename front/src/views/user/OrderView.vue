@@ -81,7 +81,6 @@ function getOrder() {
           order.value = resp.data;
           for (let orderDetail of order.value.orderDetailList) {
             total.value += orderDetail.count * orderDetail.price
-            console.log(order.value)
           }
         } else {
           ElMessage.error(resp.msg);
@@ -108,7 +107,6 @@ function confirm(id) {
       .then(resp => {
         orderUpdate.value = resp.data;
         orderUpdate.value.status = 3;
-        console.log(orderUpdate.value)
         orderApi.update(orderUpdate.value)
             .then(resp => {
               if (resp.code == 10000) {

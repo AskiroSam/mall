@@ -23,7 +23,8 @@ public interface OrderService {
 
     //查询所有
     List<Order> selectAll();
-
-
+    //支付
     void pay(OrderVo orderVo) throws SteduException;
+    //检查订单超时时间
+    int checkOrderTime(String id) throws SteduException;
 }

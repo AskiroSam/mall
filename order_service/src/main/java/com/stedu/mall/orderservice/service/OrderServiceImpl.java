@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -270,6 +272,33 @@ public class OrderServiceImpl implements OrderService {
         u.setMoney(user.getMoney().subtract(sum));
         userService.payUpdate(u);
 
+    }
+
+    @Override
+    public int checkOrderTime(String id) throws SteduException {
+        //获取订单
+        Order order = orderMapper.selectById(id);
+
+        //当前时间
+        Date date = new Date();
+        //订单创建时间
+        Date createTime = order.getCreateTime();
+        //订单自创建到现在经过的时间
+        long nextDate = date.getTime() - createTime.getTime();
+        //设置订单的超时时间为 15 分钟
+        long timeOut = 15 * 60 * 1000;
+        //剩余时间
+        long passDate = timeOut - nextDate;
+        //剩余时间的秒数 - 前端使用
+        int passDateSeconds = (int) (passDate / 1000);
+
+        //计算订单超时
+        if (nextDate > timeOut) {
+            orderMapper.delete(id);
+            throw new SteduException("订单已经超时，自动删除");
+        }
+
+        return passDateSeconds;
     }
 
 }
