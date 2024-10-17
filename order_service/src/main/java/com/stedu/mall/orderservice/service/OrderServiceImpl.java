@@ -40,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
     @DubboReference
     private GoodsService goodsService;
 
-    @GlobalTransactional(rollbackFor = Exception.class)
+    //@GlobalTransactional(rollbackFor = Exception.class)
     @Override
     public void insert(OrderVo orderVo) throws SteduException {
         /*
@@ -223,7 +223,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.selectAll();
     }
 
-    @GlobalTransactional(rollbackFor = Exception.class)
+    //@GlobalTransactional(rollbackFor = Exception.class)
     @Override
     public void pay(OrderVo orderVo) throws SteduException {
         Order order = orderMapper.selectById(orderVo.getOrderId());

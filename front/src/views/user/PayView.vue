@@ -130,7 +130,12 @@ function checkTime() {
 
   orderApi.checkTime(orderId)
       .then(resp => {
-        time.value = Math.floor(resp.data / 60);
+        if (resp.code == 10000) {
+          time.value = Math.floor(resp.data / 60);
+        } else {
+          ElMessage.error(resp.msg);
+          router.push('/user/orderList');
+        }
       })
 
 }
