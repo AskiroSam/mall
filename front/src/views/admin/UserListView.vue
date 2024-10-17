@@ -3,9 +3,9 @@
     <el-col :span="24">
       <el-card style="opacity: 0.9;">
         <el-form :inline="true" class="demo-form-inline">
-          <el-form-item>
-            <el-button type="primary" @click="openUserAddDialog">添加</el-button>
-          </el-form-item>
+          <!--<el-form-item>-->
+          <!--  <el-button type="primary" @click="openUserAddDialog">添加</el-button>-->
+          <!--</el-form-item>-->
           <el-form-item style="float: right;">
             <el-input v-model="condition.username" placeholder="请输入要搜索的名称" @input="selectByPage(1);" />
           </el-form-item>
@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column label="操作" width="330px">
             <template #default="scope">
-              <el-button size="small" type="primary" @click="selectById(scope.row.id)">修改</el-button>
+              <!--<el-button size="small" type="primary" @click="selectById(scope.row.id)">修改</el-button>-->
               <el-popconfirm title="你确定要删除该用户吗？" confirm-button-text="确认" cancel-button-text="取消" width="200px" @confirm="deleteUser(scope.row.id)">
                 <template #reference>
                   <el-button size="small" type="danger">删除</el-button>

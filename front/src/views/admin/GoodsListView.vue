@@ -111,8 +111,8 @@
 
   <!--添加商品的对话框开始-->
   <el-dialog v-model="addDialogShow" title="添加商品" width="500">
-    <el-form>
-      <el-form-item label="分类:" label-width="18%" prop="did">
+    <el-form ref="insertForm" :model="goodsAdd" :rules="rules">
+      <el-form-item label="分类:" label-width="18%" prop="categoryId">
         <el-cascader
             v-model="goodsAdd.categoryId"
             :options="allParent"
@@ -159,7 +159,7 @@
           <el-radio label="上架" :value="1" size="large" />
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="图片:" label-width="20%">
+      <el-form-item label="图片:" label-width="20%" prop="picList">
         <el-upload :action="SERVER_ADDR + '/goods/upload'"
                    v-model:file-list="goodsAdd.picList"
                    name="pic"
@@ -185,8 +185,8 @@
 
   <!-- 修改商品的对话框开始 -->*
   <el-dialog v-model="updateDialogShow" title="修改商品" width="500">
-    <el-form>
-      <el-form-item label="分类:" label-width="18%" prop="did">
+    <el-form ref="updateForm" :model="goodsUpdate" :rules="rules">
+      <el-form-item label="分类:" label-width="18%" prop="categoryId">
         <el-cascader
             v-model="goodsUpdate.categoryId"
             :options="allParent"
@@ -233,7 +233,7 @@
           <el-radio label="上架" :value="1" size="large" />
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="图片:" label-width="20%">
+      <el-form-item label="图片:" label-width="20%" prop="picList">
         <el-upload :action="SERVER_ADDR + '/goods/upload'"
                    v-model:file-list="goodsUpdate.picList"
                    name="pic"
@@ -331,6 +331,42 @@ const condition = ref({
 
 })
 
+// 验证规则
+const rules = {
+  name: [
+    { required: true, message: '名称不能为空', trigger: 'blur' }
+  ],
+  dscp: [
+    { required: true, message: '描述不能为空', trigger: 'blur' }
+  ],
+  price: [
+    { required: true, message: '售价不能为空', trigger: 'blur' }
+  ],
+  markPrice: [
+    { required: true, message: '标价不能为空', trigger: 'blur' }
+  ],
+  purchasePrice: [
+    { required: true, message: '进价不能为空', trigger: 'blur' }
+  ],
+  color: [
+    { required: true, message: '颜色不能为空', trigger: 'blur' }
+  ],
+  version: [
+    { required: true, message: '版本不能为空', trigger: 'blur' }
+  ],
+  count: [
+    { required: true, message: '数量不能为空', trigger: 'blur' }
+  ],
+  categoryId: [
+    { required: true, message: '分类不能为空', trigger: 'blur' }
+  ],
+  picList: [
+    { required: true, message: '图片不能为空', trigger: 'blur' }
+  ]
+};
+const insertForm = ref()
+const updateForm = ref()
+
 //被添加的商品信息
 const goodsAdd = ref({
   name: '',
@@ -386,33 +422,37 @@ function insert() {
   for (let i = 0; i < goodsAdd.value.picList.length; i++) {
     goodsAdd.value.picList[i].url = goodsAdd.value.picList[i].realName;
   }
-  goodsApi.insert(goodsAdd.value)
-      .then(resp => {
-        if (resp.code == 10000) {
-          ElMessage.success(resp.msg);
-          //隐藏对话框
-          addDialogShow.value = false;
-          //清空对话框
-          goodsAdd.value = {
-            name: '',
-            dscp: '',
-            price: null,
-            markPrice: null,
-            purchasePrice: null,
-            color: null,
-            version: null,
-            count: null,
-            recom: null,
-            categoryId: null,
-            status: null,
-            picList: []
-          };
-          //查询第一页
-          selectByPage(1);
-        } else {
-          ElMessage.error(resp.msg);
-        }
-      });
+  insertForm.value.validate(valid => {
+    if (valid) {
+      goodsApi.insert(goodsAdd.value)
+          .then(resp => {
+            if (resp.code == 10000) {
+              ElMessage.success(resp.msg);
+              //隐藏对话框
+              addDialogShow.value = false;
+              //清空对话框
+              goodsAdd.value = {
+                name: '',
+                dscp: '',
+                price: null,
+                markPrice: null,
+                purchasePrice: null,
+                color: null,
+                version: null,
+                count: null,
+                recom: null,
+                categoryId: null,
+                status: null,
+                picList: []
+              };
+              //查询第一页
+              selectByPage(1);
+            } else {
+              ElMessage.error(resp.msg);
+            }
+          });
+    }
+  })
 }
 //上传图片之前的回调
 function beforeAvatarUpload(rawFile) {
@@ -498,39 +538,43 @@ function updateDetail() {
 }
 //修改
 function update() {
-  //处理图片
-  for (let i = 0; i < goodsUpdate.value.picList.length; i++) {
-    goodsUpdate.value.picList[i].url = goodsUpdate.value.picList[i].realName;
-  }
-  goodsApi.update(goodsUpdate.value)
-      .then(resp => {
-        if (resp.code == 10000) {
-          ElMessage.success(resp.msg);
-          //隐藏对话框
-          updateDialogShow.value = false;
-          //重置
-          goodsUpdate.value =  {
-            id: 0,
-            name: '',
-            dscp: '',
-            detail: '',
-            price: null,
-            markPrice: null,
-            purchasePrice: null,
-            color: null,
-            version: null,
-            count: null,
-            recom: null,
-            categoryId: null,
-            status: null,
-            picList: []
-          };
-          //查询第一页
-          selectByPage(pageInfo.value.pageNum);
-        } else {
-          ElMessage.error(resp.msg);
-        }
-      })
+  updateForm.value.validate(valid => {
+    if (valid) {
+      //处理图片
+      for (let i = 0; i < goodsUpdate.value.picList.length; i++) {
+        goodsUpdate.value.picList[i].url = goodsUpdate.value.picList[i].realName;
+      }
+      goodsApi.update(goodsUpdate.value)
+          .then(resp => {
+            if (resp.code == 10000) {
+              ElMessage.success(resp.msg);
+              //隐藏对话框
+              updateDialogShow.value = false;
+              //重置
+              goodsUpdate.value =  {
+                id: 0,
+                name: '',
+                dscp: '',
+                detail: '',
+                price: null,
+                markPrice: null,
+                purchasePrice: null,
+                color: null,
+                version: null,
+                count: null,
+                recom: null,
+                categoryId: null,
+                status: null,
+                picList: []
+              };
+              //查询第一页
+              selectByPage(pageInfo.value.pageNum);
+            } else {
+              ElMessage.error(resp.msg);
+            }
+          })
+    }
+  })
 }
 
 //是否推荐

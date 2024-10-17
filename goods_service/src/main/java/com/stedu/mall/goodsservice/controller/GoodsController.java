@@ -7,6 +7,7 @@ import com.stedu.mall.common.bean.RespBean;
 import com.stedu.mall.common.exception.SteduException;
 import com.stedu.mall.common.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class GoodsController {
 
     //添加
     @PostMapping
-    public RespBean insert(@RequestBody Goods goods) throws SteduException {
+    public RespBean insert(@Validated @RequestBody Goods goods) throws SteduException {
         goods.setScore(5F);
         goodsService.insert(goods);
 
@@ -37,7 +38,7 @@ public class GoodsController {
 
     //修改
     @PutMapping
-    public RespBean update(@RequestBody Goods goods) throws SteduException {
+    public RespBean update(@Validated @RequestBody Goods goods) throws SteduException {
         goodsService.update(goods);
 
         return RespBean.ok("修改成功");
