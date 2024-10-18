@@ -1,6 +1,6 @@
 <template>
 
-  <el-card style="margin-top: 10px">
+  <el-card v-if="!goodsStore.goodsInfo" style="margin-top: 10px">
     <!--轮播图-->
     <el-carousel height="450px">
       <el-carousel-item v-for="(banner, index) in banners" :key="index">
@@ -11,7 +11,7 @@
 
 
   <!--广告位-->
-  <div class="ad">
+  <div v-if="!goodsStore.goodsInfo" class="ad">
     <el-carousel :interval="4000" type="card" height="200px">
       <el-carousel-item v-for="item in banners2" :key="item">
         <el-image :src="item"></el-image>
@@ -20,11 +20,24 @@
   </div>
 
   <!--推荐的商品-->
-  <div class="recom" v-for="(category, index) in parentList" :key="index">
+  <div v-if="!goodsStore.goodsInfo" class="recom" v-for="(category, index) in parentList" :key="index">
     <div class="categoryName">{{category.name}}</div>
     <div class="goodsList">
       <ul>
         <li v-for="(goods, index) in category.goodsList" :key="index" @click="toGoodsView(goods.id)">
+          <div class="pic"><el-image :src="`${SERVER_ADDR}/goods/pic/${goods.picList[0].url}`" style="width: 200px; height: 200px; margin-top: 10px" fit="contain" /></div>
+          <div class="name">{{goods.name}}</div>
+          <div class="dscp">{{goods.dscp}}</div>
+          <div class="price">{{goods.price}}</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!--搜索到的的商品-->
+  <div v-else class="recom">
+    <div class="goodsList">
+      <ul>
+        <li v-for="(goods, index) in goodsList" :key="index" @click="toGoodsView(goods.id)">
           <div class="pic"><el-image :src="`${SERVER_ADDR}/goods/pic/${goods.picList[0].url}`" style="width: 200px; height: 200px; margin-top: 10px" fit="contain" /></div>
           <div class="name">{{goods.name}}</div>
           <div class="dscp">{{goods.dscp}}</div>
@@ -43,6 +56,7 @@ import categoryApi from "@/api/categoryApi.js";
 import {useRouter} from "vue-router";
 import {useGoodsStore} from "@/stores/goods.js";
 import {useRoute} from "vue-router";
+import goodsApi from "@/api/goodsApi.js";
 
 const router = useRouter();
 const route = useRoute();
@@ -50,6 +64,8 @@ const route = useRoute();
 const goodsStore = useGoodsStore();
 //查询条件
 const categoryName = ref();
+const goodsName = ref();
+const goodsList = ref(null);
 //服务器地址
 const SERVER_ADDR = ref(import.meta.env.VITE_SERVER_ADDR);
 const banners = ref([
@@ -63,15 +79,28 @@ const banners2 = ref([
   "/src/assets/lb6.jpeg"
 ])
 
+
+function selectByGoods() {
+  goodsName.value = goodsStore.goodsInfo
+  const condition =  {
+    name: goodsName.value
+  }
+  goodsApi.selectByPage(condition, 1, 100)
+      .then(resp => {
+        goodsList.value = resp.data.list;
+        console.log(goodsList.value);
+      })
+}
+
 //已上架的夫分类
 const parentList = ref([]);
 //1.获取夫分类 2.上架
 function getParent() {
-  categoryName.value = goodsStore.goodsInfo;
+  // categoryName.value = goodsStore.goodsInfo;
   const condition = {
     parentId: 0,
     status: 1,
-    name: categoryName.value
+    name: '',
   }
 
   categoryApi.selectByPage(condition)
@@ -95,10 +124,12 @@ watch(
     () => goodsStore.goodsInfo,
     () => {
       getParent(); // 重新获取数据
+      selectByGoods();
     }
 );
 
 getParent();
+selectByGoods();
 </script>
 
 <style scoped>
